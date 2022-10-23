@@ -2,7 +2,11 @@
   function show() {
      //简单判断首页，因为我的域名是tomorrow50.xyz，所以首页就会触发
 	if (location.href==="http://localhost:4000/"||location.href==="https://akatsukihi.github.io/"){
-         //直接把音乐框隐藏
+		if (window.screen.width < 500) {
+		// 当前设备是移动设备 
+		$("#music_div").attr("style","display:block;");
+		}else{
+			 //直接把音乐框隐藏
 		$("#music_div").attr("style","display:none;");
          //滚动条事件
 		$(window).scroll(function(){
@@ -15,6 +19,9 @@
 				$("#music_div").attr("style","display:none;");
 			}
 		 })
+		
+		}
+        
 	}
 
   }
