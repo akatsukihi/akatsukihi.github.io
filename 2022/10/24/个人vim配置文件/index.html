@@ -1,0 +1,631 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="akatsukihi">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="配置如下       123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899">
+<meta property="og:type" content="article">
+<meta property="og:title" content="个人vim配置文件">
+<meta property="og:url" content="https://akatsukihi.github.io/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:site_name" content="AkatsukiHi">
+<meta property="og:description" content="配置如下       123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/vimrc1.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/vimrc2.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/vimrc3.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/vimrc4.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/vimrc5.png">
+<meta property="article:published_time" content="2022-10-24T07:21:29.000Z">
+<meta property="article:modified_time" content="2022-10-24T08:06:51.664Z">
+<meta property="article:author" content="akatsukihi">
+<meta property="article:tag" content="vim">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://akatsukihi.github.io/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/vimrc1.png">
+  
+  
+  
+  <title>个人vim配置文件 - AkatsukiHi</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akatsukihi.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>AkatsukiHi</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg/nihon.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="个人vim配置文件"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-24 16:21" pubdate>
+          2022年10月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          92 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">个人vim配置文件</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="配置如下"><a href="#配置如下" class="headerlink" title="配置如下"></a><center>配置如下</h1><img src="/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/vimrc1.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/vimrc2.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/vimrc3.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/vimrc4.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/vimrc5.png" srcset="/img/loading.gif" lazyload class="">
+
+
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br></pre></td><td class="code"><pre><code class="hljs 1c"><span class="hljs-string">&quot; All system-wide defaults are set in $VIMRUNTIME/debian.vim and sourced by</span><br><span class="hljs-string">&quot; the call to :runtime you can find below.	If you wish to change any of those</span><br><span class="hljs-string">&quot; settings, you should do it in this file (/etc/vim/vimrc), since debian.vim</span><br><span class="hljs-string">&quot; will be overwritten everytime an upgrade of the vim packages is performed.</span><br><span class="hljs-string">&quot; It is recommended to make changes after sourcing debian.vim since it alters</span><br><span class="hljs-string">&quot; the value of the &#x27;compatible&#x27; option.</span><br><br>runtime! debian.vim<br><br><span class="hljs-string">&quot; Vim will load $VIMRUNTIME/defaults.vim if the user does not have a vimrc.</span><br><span class="hljs-string">&quot; This happens after /etc/vim/vimrc(.local) are loaded, so it will override</span><br><span class="hljs-string">&quot; any settings in these files.</span><br><span class="hljs-string">&quot; If you don&#x27;t want that to happen, uncomment the below line to prevent</span><br><span class="hljs-string">&quot; defaults.vim from being loaded.</span><br><span class="hljs-string">&quot; let g:skip_defaults_vim = 1</span><br><br><span class="hljs-string">&quot; Uncomment the next line to make Vim more Vi-compatible</span><br><span class="hljs-string">&quot; NOTE: debian.vim sets &#x27;nocompatible&#x27;.  Setting &#x27;compatible&#x27; changes numerous</span><br><span class="hljs-string">&quot; options, so any other options should be set AFTER setting &#x27;compatible&#x27;.</span><br><span class="hljs-string">&quot;set compatible</span><br><br><span class="hljs-string">&quot; Vim5 and later versions support syntax highlighting. Uncommenting the next</span><br><span class="hljs-string">&quot; line enables syntax highlighting by default.</span><br>if has(<span class="hljs-string">&quot;syntax&quot;</span>)<br>  syntax on<br>endif<br><br><span class="hljs-string">&quot; If using a dark background within the editing area and syntax highlighting</span><br><span class="hljs-string">&quot; turn on this option as well</span><br><span class="hljs-string">&quot;set background=dark</span><br><br><span class="hljs-string">&quot; Uncomment the following to have Vim jump to the last position when</span><br><span class="hljs-string">&quot; reopening a file</span><br><span class="hljs-string">&quot;au BufReadPost * if line(&quot;</span>&#x27;\&quot;&quot;) &gt; 1 &amp;&amp; line(&quot;&#x27;\<span class="hljs-string">&quot;&quot;</span>) &lt;= line(<span class="hljs-string">&quot;$&quot;</span>) <span class="hljs-string">| exe &quot;</span>normal! g&#x27;\&quot;&quot; | endif<br><br>&quot; Uncomment the following to have Vim load indentation rules and plugins<br>&quot; according to the detected filetype.<br>&quot;filetype plugin indent on<br><br>&quot; The following are commented out as they cause vim to behave a lot<br>&quot; differently from regular Vi. They are highly recommended though.<br>&quot;set showcmd		&quot; Show (partial) command in status line.<br>&quot;set showmatch		&quot; Show matching brackets.<br>&quot;set ignorecase		&quot; Do case insensitive matching<br>&quot;set smartcase		&quot; Do smart case matching<br>&quot;set incsearch		&quot; Incremental search<br>&quot;set autowrite		&quot; Automatically save before commands like :next and :make<br>&quot;set hidden		&quot; Hide buffers when they are abandoned<br>&quot;set mouse=a		&quot; Enable mouse usage (all modes)<br><br>&quot; Source a global configuration file if available<br>if filereadable(&quot;/etc/vim/vimrc.local&quot;)<br>  source /etc/vim/vimrc.local<br>endif<br><br>&quot;个人配置==================================================================================================&gt;<br>&quot;打开文件的编码设置<br>set fileencodings=cs-bom,utf-8,utf-16,gbk,big5,gb<span class="hljs-number">1803</span>0,latin1<br>&quot;开启鼠标<br>&quot;set mouse=a <br>&quot;前缀键&lt;leader&gt;默认为\ 使用下面命令将前缀键定义为逗号<br>let mapleader=&quot;,&quot;<br>&quot;设置行号<br>set nu<br>&quot;设置缩进格式<br>set autoindent &quot;自动缩进<br>set cindent<br>set ts=4 &quot;表示一个tab在屏幕上打印多少个空格长度，默认为8<br>&quot;set softtabstop=4<br>set shiftwidth=4<br>set expandtab<br><br>&quot;set cursorcolumn<br>&quot;set cursorline<br>set hlsearch<br>hi Search term=bold,reverse cterm=bold ctermfg=15 ctermbg=2 gui=bold guifg=bg guibg=DarkGreen<br><br>&quot;设置引号和括号自动补全<br>inoremap &#x27; &#x27;&#x27;&lt;ESC&gt;i<br>inoremap <span class="hljs-string">&quot; &quot;&quot;&lt;ESC&gt;i</span><br>inoremap ( ()&lt;ESC&gt;i<br>inoremap [ []&lt;ESC&gt;i<br><span class="hljs-string">&quot;数组初始化使用补全</span><br>inoremap &#123; &#123;&#125;&lt;ESC&gt;i<br><span class="hljs-string">&quot;方法括号补全</span><br>inoremap &#123;&lt;CR&gt; &#123;&#125;&lt;ESC&gt;i&lt;CR&gt;&lt;ESC&gt;O<br><span class="hljs-string">&quot;跳出括号等</span><br>inoremap &lt;tab&gt;&lt;space&gt; &lt;ESC&gt;&lt;space&gt;a<br><span class="hljs-string">&quot;插入模式下注释当前行</span><br>inoremap <span class="hljs-comment">// &lt;ESC&gt;0i//&lt;ESC&gt;</span><br><span class="hljs-string">&quot;删除当前行注释</span><br>nnoremap &lt;leader&gt;/ <span class="hljs-number">0</span>xx<br><br><span class="hljs-string">&quot;将crtl+d映射为插入模式下的删除当前行</span><br>inoremap &lt;c-d&gt; &lt;ESC&gt;dd i<br><br><span class="hljs-string">&quot;插件管理-----------------------------------------&gt;</span><br>call plug<span class="hljs-meta">#begin(&#x27;~/.vim/plugged&#x27;)</span><br>Plug &#x27;vim-airline/vim-airline&#x27;<br>Plug &#x27;ludovicchabant/vim-gutentags&#x27;<br>Plug &#x27;ycm-core/YouCompleteMe&#x27;<br>Plug  &#x27;Yggdroot/indentLine&#x27;<br>Plug &#x27;skywind<span class="hljs-number">3000</span>/asyncrun.vim&#x27;<br>Plug &#x27;preservim/nerdtree&#x27;<br>Plug &#x27;iamcco/markdown-preview.nvim&#x27;, &#123; &#x27;do&#x27;: &#123; -&gt; mkdp<span class="hljs-meta">#util#install() &#125;, &#x27;for&#x27;: [&#x27;markdown&#x27;, &#x27;vim-plug&#x27;]&#125;</span><br><span class="hljs-string">&quot;Plug &#x27;puremourning/vimspector&#x27;</span><br><br><br>call plug<span class="hljs-meta">#end()</span><br><span class="hljs-string">&quot;-------------------------------------------------&gt;</span><br><br><span class="hljs-string">&quot;文件插件类型</span><br>filetype plugin indent on<br><br><span class="hljs-string">&quot;vim-gutentags插件设置----------------------------&gt;</span><br>set tags=./.tags;,.tags<br><span class="hljs-string">&quot;gutentags搜索工程目录的标志,碰到这些文件或者目录名就停止向上一级递归</span><br>let g:gutentags_project_root=[&#x27;.root&#x27;,&#x27;.svn&#x27;,&#x27;.git&#x27;,&#x27;.hg&#x27;,&#x27;.project&#x27;]<br><span class="hljs-string">&quot;所生成的数据的文件名称</span><br>let g:gutentags_ctags_tagfile=&#x27;.tags&#x27;<br><span class="hljs-string">&quot;将自动生成的tags文件全部放入~/.cache/tags/目录中，避免污染工程目录</span><br>let s:vim_tags=expand(&#x27;~/.cache/tags&#x27;)<br>let g:gutentags_cache_dir=s:vim_tags<br><span class="hljs-string">&quot;配置ctags的参数</span><br>let g:gutentags_ctags_extra_args=[&#x27;--fields=+niazS&#x27;,&#x27;--extra=+q&#x27;]<br>let g:gutentags_ctags_extra_args+=[&#x27;--c++-kinds=+px&#x27;]<br>let g:gutentags_ctags_extra_args+=[&#x27;--c-kinds=+px&#x27;]<br>let g:gutentags_ctags_extra_args+=[&#x27;--output-format=e-ctags&#x27;]<br><span class="hljs-string">&quot;检测~/.cache/tags,不存在就新建</span><br>if !isdirectory(s:vim_tags)<br>	silent! call mkdir(s:vim_tags,&#x27;p&#x27;)<br>endif<br><br><span class="hljs-string">&quot;--------------------------------------------------&gt;</span><br><span class="hljs-string">&quot;YouCompleteMe代码补全插件设置-----------------------------------------&gt;</span><br><span class="hljs-string">&quot;设置补全窗口的背景色</span><br>highlight PMenu ctermfg=<span class="hljs-number">0</span> ctermbg=<span class="hljs-number">242</span> guifg=black guibg=darkgrey<br>highlight PMenuSel ctermfg=<span class="hljs-number">242</span> ctermbg=<span class="hljs-number">8</span> guifg=darkgrey guibg=black<br><br>let g:ycm_add_preview_to_completeopt = <span class="hljs-number">0</span><br>let g:ycm_show_diagnostics_ui = <span class="hljs-number">0</span><br>let g:ycm_server_log_level = &#x27;info&#x27;<br>let g:ycm_min_num_identifier_candidate_chars = <span class="hljs-number">2</span><br>let g:ycm_collect_identifiers_from_comments_and_strings = <span class="hljs-number">1</span><br>let g:ycm_complete_in_strings=<span class="hljs-number">1</span><br>let g:ycm_key_invoke_completion = &#x27;&lt;c-z&gt;&#x27;<br>set completeopt=menu,menuone<br><br>noremap &lt;c-z&gt; &lt;NOP&gt;<br><br>let g:ycm_semantic_triggers =  &#123;<br>			\ &#x27;c,cpp,python,java,go,erlang,perl&#x27;: [&#x27;re!\w&#123;2&#125;&#x27;],<br>			\ &#x27;cs,lua,javascript&#x27;: [&#x27;re!\w&#123;2&#125;&#x27;],<br>			\ &#125;<br><br>let g:ycm_filetype_whitelist = &#123; <br>			\ <span class="hljs-string">&quot;c&quot;</span>:<span class="hljs-number">1</span>,<br>			\ <span class="hljs-string">&quot;cpp&quot;</span>:<span class="hljs-number">1</span>, <br>			\ <span class="hljs-string">&quot;objc&quot;</span>:<span class="hljs-number">1</span>,<br>			\ <span class="hljs-string">&quot;sh&quot;</span>:<span class="hljs-number">1</span>,<br>			\ <span class="hljs-string">&quot;zsh&quot;</span>:<span class="hljs-number">1</span>,<br>			\ <span class="hljs-string">&quot;zimbu&quot;</span>:<span class="hljs-number">1</span>,<br>			\ &#125;<br><br><br><span class="hljs-string">&quot;-----------------------------------------------------------------------&gt;</span><br><br><span class="hljs-string">&quot;indentLine插件设置-----------------------------------------------------------------&gt;</span><br>let g:indentLine_char =  &#x27;¦&#x27;				<span class="hljs-string">&quot; 设置缩进线字符，也可以为 &#x27;|&#x27;, &#x27;┆&#x27;, &#x27;┊&#x27; 等</span><br>let g:indentLine_conceallevel = <span class="hljs-number">2</span>		<span class="hljs-string">&quot; 使插件正常运行</span><br><br><span class="hljs-string">&quot;-----------------------------------------------------------------------------------&gt;</span><br><br><br><span class="hljs-string">&quot;asyncrun插件设置-----------------------------------------------------------------&gt;</span><br>let g:asyncrun_rootmarks = [&#x27;.svn&#x27;, &#x27;.git&#x27;, &#x27;.root&#x27;, &#x27;_darcs&#x27;, &#x27;build.xml&#x27;]<br>let g:asyncrun_open=<span class="hljs-number">10</span> <span class="hljs-string">&quot;自动打开quick window窗口，高度为10</span><br>let g:asyncrun_bell=<span class="hljs-number">1</span> <span class="hljs-string">&quot;任务结束响铃提醒</span><br><span class="hljs-string">&quot;设置F1打开关闭quickfix窗口</span><br>noremap &lt;F1&gt; :call asyncrun<span class="hljs-meta">#quickfix_toggle(6)&lt;cr&gt; </span><br><span class="hljs-string">&quot;设置F2单文件：编译(C文件)</span><br>nnoremap &lt;silent&gt; &lt;F2&gt; :AsyncRun! gcc -Wall -O2 <span class="hljs-string">&quot;$(VIM_FILEPATH)&quot;</span> -o <span class="hljs-string">&quot;$(VIM_FILEDIR)/$(VIM_FILENOEXT)&quot;</span> &lt;cr&gt;<br><span class="hljs-string">&quot;设置F3单文件：编译debug版本（C++）</span><br>nnoremap &lt;silent&gt; &lt;F3&gt; :AsyncRun! g++ -g <span class="hljs-string">&quot;$(VIM_FILEPATH)&quot;</span> -o <span class="hljs-string">&quot;$(VIM_FILEDIR)/$(VIM_FILENOEXT)&quot;</span>&lt;cr&gt;<br><span class="hljs-string">&quot;设置F4单文件：编译正常版本（C++）</span><br>nnoremap &lt;silent&gt; &lt;F4&gt; :AsyncRun! g++ -O3 <span class="hljs-string">&quot;$(VIM_FILEPATH)&quot;</span> -o <span class="hljs-string">&quot;$(VIM_FILEDIR)/$(VIM_FILENOEXT)&quot;</span>&lt;cr&gt;<br><span class="hljs-string">&quot;设置F5单文件：运行</span><br><span class="hljs-string">&quot;nnoremap &lt;silent&gt; &lt;F5&gt; :AsyncRun -raw -cwd=$(VIM_FILEDIR) \&quot;</span>$(VIM_FILEDIR)/$(VIM_FILENOEXT)<span class="hljs-string">&quot; &lt;cr&gt;</span><br>nnoremap &lt;silent&gt; &lt;F5&gt; :AsyncRun! -mode=term -pos=right -cols=<span class="hljs-number">60</span> <span class="hljs-string">&quot;$(VIM_PATHNOEXT)&quot;</span>&lt;cr&gt;<br><br><span class="hljs-string">&quot;设置F7项目：编译</span><br>nnoremap &lt;silent&gt; &lt;F7&gt; :AsyncRun! -cwd=&lt;root&gt; make &lt;cr&gt;<br><span class="hljs-string">&quot;设置F8项目：运行</span><br>nnoremap &lt;silent&gt; &lt;F8&gt; :AsyncRun! -cwd=&lt;root&gt; -raw make run &lt;cr&gt;<br><span class="hljs-string">&quot;退出运行时的终端窗口terminal</span><br>nnoremap &lt;leader&gt;w :exit&lt;cr&gt;<br><br><span class="hljs-string">&quot;--------------------------------------------------------------------------------&gt;&quot;</span><br><br><span class="hljs-string">&quot;NERDTree插件设置-----------------------------------------------------------------&gt;</span><br><span class="hljs-string">&quot;设置目录箭头</span><br>let g:NERDTreeDirArrowExpandable = &#x27;⇨⇨⇨&#x27;<br>let g:NERDTreeDirArrowCollapsible = &#x27;➤➤➤&#x27;<br><span class="hljs-string">&quot; 在 vim 启动的时候默认开启 NERDTree（autocmd 可以缩写为 au）</span><br><span class="hljs-string">&quot;autocmd VimEnter * NERDTree</span><br><span class="hljs-string">&quot;定位当前文件的位置，类似于eclipse的link with edited</span><br>nnoremap &lt;C-f&gt; :NERDTreeFind&lt;CR&gt;<br><span class="hljs-string">&quot;打开关闭目录树</span><br>nnoremap &lt;C-n&gt; :NERDTreeToggle&lt;CR&gt;<br><span class="hljs-string">&quot;如果 NERDTree 是唯一选项卡中剩下的唯一窗口，则退出 Vim</span><br>autocmd BufEnter * if tabpagenr(&#x27;$&#x27;) == <span class="hljs-number">1</span> <span class="hljs-meta">&amp;&amp; winnr(&#x27;$&#x27;) == 1 &amp;&amp; exists(&#x27;b:NERDTree&#x27;) &amp;&amp; b:NERDTree.isTabTree() | quit | endif</span><br><span class="hljs-string">&quot;如果 NERDTree 是其中唯一剩余的窗口，请关闭选项卡</span><br>autocmd BufEnter * if winnr(&#x27;$&#x27;) == <span class="hljs-number">1</span> <span class="hljs-meta">&amp;&amp; exists(&#x27;b:NERDTree&#x27;) &amp;&amp; b:NERDTree.isTabTree() | quit | endif</span><br><span class="hljs-string">&quot;关闭当前标签页</span><br>nnoremap &lt;leader&gt;c :tabc&lt;CR&gt;<br><span class="hljs-string">&quot;关闭其它标签页</span><br>nnoremap &lt;leader&gt;o :tabo&lt;CR&gt;<br><span class="hljs-string">&quot;前一个tab标签页</span><br>nnoremap &lt;leader&gt;m :tabp&lt;CR&gt;<br><span class="hljs-string">&quot;下一个标签页</span><br>nnoremap &lt;leader&gt;n :tabn&lt;CR&gt;<br><br><span class="hljs-string">&quot;---------------------------------------------------------------------------------&gt;&quot;</span><br><br><span class="hljs-string">&quot;vimspector插件设置-----------------------------------------------------------------&gt;</span><br><span class="hljs-string">&quot;F5 debugger/ Shift F5 stop debugger/ Ctrl+Shift+F5 restart debugger</span><br><span class="hljs-string">&quot;F6 pause debugger</span><br><span class="hljs-string">&quot;F9 Toggle line breakpoint on the current line</span><br><span class="hljs-string">&quot;Shift F9 Add a function breakpoint for the expression under cursor</span><br><span class="hljs-string">&quot;F10 Step Over</span><br><span class="hljs-string">&quot;F11 Step into</span><br><span class="hljs-string">&quot;Shift F11 Step out of current function scope</span><br><span class="hljs-string">&quot;let g:vimspector_enable_mappings = &#x27;VISUAL_STUDIO&#x27;</span><br><span class="hljs-string">&quot;nnoremap &lt;leader&gt;e :VimspectorReset&lt;CR&gt;</span><br><span class="hljs-string">&quot;---------------------------------------------------------------------------------&gt;&quot;</span><br><br><span class="hljs-string">&quot;vim8自带的Termdebug插件设置-----------------------------------------------------------------&gt;</span><br><span class="hljs-string">&quot;F6进入debug当前文件模式</span><br>nnoremap &lt;silent&gt; &lt;F6&gt; :packadd termdebug&lt;cr&gt;:Termdebug %:r&lt;cr&gt;<br><br><span class="hljs-string">&quot;---------------------------------------------------------------------------------&gt;&quot;</span><br><br><span class="hljs-string">&quot;vim8使用CGDB进行调试-----------------------------------------------------------------&gt;</span><br>nnoremap &lt;space&gt;cd :!cgdb %:r&lt;cr&gt;<br><span class="hljs-string">&quot;---------------------------------------------------------------------------------&gt;&quot;</span><br><br><br><span class="hljs-string">&quot;Markdownd插件设置----------------------------------------------------------------&gt;</span><br>imap &lt;C-s&gt; &lt;Plug&gt;MarkdownPreview<br><span class="hljs-string">&quot;---------------------------------------------------------------------------------&gt;&quot;</span><br><br><br><span class="hljs-string">&quot;---------------------------------------------------------------------------------&gt;&quot;</span><br><br><span class="hljs-string">&quot;---------------------------------------------------------------------------------&gt;&quot;</span><br><span class="hljs-string">&quot;====================================================================================================================&gt;</span><br><br><br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%85%8D%E7%BD%AE/" class="category-chain-item">配置</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/vim/">#vim</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>个人vim配置文件</div>
+      <div>https://akatsukihi.github.io/2022/10/24/个人vim配置文件/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>akatsukihi</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月24日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/23/github%E5%BB%BA%E7%AB%99/" title="github建站">
+                        <span class="hidden-mobile">github建站</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <!-- 3164490795/7198694818/502092887 -->
+<div id="_footer" class="footer-inner">
+
+  
+    <div class="footer-content">
+	 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+	
+	<div id="music_div" style="position:fixed;bottom: 0px; left: 30px;z-index: 100;">
+   <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=110 src="//music.163.com/outchain/player?type=0&id=3164490795&auto=0&height=90"></iframe>
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/js/musicshow.js"></script>
+	</div>
+	
+	
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
