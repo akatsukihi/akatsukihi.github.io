@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>判断两个指针相等注意事项</title>
+    <link href="/2022/11/01/%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%8C%87%E9%92%88%E7%9B%B8%E7%AD%89%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"/>
+    <url>/2022/11/01/%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%8C%87%E9%92%88%E7%9B%B8%E7%AD%89%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
+    
+    <content type="html"><![CDATA[<h2 id="指针操作"><a href="#指针操作" class="headerlink" title="指针操作"></a>指针操作</h2><p>C++ Primer中关于指针操作中有一段描述是：</p><blockquote><p>对于两个类型相同的合法指针，可以用相等操作符 &#x3D;&#x3D; 或 不相等操作符 !&#x3D; 来比较它们，比较的的结果<br>是布尔类型。如果两个指针存放的地址值相同，则它们相等；反之它们不相等。这里两个指针存放的地址值相同（两个指针相等）<br>有三种可能：它们都为空、都指向同一个对象、或者都指向了同一个对象的下一地址。<br>需要注意的是:<strong>一个指针指向某对象，同时另一个指针指向另外对象的下一地址，此时也有可能出现这两个指针值相同的情况，即指针相等。</strong></p></blockquote><p>关于最后描述的同一个对象的下一地址，出现有可能相等的情况，这是因为内存的申请使用一般都是连续分配的，所以很可能出现指针运算过后指向的下一个地址和相同类型的另一指针指向的当前位置相等！具体如下所示：</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br> <br>  <span class="hljs-type">int</span> a1 = <span class="hljs-number">1</span>;<br>  <span class="hljs-type">int</span> a2 = <span class="hljs-number">2</span>;<br> <br>  <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function">  </span>&#123;<br>      <span class="hljs-type">int</span>* p1 = &amp;a1;<br>      <span class="hljs-type">int</span>* p2 = &amp;a2;<br>      <span class="hljs-type">int</span>* p3;<br> <br>      std::cout&lt;&lt;<span class="hljs-string">&quot;*p1 = &quot;</span>&lt;&lt;*p1&lt;&lt;<span class="hljs-string">&quot;,地址为：p1 = &quot;</span>&lt;&lt;p1&lt;&lt;std::endl;<br>      std::cout&lt;&lt;<span class="hljs-string">&quot;*p2 = &quot;</span>&lt;&lt;*p2&lt;&lt;<span class="hljs-string">&quot;,地址为：p2 = &quot;</span>&lt;&lt;p2&lt;&lt;std::endl;<br>      p3 = ++p1;<br>      <span class="hljs-keyword">if</span>(p2 == p3)&#123;<br>      ¦   std::cout&lt;&lt;<span class="hljs-string">&quot;*p3 = &quot;</span>&lt;&lt;*p3&lt;&lt;<span class="hljs-string">&quot;,地址为：p3 = &quot;</span>&lt;&lt;p3&lt;&lt;std::endl;<br>      &#125;<br> <br>      <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>  &#125;<br></code></pre></td></tr></table></figure><p>运行图如下所示：</p><img src="/2022/11/01/%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%8C%87%E9%92%88%E7%9B%B8%E7%AD%89%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/bg1.png" class="">]]></content>
+    
+    
+    <categories>
+      
+      <category>指针</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>c/c++</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>个人vim配置文件</title>
     <link href="/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/"/>
     <url>/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/</url>
