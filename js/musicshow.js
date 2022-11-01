@@ -4,7 +4,7 @@
 	if (location.href==="http://localhost:4000/"||location.href==="https://akatsukihi.github.io/"){
 		if (window.innerWidth < 768) {
 			// 当前设备是移动设备 
-			$("#music_div").attr("style","display:block;position:inherit;bottom:0px;left:30px;");
+			$("#music_div").attr("style","display:block;position:relative;bottom:0px;");
 
 			
 		}else{
@@ -26,7 +26,7 @@
 	}else{
 		if (window.innerWidth < 768) {
 			// 当前设备是移动设备 
-			$("#music_div").attr("style","display:block;position:inherit;bottom:0px;left:30px;");
+			$("#music_div").attr("style","display:block;position:relative;bottom:0px;");
 
 			
 		}
