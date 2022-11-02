@@ -16,24 +16,33 @@
   <meta name="author" content="akatsukihi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="指针操作C++ Primer中关于指针操作中有一段描述是：  对于两个类型相同的合法指针，可以用相等操作符 &#x3D;&#x3D; 或 不相等操作符 !&#x3D; 来比较它们，比较的的结果是布尔类型。如果两个指针存放的地址值相同，则它们相等；反之它们不相等。这里两个指针存放的地址值相同（两个指针相等）有三种可能：它们都为空、都指向同一个对象、或者都指向了同一个对象的下一地址。需要注意的是:一个">
+    <meta name="description" content="背景媳妇她们项目组在做一个老旧项目的升级移行工作，她最近主要在负责batch这块的改修，其中有一个功能是关于excel生成的，之前老项目中是HSSF的导出，现在她要升级为XSSF的导出，所以得引入一些poi的包，由于导入了部分新包，所以项目产生了莫名其妙的报错。 过程由于她们的项目是很老的项目，没有使用maven管理，所以排查起来很是费劲。先是在本地建了一个maven的项目，然后导入了主要的两个p">
 <meta property="og:type" content="article">
-<meta property="og:title" content="判断两个指针相等注意事项">
-<meta property="og:url" content="https://akatsukihi.github.io/2022/11/01/%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%8C%87%E9%92%88%E7%9B%B8%E7%AD%89%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/index.html">
+<meta property="og:title" content="poi包冲突调试">
+<meta property="og:url" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/index.html">
 <meta property="og:site_name" content="AkatsukiHi">
-<meta property="og:description" content="指针操作C++ Primer中关于指针操作中有一段描述是：  对于两个类型相同的合法指针，可以用相等操作符 &#x3D;&#x3D; 或 不相等操作符 !&#x3D; 来比较它们，比较的的结果是布尔类型。如果两个指针存放的地址值相同，则它们相等；反之它们不相等。这里两个指针存放的地址值相同（两个指针相等）有三种可能：它们都为空、都指向同一个对象、或者都指向了同一个对象的下一地址。需要注意的是:一个">
+<meta property="og:description" content="背景媳妇她们项目组在做一个老旧项目的升级移行工作，她最近主要在负责batch这块的改修，其中有一个功能是关于excel生成的，之前老项目中是HSSF的导出，现在她要升级为XSSF的导出，所以得引入一些poi的包，由于导入了部分新包，所以项目产生了莫名其妙的报错。 过程由于她们的项目是很老的项目，没有使用maven管理，所以排查起来很是费劲。先是在本地建了一个maven的项目，然后导入了主要的两个p">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://akatsukihi.github.io/2022/11/01/%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%8C%87%E9%92%88%E7%9B%B8%E7%AD%89%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/bg1.png">
-<meta property="article:published_time" content="2022-11-01T03:25:39.000Z">
-<meta property="article:modified_time" content="2022-11-01T09:13:07.529Z">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/1.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/2.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/3.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/4.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/5.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/6.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/7.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/8.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/9.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/10.png">
+<meta property="article:published_time" content="2022-11-02T07:26:39.000Z">
+<meta property="article:modified_time" content="2022-11-02T09:59:00.788Z">
 <meta property="article:author" content="akatsukihi">
-<meta property="article:tag" content="指针">
+<meta property="article:tag" content="jar冲突">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://akatsukihi.github.io/2022/11/01/%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%8C%87%E9%92%88%E7%9B%B8%E7%AD%89%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/bg1.png">
+<meta name="twitter:image" content="https://akatsukihi.github.io/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/1.png">
   
   
   
-  <title>判断两个指针相等注意事项 - AkatsukiHi</title>
+  <title>poi包冲突调试 - AkatsukiHi</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +207,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="判断两个指针相等注意事项"></span>
+            <span id="subtitle" data-typed-text="poi包冲突调试"></span>
           
         </div>
 
@@ -209,8 +218,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-11-01 12:25" pubdate>
-          2022年11月1日 中午
+        <time datetime="2022-11-02 16:26" pubdate>
+          2022年11月2日 下午
         </time>
       </span>
     
@@ -221,7 +230,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          1.9k 字
         
       </span>
     
@@ -232,7 +241,7 @@
         
         
         
-          11 分钟
+          16 分钟
         
       </span>
     
@@ -270,23 +279,42 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">判断两个指针相等注意事项</h1>
+            <h1 style="display: none">poi包冲突调试</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="指针操作"><a href="#指针操作" class="headerlink" title="指针操作"></a>指针操作</h2><p>C++ Primer中关于指针操作中有一段描述是：</p>
-<blockquote>
-<p>对于两个类型相同的合法指针，可以用相等操作符 &#x3D;&#x3D; 或 不相等操作符 !&#x3D; 来比较它们，比较的的结果<br>是布尔类型。如果两个指针存放的地址值相同，则它们相等；反之它们不相等。这里两个指针存放的地址值相同（两个指针相等）<br>有三种可能：它们都为空、都指向同一个对象、或者都指向了同一个对象的下一地址。<br>需要注意的是:<strong>一个指针指向某对象，同时另一个指针指向另外对象的下一地址，此时也有可能出现这两个指针值相同的情况，即指针相等。</strong></p>
-</blockquote>
-<p>关于最后描述的同一个对象的下一地址，出现有可能相等的情况，这是因为内存的申请使用一般都是连续分配的，所以很可能出现指针运算过后指向的下一个地址和相同类型的另一指针指向的当前位置相等！具体如下所示：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br> <br>  <span class="hljs-type">int</span> a1 = <span class="hljs-number">1</span>;<br>  <span class="hljs-type">int</span> a2 = <span class="hljs-number">2</span>;<br> <br>  <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function">  </span>&#123;<br>      <span class="hljs-type">int</span>* p1 = &amp;a1;<br>      <span class="hljs-type">int</span>* p2 = &amp;a2;<br>      <span class="hljs-type">int</span>* p3;<br> <br>      std::cout&lt;&lt;<span class="hljs-string">&quot;*p1 = &quot;</span>&lt;&lt;*p1&lt;&lt;<span class="hljs-string">&quot;,地址为：p1 = &quot;</span>&lt;&lt;p1&lt;&lt;std::endl;<br>      std::cout&lt;&lt;<span class="hljs-string">&quot;*p2 = &quot;</span>&lt;&lt;*p2&lt;&lt;<span class="hljs-string">&quot;,地址为：p2 = &quot;</span>&lt;&lt;p2&lt;&lt;std::endl;<br>      p3 = ++p1;<br>      <span class="hljs-keyword">if</span>(p2 == p3)&#123;<br>      ¦   std::cout&lt;&lt;<span class="hljs-string">&quot;*p3 = &quot;</span>&lt;&lt;*p3&lt;&lt;<span class="hljs-string">&quot;,地址为：p3 = &quot;</span>&lt;&lt;p3&lt;&lt;std::endl;<br>      &#125;<br> <br>      <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>  &#125;<br></code></pre></td></tr></table></figure>
-<p>运行图如下所示：</p>
-<img src="/2022/11/01/%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%8C%87%E9%92%88%E7%9B%B8%E7%AD%89%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/bg1.png" srcset="/img/loading.gif" lazyload class="">
+                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>媳妇她们项目组在做一个老旧项目的升级移行工作，她最近主要在负责batch这块的改修，其中有一个功能是关于<br>excel生成的，之前老项目中是HSSF的导出，现在她要升级为XSSF的导出，所以得引入一些poi的包，由于导入了<br>部分新包，所以项目产生了莫名其妙的报错。</p>
+<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>由于她们的项目是很老的项目，没有使用maven管理，所以排查起来很是费劲。先是在本地建了一个maven的项目，<br>然后导入了主要的两个poi包，poi-5.2.2.jar和poi-ooxml-5.2.2.jar，查看了它们的依赖关系，锁定了需要的最<br>小依赖，写了段简略的读写测试代码，运行调试通过。最后将项目所有包导入，运行报错，试着删除和poi有依赖<br>冲突可能的包，直到测试代码可以正常运行。最后锁定了一个名为poi-2.5.1-final-20040804.jar的包，删掉此<br>包后测试代码正常执行导入导出，但是奇怪的是再次导入此包后测试代码仍然可以正常运行，以为是项目缓存<br>导致的，所以将project又clean了继续运行，然而测试代码仍然正常结束。重复了几次，发现只有在第一次导入<br>所有包时运行报错，删除poi-2.5.1-final-20040804.jar包后就正常运行，再次导入后又不会引发冲突错误，更<br>令人费解的是正式项目的引用包中是没有poi-2.5.1-final-20040804.jar的。<br><br>报错如下：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Exception <span class="hljs-keyword">in</span> thread <span class="hljs-string">&quot;main&quot;</span> java.lang.NoSuchMethodError: org.apache.poi.util.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">IOUtils</span>.</span></span>copy(Ljava/io/InputStream;Ljava/io/OutputStream;)J<br>	at org.apache.poi.openxml4j.opc.internal.marshallers.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZipPartMarshaller</span>.</span></span>marshall(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZipPartMarshaller</span>.</span></span>java:<span class="hljs-number">89</span>)<br>	at org.apache.poi.openxml4j.opc.internal.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">MemoryPackagePart</span>.</span></span>save(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">MemoryPackagePart</span>.</span></span>java:<span class="hljs-number">111</span>)<br>	at org.apache.poi.openxml4j.opc.internal.marshallers.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DefaultMarshaller</span>.</span></span>marshall(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DefaultMarshaller</span>.</span></span>java:<span class="hljs-number">46</span>)<br>	at org.apache.poi.openxml4j.opc.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZipPackage</span>.</span></span>save<span class="hljs-constructor">Impl(ZipPackage.<span class="hljs-params">java</span>:584)</span><br>	at org.apache.poi.openxml4j.opc.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">OPCPackage</span>.</span></span>save(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">OPCPackage</span>.</span></span>java:<span class="hljs-number">1490</span>)<br>	at org.apache.poi.ooxml.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">POIXMLDocument</span>.</span></span>write(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">POIXMLDocument</span>.</span></span>java:<span class="hljs-number">227</span>)<br>	at testlib.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Test</span>.</span></span>main(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Test</span>.</span></span>java:<span class="hljs-number">31</span>)<br></code></pre></td></tr></table></figure>
+<p>或者报错是关于btye[]的方法peekFirstNBtyes之类。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>由于错误log中所报的这些方法经过跟踪确实是存在的，删掉poi-2.5.1-final-20040804.jar包也确实不再报错，所以可以<br>确定的是问题肯定出在了poi-2.5.1-final-20040804.jar这个jar包上，但是为什么只有第一次存在这个jar包引用时会出错<br>删掉再导入后又不会引发冲突，为什么正式项目中没有此包也报错？本能觉得是项目结构构筑的问题，所以就查看了关于<br>build path的详细信息，发现关于order and export的一段描述是越上层的优先级越高，而我本地的build path中的导致<br>报错的poi-2.5.1-final-20040804.jar包却在最底层，所以我将该包的优先级调为了上层又复现了之前的错误，为什么只<br>有第一次导入会导致报错，删除后重新导入就不会引发错误的问题至此已经解决，还有第二个问题是正式项目中没有此包<br>为什么也会报错，这个问题经过查看build path后发现老项目中引用了一个外部工程common，而位于顶层的common当中<br>引用了poi-2.5.1-final-20040804.jar此包，经过优先级重调，第二个问题也顺利解决。<br><br>模拟第一次报错：</p>
+<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/1.png" srcset="/img/loading.gif" lazyload class="">
+<br>
+<br>
+<br>
 
-<h4 id="关于指针和引用"><a href="#关于指针和引用" class="headerlink" title="关于指针和引用"></a>关于指针和引用</h4><p>引用并非对象，它只是为一个已经存在的对象所起的别名而已，所以引用只能使用对象进行初始化(不能使用字面量初始化)，<br>引用的初始化过程并非是将对象的值拷贝给引用，而是绑定，程序将引用和它的初始值绑定在一起，一旦初始化完成，引用<br>将和它的初始值对象一直捆绑在一起，也正是因为引用无法重新解绑到另外一个对象，所以引用必须进行初始化操作！因为<br>引用不是对象，没有实际的地址，所以不能定义指向引用的指针 ！</p>
-<p><strong>指针和引用的区别：</strong><br>指针和引用同为复合类型，都与内存中实际存在的对象有联系。指针”指向”内存中的某个对象，而引用”绑定到”内存中的某<br>个对象，它们都实现了对其他对象的间接访问，二者的区别主要有两方面：</p>
-<p><em><strong>第一，指针本身就是一个对象，允许对指针赋值和拷贝，而且在指针的生命周期内它可以指向几个不同的对象；引用不是一<br>个对象，无法令引用重新绑定到另外一个对象。<br><br>第二，指针无须在定义时赋初值，和其他内置类型一样，在块作用域内定义的指针如果没有被初始化，也将拥有一个不确定<br>的值；引用则必须在定义时赋初值。</strong></em></p>
+<p>删除冲突包执行成功：</p>
+<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/2.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/3.png" srcset="/img/loading.gif" lazyload class="">
+<br>
+<br>
+<br>
+
+
+<p>再次导入冲突包执行依然成功：</p>
+<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/4.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/5.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/6.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/7.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/8.png" srcset="/img/loading.gif" lazyload class="">
+<br>
+<br>
+<br>
+
+<p>更改引用顺序，重现错误：</p>
+<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/9.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/10.png" srcset="/img/loading.gif" lazyload class="">
 
                 
               </div>
@@ -305,7 +333,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/C-C/" class="category-chain-item">C/C++</a>
+  <a href="/categories/java/" class="category-chain-item">java</a>
   
   
 
@@ -320,7 +348,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E6%8C%87%E9%92%88/">#指针</a>
+        <a href="/tags/jar%E5%86%B2%E7%AA%81/">#jar冲突</a>
       
     </div>
   
@@ -332,8 +360,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>判断两个指针相等注意事项</div>
-      <div>https://akatsukihi.github.io/2022/11/01/判断两个指针相等注意事项/</div>
+      <div>poi包冲突调试</div>
+      <div>https://akatsukihi.github.io/2022/11/02/poi包冲突调试/</div>
     </div>
     <div class="license-meta">
       
@@ -345,7 +373,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年11月1日</div>
+          <div>2022年11月2日</div>
         </div>
       
       
@@ -375,18 +403,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/" title="poi包冲突调试">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">poi包冲突调试</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/10/24/%E4%B8%AA%E4%BA%BAvim%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" title="个人vim配置文件">
-                        <span class="hidden-mobile">个人vim配置文件</span>
+                      <a href="/2022/11/01/%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%8C%87%E9%92%88%E7%9B%B8%E7%AD%89%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/" title="判断两个指针相等注意事项">
+                        <span class="hidden-mobile">判断两个指针相等注意事项</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
