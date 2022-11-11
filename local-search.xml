@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>power shell脚本命令</title>
+    <link href="/2022/11/11/powershell%E8%84%9A%E6%9C%AC/"/>
+    <url>/2022/11/11/powershell%E8%84%9A%E6%9C%AC/</url>
+    
+    <content type="html"><![CDATA[<p>最近开始支援其他项目组做一些脚本开发，记录一下。  </p><ul><li>去除输入文件的首行，重新生成新的文件：<figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dsconfig">$<span class="hljs-string">x</span> = <span class="hljs-string">Get-Content</span> -<span class="hljs-string">Path</span> <span class="hljs-string">&quot;..test.csv&quot;</span><br><span class="hljs-built_in">set-Content</span> -<span class="hljs-string">Path</span> <span class="hljs-string">&quot;..new.csv&quot;</span> -<span class="hljs-string">Value</span> ($<span class="hljs-string">x</span>[<span class="hljs-string">1</span>..($<span class="hljs-string">x</span>.<span class="hljs-string">Length-1</span>)])<br></code></pre></td></tr></table></figure></li><li>获取文件的当前路径 $PSScriptRoot</li></ul><figure class="highlight monkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs monkey"><span class="hljs-keyword">Import</span>-<span class="hljs-keyword">Module</span> ./test.ps1<span class="hljs-meta"></span><br><span class="hljs-meta"># 更改为</span><br><span class="hljs-keyword">Import</span>-<span class="hljs-keyword">Module</span> $PSScriptRoot/test.ps1<br></code></pre></td></tr></table></figure><p>这样可以避免执行脚本时必须进入脚本所在的目录，只需要在任意路径下输入脚本的绝对路径，这样脚本中其它的导入模块也会正常的被脚本读取到。</p><ul><li>将读入的csv文件转化为数组<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-variable">$csvdata</span> = <span class="hljs-selector-tag">@</span>(<span class="hljs-built_in">Import-Csv</span> <span class="hljs-variable">$csvfile</span> <span class="hljs-literal">-Encoding</span> UTF8)<br><span class="hljs-comment"># 数组长度</span><br><span class="hljs-variable">$arrsize</span> = <span class="hljs-variable">$csvdate</span>.Count<br></code></pre></td></tr></table></figure></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>power shell</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>脚本</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>poi包冲突调试</title>
     <link href="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/"/>
     <url>/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/</url>
