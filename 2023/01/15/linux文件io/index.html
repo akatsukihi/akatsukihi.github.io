@@ -24,8 +24,9 @@
 <meta property="og:description" content="什么是I&#x2F;OI&#x2F;O就是输入&#x2F;输出，它是主存和外部设备（比如硬盘、U盘）之间复制数据的过程，其中数据从设备到内存的过程称为输入，数据从内存到设备的过程叫输出，I&#x2F;O可以分为高级I&#x2F;O和低级I&#x2F;O，高级I&#x2F;O通常也称为带缓冲的I&#x2F;O，比如ANSI C提供的标准I&#x2F;O库。低级I&#x2F;O通常也称为不带缓冲的I&amp;">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/1.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/2.png">
 <meta property="article:published_time" content="2023-01-15T04:12:37.000Z">
-<meta property="article:modified_time" content="2023-01-15T12:31:42.637Z">
+<meta property="article:modified_time" content="2023-01-16T04:40:33.208Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="c&#x2F;c++文件io">
 <meta name="twitter:card" content="summary_large_image">
@@ -250,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          3.5k 字
         
       </span>
     
@@ -261,7 +262,7 @@
         
         
         
-          26 分钟
+          30 分钟
         
       </span>
     
@@ -356,7 +357,20 @@
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/1.png" srcset="/img/loading.gif" lazyload class="">
 
 <h4 id="关闭文件"><a href="#关闭文件" class="headerlink" title="关闭文件"></a>关闭文件</h4><p> 文件不再使用的时候，需要关闭，关闭问价使用close函数，该函数声明如下：<br> <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">close</span><span class="hljs-params">(<span class="hljs-type">int</span> fd)</span></span>;<br></code></pre></td></tr></table></figure><br>其中fd为要关闭的文件描述符，函数执行成功就返回文件描述符，否则则返回-1。<br>文件关闭以后，此问价描述符不再指向任何文件，从而此描述符可以再次使用。如果每次打开文件后不关闭，就会<br>将系统的文件描述符耗尽，最终导致不能再打开文件。</p>
+<h4 id="读取文件数据"><a href="#读取文件数据" class="headerlink" title="读取文件数据"></a>读取文件数据</h4><p>read函数可以实现从已经打开的文件中读取数据，该函数声明如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">ssize_t</span> <span class="hljs-title">read</span><span class="hljs-params">(<span class="hljs-type">int</span> fd , <span class="hljs-type">void</span> *buf , <span class="hljs-type">size_t</span> count)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>该函数把参数fd所指的文件传送count个字节到buf指针所指的内存中，若count为0，则read函数不会起作用并<br>返回0，返回值为实际读取到的字节数，如果返回0，表示已经到达文件结尾或没有可以读取的数据。<em><strong>注意：文件读写位置会随读取到的字节移动。</strong></em><br>需要强调的是，如果函数读取成功，会返回实际读取到的字节数，所以最好能将返回值与参数count做比较，若<br>返回的字节数小于要求读取的字节数，则有可能读到了文件尾部或者read函数被信号中断了读取动作。若有错<br>误发生时，则返回-1，错误代码存入errno中，此时文件读写位置无法预期。<br>常见的错误代码如下：</p>
+<blockquote>
+<ul>
+<li>EINTR: 此调用被信号所中断。</li>
+<li>EAGAIN: 当使用不可阻断I&#x2F;O时（O_NONBLOCK），若无数据可读取，则返回此值。</li>
+<li>EBADF: 参数fd为非有效的文件描述符，或者当前文件已关闭。</li>
+</ul>
+</blockquote>
+<p>read函数示例如下：  </p>
+<img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/2.png" srcset="/img/loading.gif" lazyload class="">  
 
+<h4 id="向文件写入数据"><a href="#向文件写入数据" class="headerlink" title="向文件写入数据"></a>向文件写入数据</h4>
                 
               </div>
             
