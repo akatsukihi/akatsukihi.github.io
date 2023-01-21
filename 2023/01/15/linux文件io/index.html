@@ -16,12 +16,12 @@
   <meta name="author" content="akatsukihi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="什么是I&#x2F;OI&#x2F;O就是输入&#x2F;输出，它是主存和外部设备（比如硬盘、U盘）之间复制数据的过程，其中数据从设备到内存的过程称为输入，数据从内存到设备的过程叫输出，I&#x2F;O可以分为高级I&#x2F;O和低级I&#x2F;O，高级I&#x2F;O通常也称为带缓冲的I&#x2F;O，比如ANSI C提供的标准I&#x2F;O库。低级I&#x2F;O通常也称为不带缓冲的I&amp;">
+    <meta name="description" content="关于I&#x2F;OI&#x2F;O就是输入&#x2F;输出，它是主存和外部设备（比如硬盘、U盘）之间复制数据的过程，其中数据从设备到内存的过程称为输入，数据从内存到设备的过程叫输出，I&#x2F;O可以分为高级I&#x2F;O和低级I&#x2F;O，高级I&#x2F;O通常也称为带缓冲的I&#x2F;O，比如ANSI C提供的标准I&#x2F;O库。低级I&#x2F;O通常也称为不带缓冲的I&amp;#">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux文件io">
+<meta property="og:title" content="linux系统调用下的文件I&#x2F;O">
 <meta property="og:url" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/index.html">
 <meta property="og:site_name" content="AkatsukiHi">
-<meta property="og:description" content="什么是I&#x2F;OI&#x2F;O就是输入&#x2F;输出，它是主存和外部设备（比如硬盘、U盘）之间复制数据的过程，其中数据从设备到内存的过程称为输入，数据从内存到设备的过程叫输出，I&#x2F;O可以分为高级I&#x2F;O和低级I&#x2F;O，高级I&#x2F;O通常也称为带缓冲的I&#x2F;O，比如ANSI C提供的标准I&#x2F;O库。低级I&#x2F;O通常也称为不带缓冲的I&amp;">
+<meta property="og:description" content="关于I&#x2F;OI&#x2F;O就是输入&#x2F;输出，它是主存和外部设备（比如硬盘、U盘）之间复制数据的过程，其中数据从设备到内存的过程称为输入，数据从内存到设备的过程叫输出，I&#x2F;O可以分为高级I&#x2F;O和低级I&#x2F;O，高级I&#x2F;O通常也称为带缓冲的I&#x2F;O，比如ANSI C提供的标准I&#x2F;O库。低级I&#x2F;O通常也称为不带缓冲的I&amp;#">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/1.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/2.png">
@@ -38,9 +38,9 @@
 <meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/13.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/14.png">
 <meta property="article:published_time" content="2023-01-15T04:12:37.000Z">
-<meta property="article:modified_time" content="2023-01-18T11:22:13.339Z">
+<meta property="article:modified_time" content="2023-01-21T02:51:03.254Z">
 <meta property="article:author" content="akatsukihi">
-<meta property="article:tag" content="c&#x2F;c++文件io">
+<meta property="article:tag" content="I&#x2F;O">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/1.png">
   
@@ -48,7 +48,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>linux文件io - AkatsukiHi</title>
+  <title>linux系统调用下的文件I/O - AkatsukiHi</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -240,7 +240,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="linux文件io"></span>
+            <span id="subtitle" data-typed-text="linux系统调用下的文件I/O"></span>
           
         </div>
 
@@ -263,7 +263,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          8.3k 字
+          9.3k 字
         
       </span>
     
@@ -274,7 +274,7 @@
         
         
         
-          70 分钟
+          78 分钟
         
       </span>
     
@@ -312,13 +312,13 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">linux文件io</h1>
+            <h1 style="display: none">linux系统调用下的文件I/O</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="什么是I-x2F-O"><a href="#什么是I-x2F-O" class="headerlink" title="什么是I&#x2F;O"></a>什么是I&#x2F;O</h2><p>I&#x2F;O就是输入&#x2F;输出，它是主存和外部设备（比如硬盘、U盘）之间复制数据的过程，其中数据从设备到内存的过程<br>称为输入，数据从内存到设备的过程叫输出，I&#x2F;O可以分为高级I&#x2F;O和低级I&#x2F;O，高级I&#x2F;O通常也称为带缓冲的I&#x2F;O，<br>比如ANSI C提供的标准I&#x2F;O库。低级I&#x2F;O通常也称为不带缓冲的I&#x2F;O，它是linux提供的系统调用，速度快，如函数<br>open、read、write等。而带缓冲的I&#x2F;O在系统调用前采用一定的策略，速度慢，但比不带缓冲的I&#x2F;O安全，如fopen、<br>fread、fwrite等。在linux下对文件进行输入输出操作有3种编程方式，一种是调用C库中文件的I&#x2F;O函数，比如<br>fopen、fread&#x2F;fwrite、fclose等，另外两种方式是使用linux的系统调用和C++文件流的操作。</p>
-<h2 id="文件I-x2F-O操作"><a href="#文件I-x2F-O操作" class="headerlink" title="文件I&#x2F;O操作"></a>文件I&#x2F;O操作</h2><h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>对于linux而言，所有设备或文件的操作都是通过文件描述符进行的。当打开或者创建一个文件的时候，内核向进<br>程返回一个非负的文件描述符。后续对文件的操作只需要通过该文件描述符，内核记录有关这个打开文件的信息。<br>一个进程启动时，默认打开三个文件，标准输入、标准输出、标准错误，对应文件描述符是0（STDIN_FILENO）、<br>1（STDOUT_FILENO）、2（STDERR_FILENO）,这些常量定义在unistd.h头文件中。文件描述符和文件指针可以互相<br>转换，具体通过函数fileno和fdopen。函数fileno将文件指针转为文件描述符，函数声明如下:</p>
+                <h2 id="关于I-x2F-O"><a href="#关于I-x2F-O" class="headerlink" title="关于I&#x2F;O"></a>关于I&#x2F;O</h2><p>I&#x2F;O就是输入&#x2F;输出，它是主存和外部设备（比如硬盘、U盘）之间复制数据的过程，其中数据从设备到内存的过程<br>称为输入，数据从内存到设备的过程叫输出，I&#x2F;O可以分为高级I&#x2F;O和低级I&#x2F;O，高级I&#x2F;O通常也称为带缓冲的I&#x2F;O，<br>比如ANSI C提供的标准I&#x2F;O库。低级I&#x2F;O通常也称为不带缓冲的I&#x2F;O，它是linux提供的系统调用，速度快，如函数<br>open、read、write等。而带缓冲的I&#x2F;O在系统调用前采用一定的策略，速度慢，但比不带缓冲的I&#x2F;O安全，如fopen、<br>fread、fwrite等。在linux下对文件进行输入输出操作有3种编程方式，一种是调用C库中文件的I&#x2F;O函数，比如<br>fopen、fread&#x2F;fwrite、fclose等，另外两种方式是使用linux的系统调用和C++文件流的操作。</p>
+<h2 id="I-x2F-O相关函数"><a href="#I-x2F-O相关函数" class="headerlink" title="I&#x2F;O相关函数"></a>I&#x2F;O相关函数</h2><h4 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h4><p>对于linux而言，所有设备或文件的操作都是通过文件描述符进行的。当打开或者创建一个文件的时候，内核向进<br>程返回一个非负的文件描述符。后续对文件的操作只需要通过该文件描述符，内核记录有关这个打开文件的信息。<br>一个进程启动时，默认打开三个文件，标准输入、标准输出、标准错误，对应文件描述符是0（STDIN_FILENO）、<br>1（STDOUT_FILENO）、2（STDERR_FILENO）,这些常量定义在unistd.h头文件中。文件描述符和文件指针可以互相<br>转换，具体通过函数fileno和fdopen。函数fileno将文件指针转为文件描述符，函数声明如下:</p>
 <figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">fileno</span><span class="hljs-params">(FILE *stream)</span></span>;<br></code></pre></td></tr></table></figure>
 <p>其中，参数stream是文件指针。<br>函数fdopen将文件描述符转换为文件指针，声明如下：    </p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">FILE *<span class="hljs-title">fdopen</span><span class="hljs-params">(<span class="hljs-type">int</span> fd, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *mode)</span></span>;<br></code></pre></td></tr></table></figure>
@@ -460,10 +460,33 @@
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/11.png" srcset="/img/loading.gif" lazyload class="">  
 <p>上图中的lock.txt文件内容开始是空的，然后用echo往该上锁文件中写入数据，再次输出时可以看到写入的数据被输出了，<br>说明被建议锁锁住的文件的确是可以被其它进程修改的,所以建议锁只适合于合作进程。建议锁就是假定所有人都会遵守某<br>些规则去做一件事，例如人与车看到红灯都会停，看到绿灯才会继续走，此时的红绿灯就类似于建议锁，但这是一件需要<br>大家主动去遵守的规则，而并不能避免有些车与人强行闯红灯，而强制锁则完全是无法闯红灯的措施。<br>实现强制锁需要将文件所在的文件系统通过mount命令的“-o mand”选项来挂载，并且使用chmod函数或者chmod命令将文<br>件用户组的x权限去掉（即清楚组可执行位）。如下图所示：<br>首先切换到root用户，并查看我们的文件挂载硬盘信息：  </p>
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/12.png" srcset="/img/loading.gif" lazyload class="">  
-<p>可以看到lock.txt文件是挂载在&#x2F;dev&#x2F;sdc下的，所以进入lock.txt所在目录重新进行挂载,挂载完成后，此时文件系统<br>&#x2F;dev&#x2F;sdc增加了mand选项，然后再修改lock.txt的权限，将用户组的x权限去掉。如下图所示：  </p>
+<p> 可以看到lock.txt文件是挂载在&#x2F;dev&#x2F;sdc下的，所以进入lock.txt所在目录重新进行挂载，挂载完成后，此时文件系统<br> &#x2F;dev&#x2F;sdc增加了mand选项，然后再修改lock.txt的权限，将用户组的x权限去掉。如下图所示：  </p>
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/13.png" srcset="/img/loading.gif" lazyload class="">  
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/14.png" srcset="/img/loading.gif" lazyload class="">  
 <p>此时重新运行之前的test_filelock程序，程序处于死循环当中，然后重新打开一个终端shell,尝试向lock.txt中写入新<br>内容，可以发现，#提示符出现不了，说明echo命令被阻塞不动了（内核阻止了该进程），说明强制锁已经生效。然后回<br>到之前的shell使用ctrl+c终止test_filelock程序，可以发现另一个shell的echo进程阻塞被解除了，出现了#提示符，查<br>看lock.txt文件，发现新的内容已经被写入，这说明强制锁解除后，就可以写入新内容了，否则无法写入。从这个例子可<br>以看出，强制锁的实现只是进行了一些系统上的设置，重新加载了文件系统，修改了文件的权限，程序上并没有进行任何<br>更改。</p>
+<h4 id="文件与内存映射"><a href="#文件与内存映射" class="headerlink" title="文件与内存映射"></a>文件与内存映射</h4><p>文件和内存的映射，就是将普通文件映射到内存中，普通文件被映射到进程地址空间后，进程可以像访问普通内存一样对<br>文件进行访问，不需要再调用read或者write等函数进行操作。将普通文件映射到内存的系统函数为mmap,函数声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/mman.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">void</span> *<span class="hljs-title">mmap</span><span class="hljs-params">(<span class="hljs-type">void</span> *start , <span class="hljs-type">size_t</span> length , <span class="hljs-type">int</span> prot , <span class="hljs-type">int</span> flags , <span class="hljs-type">int</span> fd , <span class="hljs-type">off_t</span> offset)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中参数start为映射区域的起始地址，通常为NULL或0，表示由系统自己决定映射到什么地址；length为映射数据的长度<br>，即文件需要映射到内存中的数据的大小；prot表示映射区域的保护方式，有以下取值（或它们的组合）：  </p>
+<blockquote>
+<ul>
+<li>PROT_EXEC: 映射区可被执行。</li>
+<li>PROT_READ: 映射区可读取。</li>
+<li>PROT_WRITE: 映射区可写入。</li>
+<li>PROT_NONE: 映射区不可访问。</li>
+</ul>
+</blockquote>
+<p>flags用来指定映射对象的类型、映射选项和映射页是否可以共享，它的取值可以是一个或者多个位的组合。如下所示：  </p>
+<blockquote>
+<ul>
+<li>MAP_FIXED: 如果参数start指定了需要映射到的地址，而所指定的地址无法成功建立映射，映射就会失败。通常不推<br>         荐使用此设置，而将start设置为NULL或0，由系统自动选取映射地址。</li>
+<li>MAP_SHARED: 共享映射区域，映射区域允许其它进程共享，对映射区域写入数据将会写入原来的文件中。</li>
+<li>MAP_PRIVATE: 对映射区域进行写入操作时会产生一个映射文件的复制，即私人的写入时复制（copy on write），对此<br>           映射区域的修改不会写回原来的文件，即不会影响原来文件的内容。</li>
+<li>MAP_ANONYMOUS: 建立匿名映射。映射区不与任何文件关联，而且映射区无法与其它进程共享。</li>
+<li>MAP_DENYWRITE: 对文件的写入操作将被禁止，不允许直接对文件进行操作。</li>
+<li>MAP_LOCKED: 将映射区锁定，防止页面被交换出内存。</li>
+</ul>
+</blockquote>
+<p>参数flags必须为MAP_SHARED或者MAP_PRIVATE二者之一的类型。MAP_SHARED类型表示多个进程使用的是一个内存映射的副<br>本，任何一个进程都可以对此映射进行修改，且其它进程对此修改是可见的。而MAP_PRIVATE则是多个进程使用的文件内存<br>映射，在写入操作后，会复制一个副本给修改的进程，多个进程之间的副本是不一致的。</p>
 
                 
               </div>
@@ -497,7 +520,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/c-c-%E6%96%87%E4%BB%B6io/">#c/c++文件io</a>
+        <a href="/tags/I-O/">#I/O</a>
       
     </div>
   
@@ -509,7 +532,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>linux文件io</div>
+      <div>linux系统调用下的文件I/O</div>
       <div>https://akatsukihi.github.io/2023/01/15/linux文件io/</div>
     </div>
     <div class="license-meta">
@@ -551,6 +574,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/01/21/%E6%88%91%E7%9A%842022/" title="我的2022">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">我的2022</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
@@ -730,7 +759,7 @@
 <meting-js 
 server="netease" 
 type="playlist" 
-id="3164490795" 
+id="7922695492" 
 fixed="true" 
 autoplay="true" 
 loop="all" 
