@@ -37,8 +37,12 @@
 <meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/12.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/13.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/14.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/15.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/16.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/17.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/18.png">
 <meta property="article:published_time" content="2023-01-15T04:12:37.000Z">
-<meta property="article:modified_time" content="2023-01-21T02:51:03.254Z">
+<meta property="article:modified_time" content="2023-01-29T12:26:37.377Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="I&#x2F;O">
 <meta name="twitter:card" content="summary_large_image">
@@ -263,7 +267,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          9.3k 字
+          10k 字
         
       </span>
     
@@ -274,7 +278,7 @@
         
         
         
-          78 分钟
+          85 分钟
         
       </span>
     
@@ -486,7 +490,21 @@
 <li>MAP_LOCKED: 将映射区锁定，防止页面被交换出内存。</li>
 </ul>
 </blockquote>
-<p>参数flags必须为MAP_SHARED或者MAP_PRIVATE二者之一的类型。MAP_SHARED类型表示多个进程使用的是一个内存映射的副<br>本，任何一个进程都可以对此映射进行修改，且其它进程对此修改是可见的。而MAP_PRIVATE则是多个进程使用的文件内存<br>映射，在写入操作后，会复制一个副本给修改的进程，多个进程之间的副本是不一致的。</p>
+<p>参数flags必须为MAP_SHARED或者MAP_PRIVATE二者之一的类型。MAP_SHARED类型表示多个进程使用的是一个内存映射的副<br>本，任何一个进程都可以对此映射进行修改，且其它进程对此修改是可见的。而MAP_PRIVATE则是多个进程使用的文件内存<br>映射，在写入操作后，会复制一个副本给修改的进程，多个进程之间的副本是不一致的。<br>参数fd表示文件描述符，一般由open()函数返回；<br>参数offset表示被映射数据在文件中的起点；<br>mmap()函数映射后，可以让用户程序直接访问设备内存，相比较在用户空间和内核空间相互复制数据，小路更高，在<br>要求高性能的应用中比较常用。mmap映射内存必须是页面大小的整数倍，面向流的设备不能进行mmap映射，mmap的实<br>现和硬件有关。<br>mmap()使用示例：   </p>
+<img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/15.png" srcset="/img/loading.gif" lazyload class="">   
+<img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/16.png" srcset="/img/loading.gif" lazyload class="">     
+<p>以上的程序将文件test.txt的内容先映射到内存mapped_mem，然后使用printf函数将此内存区域的内容输出出来，可<br>以看到，输出的内容正是test.txt文本文件的内容。<br>以上的示例因为使用的是PROT_READ，所以只能读取文件里的内容，不能修改，如果使用PROT_WIRTE，就可以修改文件<br>的内容了。又因为使用了MMAP_PRIVATE，所以只能此进程使用此内存区域，若换用MAP_SHARED，则可以被其它进程访<br>问，如下例示：   </p>
+<img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/17.png" srcset="/img/loading.gif" lazyload class="">    
+<img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/18.png" srcset="/img/loading.gif" lazyload class="">     
+<p>可以看到，我们通过对内存映射的修改，文本文件也修改成功了。   </p>
+<h4 id="mmap和共享内存"><a href="#mmap和共享内存" class="headerlink" title="mmap和共享内存"></a>mmap和共享内存</h4><p>共享内存允许两个或者多个进程共享一个给定的存储区，因为数据不需要来回复制，所以是最快的一种进程间通讯机<br>制。共享内存可以通过mmap()映射普通文件（特殊情况下还可以采用匿名映射）机制实现，也可以通过系统V共享内<br>存机制实现。应用接口和原理很简单，内部机制复杂。为了实现更安全的通信，往往还与信号灯等同步机制共同使用<br>。对比如下：   </p>
+<blockquote>
+<ul>
+<li>mmap机制：就是在硬盘上建立一个文件，每个进程存储器里面单独开辟一个空间来进行映射。如果是多进程，那<br>么对实际的物理存储器（主存）消耗不会太大。mmap保存到实际硬盘，实际存储并没有反映到主存上。优点是存储量<br>可以很大（多于主存），缺点是进程间读取和写入速度要比主存的慢。   </li>
+<li>shm机制：每个进程的共享内存都直接映射到实际物理存储器里面。shm保存到物理存储器（主存），实际的存储<br>量直接反映到主存上。优点是进程间访问速度（读写）比磁盘要快，缺点是存储量不能非常大（多于主存）。</li>
+</ul>
+</blockquote>
+<p>从使用上看，如果分配的存储量不大，就使用shm；如果存储量大，就使用mmap。</p>
 
                 
               </div>
@@ -759,7 +777,7 @@
 <meting-js 
 server="netease" 
 type="playlist" 
-id="502092887" 
+id="8102703245" 
 fixed="true" 
 autoplay="true" 
 loop="all" 
