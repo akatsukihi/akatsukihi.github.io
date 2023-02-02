@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://akatsukihi.github.io/2022/11/20/%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/3.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2022/11/20/%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/4.png">
 <meta property="article:published_time" content="2022-11-20T08:20:48.000Z">
-<meta property="article:modified_time" content="2022-11-20T10:11:25.165Z">
+<meta property="article:modified_time" content="2023-01-30T09:06:32.985Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="sql函数">
 <meta name="twitter:card" content="summary_large_image">
@@ -327,20 +327,26 @@
 <br>
 <br>
 上述业务group by和order by不易实现，因为group by分组完会改变表的行数，一行只代表一个类别，而
-partition by和rank是不会改变原表的行数的。
+partition by和rank是不会改变原表的行数的。    
 3. 其它窗口函数
 <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">select</span> * ,rank()<span class="hljs-keyword">over</span>(<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> std_score <span class="hljs-keyword">desc</span>) <span class="hljs-keyword">as</span> ranking, <br>         dense_rank() <span class="hljs-keyword">over</span>(<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> std_score <span class="hljs-keyword">desc</span>) <span class="hljs-keyword">as</span> den_ranking, <br>         row_number() <span class="hljs-keyword">over</span>(<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> std_score <span class="hljs-keyword">desc</span>) <span class="hljs-keyword">as</span> row_num <br><span class="hljs-keyword">from</span> student_score;<br></code></pre></td></tr></table></figure>
 <img src="/2022/11/20/%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/3.png" srcset="/img/loading.gif" lazyload class="">
 <br>
 <br>
-> rank函数：如果有并列的名次，则排名相同，下一位置被占。
-> dense_rank函数：如果有并列的名次，则排名相同，下一位置不被占。
-> row_num函数：不考虑并列情况。
+> -  rank函数：如果有并列的名次，则排名相同，下一位置被占。
+> -  dense_rank函数：如果有并列的名次，则排名相同，下一位置不被占。
+> -  row_num函数：不考虑并列情况。
 
 <ol start="4">
-<li>聚合函数<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">select</span> * ,<span class="hljs-built_in">sum</span>(std_score) <span class="hljs-keyword">over</span>(<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> std_id) <span class="hljs-keyword">as</span> std_sum,<br>       <span class="hljs-built_in">avg</span>(std_score) <span class="hljs-keyword">over</span>(<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> std_id) <span class="hljs-keyword">as</span> std_avg,<br>       <span class="hljs-built_in">count</span>(std_score) <span class="hljs-keyword">over</span>(<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> std_id) <span class="hljs-keyword">as</span> std_count,<br>       <span class="hljs-built_in">max</span>(std_score) <span class="hljs-keyword">over</span>(<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> std_id) <span class="hljs-keyword">as</span> std_max,<br>       <span class="hljs-built_in">min</span>(std_score) <span class="hljs-keyword">over</span>(<span class="hljs-keyword">order</span> <span class="hljs-keyword">by</span> std_id) <span class="hljs-keyword">as</span> std_min<br>   <span class="hljs-keyword">from</span> student_score;<br><br></code></pre></td></tr></table></figure>
-如下图：</li>
+<li>其它聚合函数</li>
 </ol>
+<pre><code class="hljs">select * ,sum(std_score) over(order by std_id) as std_sum,
+       avg(std_score) over(order by std_id) as std_avg,
+       count(std_score) over(order by std_id) as std_count,
+       max(std_score) over(order by std_id) as std_max,
+       min(std_score) over(order by std_id) as std_min
+   from student_score;
+</code></pre>
 <img src="/2022/11/20/%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/4.png" srcset="/img/loading.gif" lazyload class="">
 <br> 
 <br>
