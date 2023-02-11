@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/10/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/1.png">
 <meta property="article:published_time" content="2023-02-10T00:06:13.000Z">
-<meta property="article:modified_time" content="2023-02-10T09:10:25.908Z">
+<meta property="article:modified_time" content="2023-02-11T02:40:06.630Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="进程">
 <meta name="twitter:card" content="summary_large_image">
@@ -250,7 +250,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          3.8k 字
         
       </span>
     
@@ -261,7 +261,7 @@
         
         
         
-          25 分钟
+          32 分钟
         
       </span>
     
@@ -330,7 +330,14 @@
 <h6 id="（3）不可中断的等待状态（TASK-UNINTERRUPTIBLE）"><a href="#（3）不可中断的等待状态（TASK-UNINTERRUPTIBLE）" class="headerlink" title="（3）不可中断的等待状态（TASK_UNINTERRUPTIBLE）"></a>（3）不可中断的等待状态（TASK_UNINTERRUPTIBLE）</h6><p>这种状态与前一种状态相似，但不同的是，传递信号给睡眠的进程并不能改变其状态。这种状态不太常见，但在一些<br>特定的情况下是很有用的，例如进程必须等待，直到给定的事件发生，而其间不能被中断。</p>
 <h6 id="（4）暂停状态（TASK-STOPPED）"><a href="#（4）暂停状态（TASK-STOPPED）" class="headerlink" title="（4）暂停状态（TASK_STOPPED）"></a>（4）暂停状态（TASK_STOPPED）</h6><p>进程的执行已经被暂停，当进程接收到SIGSTOP、SIGTSTP、SIGTTIN或者SIGTTOU信号后，进入暂停状态。当一个进程<br>正在被另一个进程监控时（例如调试程序执行ptrace系统调用来监控测试程序），每一个这样的信号都可以将这个进<br>程置于TASK_STOPPED状态。</p>
 <h6 id="（5）僵死状态（TASK-ZOMBIE）"><a href="#（5）僵死状态（TASK-ZOMBIE）" class="headerlink" title="（5）僵死状态（TASK_ZOMBIE）"></a>（5）僵死状态（TASK_ZOMBIE）</h6><p>进程的执行已经终止，但是父进程还没有发布wait类系统调用来返回有关终止进程的信息。在父进程发布wait类系统<br>调用之前，内核不能丢弃包含在终止进程task_struct结构中的数据，因为父进程可能还需要这些信息。</p>
-
+<h2 id="进程的分类"><a href="#进程的分类" class="headerlink" title="进程的分类"></a>进程的分类</h2><p>linux下，进程一般分为前台进程、后台进程和守护（Daemon）这三类。</p>
+<h3 id="前台进程"><a href="#前台进程" class="headerlink" title="前台进程"></a>前台进程</h3><p>前台进程（也称普通进程）就是需要和用户交互的进程。默认情况下，启动一个进程都是在前台运行的，这时它就把<br>Shell给占据了，我们无法进行其它操作，一直得等到该进程终止。之前讲述的进程基本都是前台进程。查看普通进<br>程的命令是ps，可以根据需要加上不同的命令选项，比如通过进程名来查找该进程id：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">ps</span> -<span class="hljs-keyword">e</span> | <span class="hljs-keyword">grep</span> process_name<br></code></pre></td></tr></table></figure>
+<p>process_name为查找的进程名</p>
+<h3 id="后台进程"><a href="#后台进程" class="headerlink" title="后台进程"></a>后台进程</h3><p>对于不需要与用户交互的进程，很多时候将其放在后台启动，可以在启动该进程的时候加一个“&amp;”。譬如需要将名为：<br>test_process的进程后台执行，则可以这样:test_process &amp; 启动，此时它就是就一个后台进程，而且不会占据Shell<br>我们可以在Shell进行其它操作。但关闭Shell窗口的时候，后台进程也将随之退出。切换到后台运行的进程称为job。<br>当一个进程以后台方式启动时，系统会输出该进程的相关job信息，job的id和进程ID。后台运行的进程，可以用ps查<br>看，或者使用jobs命令查看所有后台进程job。如果想要终止某个后台进程，可使用命令killall，如要终止某个进程<br>可以使用：killall test_process，此方法过于简单粗暴。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs elixir">akatsuki<span class="hljs-variable">@312hours</span><span class="hljs-symbol">:~/akatsuki_info/linuxio</span><span class="hljs-variable">$ </span>./test_exepwd &amp;<br>[<span class="hljs-number">1</span>] <span class="hljs-number">307</span><br>akatsuki<span class="hljs-variable">@312hours</span><span class="hljs-symbol">:~/akatsuki_info/linuxio</span><span class="hljs-variable">$ </span>目标程序接管进程，此句不会输出<br><br>[<span class="hljs-number">1</span>]+  <span class="hljs-title class_">Done</span>                    ./test_exepwd<br>akatsuki<span class="hljs-variable">@312hours</span><span class="hljs-symbol">:~/akatsuki_info/linuxio</span><span class="hljs-variable">$ </span>jobs<br>akatsuki<span class="hljs-variable">@312hours</span><span class="hljs-symbol">:~/akatsuki_info/linuxio</span>$<br></code></pre></td></tr></table></figure>
+<p>其中[1]表示job的ID，307表示进程test_exepwd的进程ID。</p>
+<h3 id="守护进程"><a href="#守护进程" class="headerlink" title="守护进程"></a>守护进程</h3>
                 
               </div>
             
