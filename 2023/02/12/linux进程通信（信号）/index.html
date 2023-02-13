@@ -1,0 +1,805 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="akatsukihi">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言为了能使一项任务可以协同工作，linux中的进程彼此之间必须能够进行通信。对于一个操作系统来说，进程间的通信是不可或缺的。linux支持多种不同方式的进程间通信机制，如信号、管道、FIFO和Syste V IPC机制，其中IPC机制包括：信号量、消息队列和共享内存三种机制。linux中的这些进程间的通信机制是从unix平台进程间通信机制继承和发展而来的，而其中常用的进程间的通信方式主要有三种：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux进程通信（信号）">
+<meta property="og:url" content="https://akatsukihi.github.io/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/index.html">
+<meta property="og:site_name" content="AkatsukiHi">
+<meta property="og:description" content="前言为了能使一项任务可以协同工作，linux中的进程彼此之间必须能够进行通信。对于一个操作系统来说，进程间的通信是不可或缺的。linux支持多种不同方式的进程间通信机制，如信号、管道、FIFO和Syste V IPC机制，其中IPC机制包括：信号量、消息队列和共享内存三种机制。linux中的这些进程间的通信机制是从unix平台进程间通信机制继承和发展而来的，而其中常用的进程间的通信方式主要有三种：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/1.png">
+<meta property="article:published_time" content="2023-02-12T09:29:57.000Z">
+<meta property="article:modified_time" content="2023-02-13T09:57:55.945Z">
+<meta property="article:author" content="akatsukihi">
+<meta property="article:tag" content="进程">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://akatsukihi.github.io/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>linux进程通信（信号） - AkatsukiHi</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akatsukihi.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"","Options":"left | right"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>AkatsukiHi</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                我
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/remark/">
+                <i class="iconfont icon-twitch-fill"></i>
+                留言板
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg/nihon.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="linux进程通信（信号）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-12 18:29" pubdate>
+          2023年2月12日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          50 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">linux进程通信（信号）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了能使一项任务可以协同工作，linux中的进程彼此之间必须能够进行通信。对于一个操作系统来说，进程间的通信<br>是不可或缺的。linux支持多种不同方式的进程间通信机制，如信号、管道、FIFO和Syste V IPC机制，其中IPC机制包<br>括：信号量、消息队列和共享内存三种机制。linux中的这些进程间的通信机制是从unix平台进程间通信机制继承和发<br>展而来的，而其中常用的进程间的通信方式主要有三种：信号、管道和消息队列。   </p>
+<h2 id="信号"><a href="#信号" class="headerlink" title="信号"></a>信号</h2><p>信号是最早引入类unix系统中的进程间通信方式之一，linux同样支持这种通信方式。信号是很短的信息，可以被发送<br>到一组进程或者一个进程，发送给进程的这个唯一信息通常是标识信号的ID。信号的来源可以是键盘中断，也可以是<br>非法访问虚拟内存时的系统错误，这些都可以产生信号。信号也可以被shell程序用来向其子进程发送任务控制命令等<br>信号异步的发生，也就是说没有确定的时序。而收到信号的进程则采取某种处理行为或者将其忽略，大多数的信号可<br>以被阻塞，以便能够在稍后的时间里再进行处理。信号机制是在软件上对中断机制的模拟。linux使用信号主要有两个<br>目的：一是让进程意识到已经发生了一个特定的事件；二是迫使进程执行包含在其自身代码中的信号处理程序。对于<br>每一个信号，进程可以采取以下三种行为：  </p>
+<blockquote>
+<ul>
+<li>(1)忽略信号。进程将忽略这个信号的出现。但有两个信号不能被忽略：SIGKILL和SIGSTOP。</li>
+<li>(2)调用相应的信号处理函数来捕获信号并处理。进程可以事先登记特殊的信号处理函数，当进程收到信号时，信<br>号处理函数则被调用执行，当信号处理函数执行完毕返回后，被中断的进程则从刚才的断点处接着继续开始执行。</li>
+<li>(3)执行与这个信号相关的默认操作。默认的操作由内核预定义，并且根据信号的类型不同，默认的操作也不同，<br>默认操作可以是以下类型：忽略信号，内核将信号丢弃，信号对进程没有任何影响（进程永远不知道曾经出现过<br>该信号）；终止（杀死）进程，有时是指进程异常终止，而不是进程因调用exit而发生的正常终止；产生核心转<br>储文件，同时进程终止，核心转储文件包含对进程虚拟内存的镜像，可将其加载到调试器中以检查进程终止时的<br>状态；停止进程（不是终止），使进程暂时停止执行；执行之前被暂停的进程。</li>
+</ul>
+</blockquote>
+<p>linux支持posix标准信号和实时信号，但内核不使用实时信号。可以使用命令kill -l来显示linux支持的信号列表：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">akatsuki</span>@<span class="hljs-number">312</span>hours:~/akatsuki_info/linuxio$ kill -l<br> <span class="hljs-attribute">1</span>) SIGHUP       <span class="hljs-number">2</span>) SIGINT       <span class="hljs-number">3</span>) SIGQUIT      <span class="hljs-number">4</span>) SIGILL       <span class="hljs-number">5</span>) SIGTRAP<br> <span class="hljs-attribute">6</span>) SIGABRT      <span class="hljs-number">7</span>) SIGBUS       <span class="hljs-number">8</span>) SIGFPE       <span class="hljs-number">9</span>) SIGKILL     <span class="hljs-number">10</span>) SIGUSR1<br><span class="hljs-attribute">11</span>) SIGSEGV     <span class="hljs-number">12</span>) SIGUSR2     <span class="hljs-number">13</span>) SIGPIPE     <span class="hljs-number">14</span>) SIGALRM     <span class="hljs-number">15</span>) SIGTERM<br><span class="hljs-attribute">16</span>) SIGSTKFLT   <span class="hljs-number">17</span>) SIGCHLD     <span class="hljs-number">18</span>) SIGCONT     <span class="hljs-number">19</span>) SIGSTOP     <span class="hljs-number">20</span>) SIGTSTP<br><span class="hljs-attribute">21</span>) SIGTTIN     <span class="hljs-number">22</span>) SIGTTOU     <span class="hljs-number">23</span>) SIGURG      <span class="hljs-number">24</span>) SIGXCPU     <span class="hljs-number">25</span>) SIGXFSZ<br><span class="hljs-attribute">26</span>) SIGVTALRM   <span class="hljs-number">27</span>) SIGPROF     <span class="hljs-number">28</span>) SIGWINCH    <span class="hljs-number">29</span>) SIGIO       <span class="hljs-number">30</span>) SIGPWR<br><span class="hljs-attribute">31</span>) SIGSYS      <span class="hljs-number">34</span>) SIGRTMIN    <span class="hljs-number">35</span>) SIGRTMIN+<span class="hljs-number">1</span>  <span class="hljs-number">36</span>) SIGRTMIN+<span class="hljs-number">2</span>  <span class="hljs-number">37</span>) SIGRTMIN+<span class="hljs-number">3</span><br><span class="hljs-attribute">38</span>) SIGRTMIN+<span class="hljs-number">4</span>  <span class="hljs-number">39</span>) SIGRTMIN+<span class="hljs-number">5</span>  <span class="hljs-number">40</span>) SIGRTMIN+<span class="hljs-number">6</span>  <span class="hljs-number">41</span>) SIGRTMIN+<span class="hljs-number">7</span>  <span class="hljs-number">42</span>) SIGRTMIN+<span class="hljs-number">8</span><br><span class="hljs-attribute">43</span>) SIGRTMIN+<span class="hljs-number">9</span>  <span class="hljs-number">44</span>) SIGRTMIN+<span class="hljs-number">10</span> <span class="hljs-number">45</span>) SIGRTMIN+<span class="hljs-number">11</span> <span class="hljs-number">46</span>) SIGRTMIN+<span class="hljs-number">12</span> <span class="hljs-number">47</span>) SIGRTMIN+<span class="hljs-number">13</span><br><span class="hljs-attribute">48</span>) SIGRTMIN+<span class="hljs-number">14</span> <span class="hljs-number">49</span>) SIGRTMIN+<span class="hljs-number">15</span> <span class="hljs-number">50</span>) SIGRTMAX-<span class="hljs-number">14</span> <span class="hljs-number">51</span>) SIGRTMAX-<span class="hljs-number">13</span> <span class="hljs-number">52</span>) SIGRTMAX-<span class="hljs-number">12</span><br><span class="hljs-attribute">53</span>) SIGRTMAX-<span class="hljs-number">11</span> <span class="hljs-number">54</span>) SIGRTMAX-<span class="hljs-number">10</span> <span class="hljs-number">55</span>) SIGRTMAX-<span class="hljs-number">9</span>  <span class="hljs-number">56</span>) SIGRTMAX-<span class="hljs-number">8</span>  <span class="hljs-number">57</span>) SIGRTMAX-<span class="hljs-number">7</span><br><span class="hljs-attribute">58</span>) SIGRTMAX-<span class="hljs-number">6</span>  <span class="hljs-number">59</span>) SIGRTMAX-<span class="hljs-number">5</span>  <span class="hljs-number">60</span>) SIGRTMAX-<span class="hljs-number">4</span>  <span class="hljs-number">61</span>) SIGRTMAX-<span class="hljs-number">3</span>  <span class="hljs-number">62</span>) SIGRTMAX-<span class="hljs-number">2</span><br><span class="hljs-attribute">63</span>) SIGRTMAX-<span class="hljs-number">1</span>  <span class="hljs-number">64</span>) SIGRTMAX<br><span class="hljs-attribute">akatsuki</span>@<span class="hljs-number">312</span>hours:~/akatsuki_info/linuxio$<br></code></pre></td></tr></table></figure>
+<p>上面的列表中，编号为1<del>31的信号为传统unix支持的信号，是不可靠信号（非实时的）；编号为32</del>64的信号是后来扩<br>充的，称作可靠信号（实时信号）。不可靠信号和可靠信号的区别在于前者不支持排队，可能会造成信号丢失，而后<br>者不会。  </p>
+<p><strong>（1）SIGHUP</strong><br>本信号在用户终端连接结束时（正常或非正常）发生，通常是在终端的控制进程结束时，通知同一session内的各个作<br>业，这时它们与控制终端不再关联。登录linux时，系统会分配给登录用户一个终端（session），在这个终端运行的<br>所有程序，包括前台进程和后台进程组，一般都属于这个session，当用户退出linux的登录时，前台进程组和后台进<br>程组有对终端进行输出的那些进程将会收到SIGHUP信号，这个信号的默认操作为终止进程，因此前台进程组和后台进<br>程组有终端输出的进程就会终止。该信号可以被捕获，比如wget能捕获SIGHUP信号，并忽略它，这样即使推出了linux<br>登录，wget也能继续下载。此外，对于与终端脱离关系的守护进程，这个信号用于通知它重新读取配置文件。<br><strong>（2）SIGINT</strong><br>程序终止（interrupt）信号，在用户输入INTR字符时（通常是Ctrl+C）发出，用于通知前台进程组终止进程。<br><strong>（3）SIGQUIT</strong><br>和SIGINT类似，但由QUIT字符来控制。进程因收到SIGQUIT退出时会产生core文件，在这个意义上类似于一个程序错误<br>信号。<br><strong>（4）SIGILL</strong><br>执行了非法指令，通常是因为可执行文件本身出现错误，或者试图执行数据段，堆栈溢出时也有可能产生这个信号。<br><strong>（5）SIGTRAP</strong><br>由断点指令或其它trap指令产生，由debugger使用。<br><strong>（6）SIGABRT</strong><br>调用abort函数生成的信号。<br><strong>（7）SIGBUS</strong><br>非法地址，包括内存地址对齐（alignment）出错。比如访问一个4个字长的整数，但其地址不是4的倍数。它与SIGSEGV<br>的区别在于，后者是由于对合法存储地址的非法访问触发的（如访问不属于自己存储空间或只读内存空间的数据）。<br><strong>（8）SIGFPE</strong><br>在发生致命的算术运算错误时发出。不仅包括浮点运算错误，还包括溢出及除数为0等其它所有的算术错误。<br><strong>（9）SIGKILL</strong><br>用来立即结束程序的运行。本信号不能被阻塞、处理和忽略。如果管理员发现某个进程终止不了，可尝试发送该信号。<br><strong>（10）SIGUSR1</strong><br>留给用户使用<br><strong>（11）SIGSEGV</strong><br>试图访问未分配给自己的内存，或试图往没有写权限的内存地址写数据。<br><strong>（12）SIGUSR2</strong><br>留给用户使用。<br><strong>（13）SIGPIPE</strong><br>管道破裂。这个信号通常发生在进程间通信，比如彩荣FIFO（管道）通信的两个进程，读管道没打开或者意外终止就<br>往管道写，写进程会收到SIGPIPE信号。此外，用socket通信的两个进程，写进程在写socket的时候，读进程已经终止。<br><strong>（14）SIGALRM</strong><br>时钟定时信号，计算的是实际时间或时钟时间，alarm函数使用该信号。<br><strong>（15）SIGTERM</strong><br>程序结束（terminate）信号，与SIGKILL不同的是，该信号可以被阻塞和处理。通常用来要求程序自己正常退出，使<br>用shell的命令kill默认产生这个信号。如果进程终止不了，我们才会尝试SIGKILL。<br><strong>（16）SIGSTKFLT</strong><br>linux专用，数学协议处理器的栈异常。<br><strong>（17）SIGCHLD</strong><br>子进程结束时，父进程会收到这个信号。如果父进程没有处理这个信号，也没有等待（wait）子进程，子进程虽然终止<br>，但是还会在内核进程表中占有表项，这时的子进程称为僵尸进程。这种情况我们应该避免，父进程或者忽略SIGCHILD<br>信号，或者捕捉它，或者等待它派生的子进程，或者父进程先终止，这时子进程的终止自动由init进程来接管。<br><strong>（18）SIGCONT</strong><br>让一个停止（stopped）的进程继续执行。本信号不能被阻塞，可以用一个handler来让程序在由停止状态变为继续执<br>行时完成特定的工作，例如重新显示提示符。<br><strong>（19）SIGSTOP</strong><br>停止进程的执行。注意它和terminate以及interrupt的区别；该进程还未结束，只是暂停执行，本信号不饿能被阻塞<br>、处理或忽略。<br><strong>（20）SIGTSTP</strong><br>停止进程的运行，但该信号可以被处理和忽略，用户输入SUSP字符时（通常是CTRL+Z）发出这个信号。<br><strong>（21）SIGTTIN</strong><br>当后台作业要从用户终端读取数据时，该作业中的所有进程会收到SIGTTIN信号。默认是这些进程都会停止执行。<br><strong>（22）SIGTTOU</strong><br>类似于SIGTTIN，但在写终端（或修改终端模式）时收到。<br><strong>（23）SIGURG</strong><br>有“紧急”数据或带外数据（out-of-band）到达socket时产生。<br><strong>（24）SIGXCPU</strong><br>超过CPU时间资源限制。这个限制可以由getrlimit&#x2F;setrlimit来读取&#x2F;改变。<br><strong>（25）SIGXFSZ</strong><br>进程企图扩大文件，以至于超过文件大小资源限制。<br><strong>（26）SIGVTALRM</strong><br>虚拟时钟信号。类似于SIGALRM，但是计算的是该进程占用的CPU时间。<br><strong>（27）SIGPROF</strong><br>类似于SIGALRM&#x2F;SIGVTALRM，但包括该进程用的CPU时间以及系统调用的时间。<br><strong>（28）SIGWINCH</strong><br>窗口大小改变时发出。<br><strong>（29）SIGIO</strong><br>文件描述符准备就绪，可以开始进行输入&#x2F;输出操作。<br><strong>（30）SIGPWR</strong><br>电源失败。<br><strong>（31）SIGSYS</strong><br>非法的系统调用。  </p>
+<p>以上列出的信号中：  </p>
+<blockquote>
+<ul>
+<li>程序不可捕获、阻塞和忽略的信号有：SIGKILL和SIGSTOP；   </li>
+<li>不能恢复至默认动作的信号有：SIGILL和SIGTRAP；</li>
+<li>默认会导致进程夭折的信号有：SIGABRT、SIGBUS、SIGFPE、SIGILL、SIGIOT、SIGQUIT、SIGSEGV、SIGTRAP、SIGXCPU、SIGXFSZ；</li>
+<li>默认会导致进程退出的信号有：SIGALRM、SIGHUP、SIGINT、SIGKILL、SIGPIPE、SIGPOLL、SIGPROF、SIGSYS、SIGTERM、SIGUSR1、SIGUSR2、SIGVTALRM；</li>
+<li>默认会导致进程停止的信号有：SIGSTOP、SIGTSTP、SIGTTIN、SIGTTOU；</li>
+<li>默认进程忽略的信号有：SIGCHLD、SIGPWR、SIGURG、SIGWINCH；</li>
+</ul>
+</blockquote>
+<p>这些信号可以归纳为下列5种方式：  </p>
+<blockquote>
+<p>(1)硬件异常产生信号。比如无效的内存访问将产生SIGSEGV信号，而除数为0时将产生SIGFPE信号等。这些条件通常<br>由硬件检测到，并将其通知给内核，内核为该条件发生时正在运行的进程产生适当的信号。<br>(2)软件条件触发信号。当内核检测到某种软件条件已经发生，并将其通知给有关进程时，也产生信号，比如进程所<br>设置的定时器到期。<br>(3)用户按某些终端键位时产生信号。比如用户在键盘终端上按Ctrl+C键位将产生SIGINT信号。<br>(4)用户使用kill命令将信号发送给进程。kill命令的语法是：kill [参数] [进程号]。其中，参数通常取如下几项</p>
+<blockquote>
+<ul>
+<li>-l:使用“-l”参数会列出全部的信号名称。    </li>
+<li>-a:当处理当前进程时，不限制命令名和进程号的对应关系。  </li>
+<li>-p:指定kill命令只打印相关进程的进程号，而不发送任何信号。  </li>
+<li>-s:指定发送信号。  </li>
+<li>-u:指定用户。</li>
+</ul>
+</blockquote>
+<p>  一般可以用该命令终止一个失控的后台进程，比如希望尽快终止一个进程，可以使用命令：kill -9 pid号。    </p>
+<p>(5)进程使用系统调用函数kill将信号发送给一个进程或一组进程。注意，这个系统调用kill不是杀死进程，而是一<br>个进程发送信号给另一个进程。其中，要求接收信号进程和发送信号进程的所有者相同，或者发送信号进程的所有者<br>是超级用户。  </p>
+</blockquote>
+<p>linux内核中并没有专门的机制来区分不同信号的相对优先级，也就是说，当有多个信号在同一时刻发出时，进程可能<br>会以任意的顺序接收到信号并进行处理。此外，当进程调用信号处理函数处理某个信号时，一般会自动阻塞相同的信号<br>，直到信号处理结束。linux通过存储在进程task_struct结构中的信息来实现信号，它维护着挂起的信号（已经产生<br>但还没有被接收的信号）、阻塞信号的掩码和进程处理每个可能信号的信息等。信号并非一产生就立刻交付给进程，<br>而是必须等到进程再次运行时才交付给进程。进程在系统调用退出之前，它都会检查是否有可以立刻发送的非阻塞信<br>号。进程也可以选择去等待信号，此时进程将一直处于可中断状态直到信号出现。</p>
+<h2 id="信号相关的系统调用"><a href="#信号相关的系统调用" class="headerlink" title="信号相关的系统调用"></a>信号相关的系统调用</h2><p>通过系统调用，进程可以向其它进程发送信号，也可以更改默认的信号处理函数、阻塞信号的掩码以及检查是否有挂<br>起的信号等。与信号相关的系统调用主要有kill()、sigaction()、sigprocmask()、sigpending()、signal()等。  </p>
+<h4 id="1-使用kill发送信号"><a href="#1-使用kill发送信号" class="headerlink" title="1.使用kill发送信号"></a>1.使用kill发送信号</h4><p>系统调用kill()用来向一个进程或一个进程组发送一个信号。声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sygnal.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">kill</span><span class="hljs-params">(<span class="hljs-type">pid_t</span> pid , <span class="hljs-type">int</span> sig)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中第一个参数决定信号发送的对象，pid可能的选择有以下4种：  </p>
+<blockquote>
+<ul>
+<li>(1) 当pid &gt; 0时，pid是sig信号欲送往的进程的标识。</li>
+<li>(1) 当pid &#x3D; 0时，sig信号将送往所有与调用kill的那个进程属于同一个使用组的进程。</li>
+<li>(1) 当pid &#x3D; -1时，sig信号将送往调用进程有权发送信号的所有进程，除了进程1（init）外。</li>
+<li>(1) 当pid &lt; -1时，sig信号将送往以|pid|为组标识的进程。</li>
+</ul>
+</blockquote>
+<p>参数sig标识准备发送的信号代码，如果其值为0，则没有任何信号送出，但是系统会执行错误检查，通常会利用sig值<br>为0来检验某个进程是否仍在执行。当函数成功执行时，返回0，否则返回-1，此时errno可以得到错误码，错误码值<br>EINVAL表示指定的信号码无效（参数sig不合法），错误码值EPERM表示权限不够，无法发送信号给指定进程，错误码<br>值ESRCH表示参数PID所指定的进程或进程组不存在。   </p>
+<p>示例：使用kill发送信号终止目标进程  </p>
+<img src="/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/1.png" srcset="/img/loading.gif" lazyload class="">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%BF%9B%E7%A8%8B/">#进程</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>linux进程通信（信号）</div>
+      <div>https://akatsukihi.github.io/2023/02/12/linux进程通信（信号）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>akatsukihi</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月12日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/10/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/" title="linux进程（二）">
+                        <span class="hidden-mobile">linux进程（二）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'gruvbox-dark';
+      var dark = 'gruvbox-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'akatsukihi/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div id="_footer" class="footer-inner">
+
+  
+    <div class="footer-content">
+	 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.js"></script>
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+  <!-- require MetingJS -->
+  <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<meting-js 
+server="netease" 
+type="playlist" 
+id="8102703245" 
+fixed="true" 
+autoplay="true" 
+loop="all" 
+order="list" 
+preload="auto" 
+list-folded="ture" 
+list-max-height="500px" 
+lrc-type="0">
+</meting-js>
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+
+</body>
+</html>
