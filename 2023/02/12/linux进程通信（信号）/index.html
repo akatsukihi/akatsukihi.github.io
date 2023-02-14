@@ -24,8 +24,14 @@
 <meta property="og:description" content="前言为了能使一项任务可以协同工作，linux中的进程彼此之间必须能够进行通信。对于一个操作系统来说，进程间的通信是不可或缺的。linux支持多种不同方式的进程间通信机制，如信号、管道、FIFO和Syste V IPC机制，其中IPC机制包括：信号量、消息队列和共享内存三种机制。linux中的这些进程间的通信机制是从unix平台进程间通信机制继承和发展而来的，而其中常用的进程间的通信方式主要有三种：">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/1.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/2.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/3.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/4.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/5.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/6.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/7.png">
 <meta property="article:published_time" content="2023-02-12T09:29:57.000Z">
-<meta property="article:modified_time" content="2023-02-13T09:57:55.945Z">
+<meta property="article:modified_time" content="2023-02-14T08:40:35.902Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="进程">
 <meta name="twitter:card" content="summary_large_image">
@@ -250,7 +256,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.9k 字
+          10k 字
         
       </span>
     
@@ -261,7 +267,7 @@
         
         
         
-          50 分钟
+          84 分钟
         
       </span>
     
@@ -359,40 +365,78 @@
 <p>参数sig标识准备发送的信号代码，如果其值为0，则没有任何信号送出，但是系统会执行错误检查，通常会利用sig值<br>为0来检验某个进程是否仍在执行。当函数成功执行时，返回0，否则返回-1，此时errno可以得到错误码，错误码值<br>EINVAL表示指定的信号码无效（参数sig不合法），错误码值EPERM表示权限不够，无法发送信号给指定进程，错误码<br>值ESRCH表示参数PID所指定的进程或进程组不存在。   </p>
 <p>示例：使用kill发送信号终止目标进程  </p>
 <img src="/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/1.png" srcset="/img/loading.gif" lazyload class="">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<p>上述示例首先创建一个子进程，然后将其休眠一会儿，在父进程中判断子进程是否存在，如果存在，则发送SIGKILL信<br>号给子进程，让其退出。<br>函数waitpid会暂时停止当前进程的执行，直到有信号到来或者子进程结束，其原型声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">pid_t</span> <span class="hljs-title">waitpid</span><span class="hljs-params">(<span class="hljs-type">pid_t</span> pid , <span class="hljs-type">int</span> *status , <span class="hljs-type">int</span> options)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中，参数pid为等待的子进程的识别码，不同的取值含义不同，具体如下：  </p>
+<blockquote>
+<ul>
+<li>当pid &lt; -1时，等待进程组识别码为|pid|的任何子进程。</li>
+<li>当pid &#x3D; -1时，等待任何子进程，相当于wait()。</li>
+<li>当pid &#x3D; 0 时，等待进程组识别码与当前进程相同的任何子进程。</li>
+<li>当pid &gt; 0 时，等待任何子进程识别码为pid的子进程。</li>
+</ul>
+</blockquote>
+<p>参数optiongs提供了一些额外的选项来控制waitpid，常见的有WNOHANG或WUNTRACED。WNOHANG表示若pid指定的子进程<br>没有结束，则waitpid()函数返回0，不予以等待，若结束，则返回该子进程的id。WUNTRACED表示若子进程进入暂停状<br>态，则马上返回，若子进程处于结束状态，则不予以理会。如果不想使用options，可以把options设为NULL。status<br>参数用来存放子进程的结束状态。如果函数执行成功，则返回子进程识别码pid，如果有错误发生，则返回-1，失败原<br>因存于errno中。   </p>
+<h4 id="2-使用sigaction查询或设置信号处理方式"><a href="#2-使用sigaction查询或设置信号处理方式" class="headerlink" title="2.使用sigaction查询或设置信号处理方式"></a>2.使用sigaction查询或设置信号处理方式</h4><p>系统调用sigaction()可以用来查询或这是信号处理方式。其声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">sigaction</span><span class="hljs-params">(<span class="hljs-type">int</span> signum , <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> sigaction *act , <span class="hljs-keyword">struct</span> sigaction *oldact)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中参数signum表示要操作的信号，可以指定SIGKILL和SIGSTOP以外的所有信号；act表示要设置的对信号的新处理方<br>式，它是一个结构体指针；oldact表示原来对信号的处理方式。函数执行成功返回0，否则返回-1。<br>结构体struct sigaction用来描述对信号的处理，定义如下： </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">struct</span> sigaction<br>&#123;<br>    <span class="hljs-keyword">void</span>      (*sa_handler)(<span class="hljs-built_in">int</span>);<br>    <span class="hljs-keyword">void</span>      (*sa_sigaction)(<span class="hljs-built_in">int</span> , siginfo_t * , <span class="hljs-keyword">void</span> *);<br>    sigset_t  sa_mask;<br>    <span class="hljs-built_in">int</span>       sa_flags;<br>    <span class="hljs-keyword">void</span>      (*sa_restorer)(<span class="hljs-keyword">void</span>);<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>结构体中，成员sa_handler是一个函数指针，指向一个信号处理函数；成员sa_sigaction则是另一个信号处理函数，<br>它包含三个参数，可以获得关于信号的更详细信息，当sa_flags成员的值包含SA_SIGINFO标志时，系统将使用sa_sigaction<br>函数作为信号处理函数，否则使用sa_handler作为信号处理函数。在某些系统中，成员sa_handler和sa_sigaction被<br>放在联合体中，因此使用时不要同时设置。成员sa_mask用来指定在信号处理函数执行期间需要被屏蔽的信号，特别是<br>当某个信号被处理时，它自身会被自动放入进程的信号掩码，因此在信号处理函数执行期间，这个信号不会再度发生。</p>
+<p>sa_flags成员用于指定信号处理的行为，它可以是以下值的“按位或”组合。   </p>
+<blockquote>
+<ul>
+<li>SA_RESTART: 使被信号打断的系统调用自动重新发起。</li>
+<li>SA_NOCLDSTOP: 使父进程在它的子进程暂停或继续运行时不会收到SIGCHLD信号。</li>
+<li>SA_NOCLDWAIT: 使父进程在它的子进程退出时不会收到SIGCHLD信号，这时子进程如果退出也不会成为僵尸进程。</li>
+<li>SA_NODEFER: 使对信号的屏蔽无效，即在信号处理函数执行期间，仍能发出这个信号。</li>
+<li>SA_RESETHAND: 信号处理之后重新设置为默认的处理方式。</li>
+<li>SA_SIGINFO: 使用sa_sigaction作为信号处理函数而不是sa_handler函数。</li>
+</ul>
+</blockquote>
+<p>成员re_restorer则是一个已经废弃的数据域，不要使用。如果需要用相同的方式处理某信号的多次出现，最好用函数<br>sigaction()，因为它设置的响应函数设置后就一直有效，不会重置。<br>函数sigaction使用示例  </p>
+<img src="/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/2.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/3.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/4.png" srcset="/img/loading.gif" lazyload class="">
+<p>可以看到，当我们使用kill -USR2给目标进程发送信号后，进程收到信号后通过注册的处理函数输出了相应语句。需<br>要注意的是系统调用函数read是一个阻塞函数，会等待用户的输入，当阻塞状态被信号中断后，errno会被赋值为EINTR<br>并且系统调用read会返回-1，表示出错且会被退出程序abort立即中断运行，sigaction注册信号处理函数时，不会自动<br>重新发起被信号中断的系统调用，如果需要自动重新发起，需要设置SA_RESTART标志，上例设置sa.sa_flags&#x3D;SA_RESTART<br>即可。   </p>
+<h4 id="3-使用sigprocmask检测或更改信号屏蔽字"><a href="#3-使用sigprocmask检测或更改信号屏蔽字" class="headerlink" title="3.使用sigprocmask检测或更改信号屏蔽字"></a>3.使用sigprocmask检测或更改信号屏蔽字</h4><p>系统调用sigprocmask()可以检测或更改信号屏蔽字。一个进程的信号屏蔽字规定了当前因阻塞而不能递送给该进程的<br>信号集。函数声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">sigprocmask</span><span class="hljs-params">(<span class="hljs-type">int</span> how , <span class="hljs-type">const</span> <span class="hljs-type">sigset_t</span> *set , <span class="hljs-type">sigset_t</span> *oldset)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中，参数how用于指定信号修改的方式，可能的选择有3种：  </p>
+<blockquote>
+<ul>
+<li>SIG_BLOCK：表示加入信号到进程屏蔽。</li>
+<li>SIG_UNBLOCK: 表示从进程屏蔽里将信号删除。</li>
+<li>SIG_SETMASK: 表示将set的值设定为新的进程屏蔽。</li>
+</ul>
+</blockquote>
+<p>参数set为指向信号集的指针，在此专指新设的信号集，如果仅想读取现在的屏蔽字，可将其设为NULL；参数oldset也<br>是指向信号集的指针，在此存放原来的信号集。如果函数成功执行，返回0，失败则返回-1，errno被设为EINVAL。<br>系统调用函数sigpromask()示例：  </p>
+<img src="/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/5.png" srcset="/img/loading.gif" lazyload class="">
+<p>从示例可以看到，红框一为程序运行后，休眠期间多次发送信号ctrl+c都不会响应，因为此时这个信号被屏蔽了，休眠<br>结束后，从第二个红框可以看到，该信号被处理了一回，接下来屏蔽被解除后，继续休眠，从第三个红框可以看出，ctrl+c<br>发送一次信号便响应结束。  </p>
+<h4 id="4-使用sigpending检查是否有挂起的信号"><a href="#4-使用sigpending检查是否有挂起的信号" class="headerlink" title="4.使用sigpending检查是否有挂起的信号"></a>4.使用sigpending检查是否有挂起的信号</h4><p>系统调用函数sigpending()用来检查进程是否有挂起的信号，也就是已经产生但被阻塞的信号。该函数声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">sigpending</span><span class="hljs-params">(<span class="hljs-type">sigset_t</span> *set)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中，信号集通过set参数返回。如果函数执行成功，返回0，错误返回-1。sigpending的示例可以参考sigprocmask的示例。   </p>
+<h4 id="5-使用signal设置信号处理程序"><a href="#5-使用signal设置信号处理程序" class="headerlink" title="5.使用signal设置信号处理程序"></a>5.使用signal设置信号处理程序</h4><p>系统调用signal()来为信号设置一个新的信号处理程序，可以将这个信号处理程序设置为一个用户指定的函数，或者<br>设置为宏SIG_ING和SIG_DFL，该函数声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;signal.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span> <span class="hljs-params">(*<span class="hljs-type">sighandler_t</span>)</span><span class="hljs-params">(<span class="hljs-type">int</span>)</span></span>;<br><span class="hljs-function"><span class="hljs-type">sighandler_t</span> <span class="hljs-title">signal</span><span class="hljs-params">(<span class="hljs-type">int</span> signum , <span class="hljs-type">sighandler_t</span> handler)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>参数signum是要处理的信号，指明了所有处理的信号类型，它可以取除了SIGKILL和SIGSTOP外的任何一种信号；参数<br>handler描述了与信号关联的动作，它可以取以下三种值：   </p>
+<p><strong>（1）SIG_IGN</strong>  </p>
+<blockquote>
+<p>宏SIG_IGN代表忽略信号，比如signal(SIGINT , SIG_IGN)表示忽略SIGINT信号，SIGINT信号由interrupt key产生，<br>通常是用户按了ctrl+c键或者delete键产生。  </p>
+</blockquote>
+<p><strong>（2）SIG_DFL</strong>  </p>
+<blockquote>
+<p>SIG_DFL表示恢复对信号的系统默认处理。比如signal(SIGINT , SIG_DFL)表示对信号SIGINT进行默认处理，即终止<br>该进程。  </p>
+</blockquote>
+<p><strong>（3）sighandler_t类型的函数指针</strong>  </p>
+<blockquote>
+<p>此时参数handler是sighandler_t类型的函数指针，指向一个自定义的信号处理函数，用来响应signum的信号，并且<br>这个自定义信号处理函数的参数是signum。进程只要接收到类型为signum的信号，不管其正在执行程序的哪一部分，<br>都立即执行handler函数。当handler函数执行结束后，控制权返回进程被中断的现场继续执行。  </p>
+</blockquote>
+<p>函数执行成功时，则返回该信号上一次的handler值，如果出错失败，则返回SIG_ERR，此时可以用过错误码errno获得。  </p>
+<p>函数signal类似于sigaction函数，但是两者之间是有区别的，首先signal是ANSI C标准的，而sigaction符合POSIX标<br>准；其次，signal比sigaction使用简单，但要注意，如果在C语言中使用，并且gcc编译时加上-std&#x3D;c99时，signal注<br>册的信号在sa_handler被调用之前会把信号的sa_handler指针恢复，用signal函数注册的信号处理函数只会被调用一<br>次，之后收到这个信号将按默认方式处理；如果编译时没有加上-std&#x3D;c99，则signal注册的信号在处理信号时不会恢<br>复sa_handler指针，下次依旧会使用signal定义的信号处理行为来处理。在c++程序中，signal注册的信号不会在sa_handler<br>被调用之前恢复该信号的sa_handler指针。而sigaction注册的信号在处理信号时不管编译时是否加上-std&#x3D;c99,都不<br>会恢复sa_handler指针，下次收到该信号时，依旧会根据sigaction注册的信号处理行为来处理。   </p>
+<p>示例：忽略sigint信号  </p>
+<img src="/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/6.png" srcset="/img/loading.gif" lazyload class="">
+<p>多次发送ctrl+c并没有使得该程序退出，表明sigint信号已经被忽略。</p>
+<p>示例：自定义信号处理函数</p>
+<img src="/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/7.png" srcset="/img/loading.gif" lazyload class="">
+<p>可以看到每次发送ctrl+c信号时，都会调用自定义函数而不是退出程序。</p>
 
                 
               </div>
