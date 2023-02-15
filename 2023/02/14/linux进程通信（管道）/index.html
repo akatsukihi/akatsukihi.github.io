@@ -1,0 +1,779 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="akatsukihi">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="管道所谓管道，是指用于连接都进程和写进程，以实现它们之间通信的共享文件，故又称作管道文件。这种进程通信方式首创于unix系统，它能传送大量的数据并且十分有效，很多操作系统都引入了这种通信方式，linux同样也支持管道。管道是一种以先进先出的方式保存一定数量数据的特殊文件，而且管道一般是单向的。写进程将数据写入管道的一端读进程从管道另一端读取数据，以便腾出空间使写进程可以继续写入新发数据，所以所有的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux进程通信（管道）">
+<meta property="og:url" content="https://akatsukihi.github.io/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/index.html">
+<meta property="og:site_name" content="AkatsukiHi">
+<meta property="og:description" content="管道所谓管道，是指用于连接都进程和写进程，以实现它们之间通信的共享文件，故又称作管道文件。这种进程通信方式首创于unix系统，它能传送大量的数据并且十分有效，很多操作系统都引入了这种通信方式，linux同样也支持管道。管道是一种以先进先出的方式保存一定数量数据的特殊文件，而且管道一般是单向的。写进程将数据写入管道的一端读进程从管道另一端读取数据，以便腾出空间使写进程可以继续写入新发数据，所以所有的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/1.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/2.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/3.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/4.png">
+<meta property="article:published_time" content="2023-02-14T09:27:04.000Z">
+<meta property="article:modified_time" content="2023-02-15T10:16:22.628Z">
+<meta property="article:author" content="akatsukihi">
+<meta property="article:tag" content="管道">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://akatsukihi.github.io/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>linux进程通信（管道） - AkatsukiHi</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akatsukihi.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"","Options":"left | right"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>AkatsukiHi</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                我
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/remark/">
+                <i class="iconfont icon-twitch-fill"></i>
+                留言板
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg/nihon.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="linux进程通信（管道）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-14 18:27" pubdate>
+          2023年2月14日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">linux进程通信（管道）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>所谓管道，是指用于连接都进程和写进程，以实现它们之间通信的共享文件，故又称作管道文件。这种进程通信方式<br>首创于unix系统，它能传送大量的数据并且十分有效，很多操作系统都引入了这种通信方式，linux同样也支持管道。<br>管道是一种以先进先出的方式保存一定数量数据的特殊文件，而且管道一般是单向的。写进程将数据写入管道的一端<br>读进程从管道另一端读取数据，以便腾出空间使写进程可以继续写入新发数据，所以所有的数据只能读取一次。linux<br>下管道的大小有一定的限制。实际上，管道是一个固定大小的缓冲区，在linux中，该缓冲区的大小为一个页面，即4kb<br>。<br>为了协调进程之间的通信，管道通信机制必须能够提供读写进程之间的同步机制。如果一个进程试图写入一个已满的<br>管道，在默认情况下，系统会自动阻塞该进程，直到管道能够有空间接收数据。同样，如果试图读一个空的管道，进<br>程也会被阻塞，直到管道有可读的数据。此外，如果一个进程以读方式打开一个管道，而没有另外的进程以写方式打<br>开该管道，则同样会造成该进程阻塞（因为没有数据会写到这个管道里）。同样，当一个进程试图对没有读进程的管<br>道进行写操作时，则会出现异常，导致进程终止。管道是一个进程连结数据流到另一个进程的通道，它通常用作把一<br>个进程的输出通过管道连接到另一个进程的输入。在shell中，可以通过使用符号”|“来使用管道。如：   </p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs tap">akatsuki@312hours:~/akatsuki_info/linuxio$ ls -l | grep test<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16256 </span>Feb<span class="hljs-number"> 13 </span>18:49 test_kill<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki  <span class="hljs-number"> 885 </span>Feb<span class="hljs-number"> 13 </span>18:58 test_kill.cpp<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16240 </span>Feb<span class="hljs-number"> 14 </span>12:10 test_sigaction<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki <span class="hljs-number"> 1028 </span>Feb<span class="hljs-number"> 14 </span>12:10 test_sigaction.cpp<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16424 </span>Feb<span class="hljs-number"> 14 </span>15:54 test_sigmask<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki <span class="hljs-number"> 1413 </span>Feb<span class="hljs-number"> 14 </span>17:06 test_sigmask.cpp<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16096 </span>Feb<span class="hljs-number"> 14 </span>17:31 test_signal<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki  <span class="hljs-number"> 317 </span>Feb<span class="hljs-number"> 14 </span>17:32 test_signal.cpp<br>akatsuki@312hours:~/akatsuki_info/linuxio$<br></code></pre></td></tr></table></figure>
+<p>ls进程会把当前目录中的文件或者文件夹都列出来，现在将本来要输出到屏幕上的数据通过管道输出到grep进程中，<br>作为grep进程的输入，然后grep进程对输入的信息进行筛选，把存在test字符串的那行打印在屏幕上。  </p>
+<h2 id="管道读写的特点"><a href="#管道读写的特点" class="headerlink" title="管道读写的特点"></a>管道读写的特点</h2><p>管道读写是通过标准的无缓冲的输入系统调用函数read()和输出系统调用函数write()实现的。系统调用read()将从一<br>个由管道文件描述符所指的管道中读取指定的字节数到缓冲区中。如果调用成功，函数将返回实际所读的字节数。如<br>果失败，将返回-1。由于管道文件有特殊性，所以读取时有其自身的特点：  </p>
+<blockquote>
+<ul>
+<li>(1) 所有的读取操作总是从管道当前位置开始读，不支持文件指针的移动。</li>
+<li>(2) 如果管道没有被其它进程以写方式打开，那么read()系统调用将返回0，也就是遇到文件末端的条件。</li>
+<li>(3) 如果管道中没有数据，也就是管道为空，默认情况下read()系统调用将会阻塞，直到有数据被写进该管道或<br>者该管道被关闭。也可以通过fcntl()系统调用对管道进行设置，如在管道为空的情况下让read()系统调用立即返回。</li>
+</ul>
+</blockquote>
+<p>数据通过系统调用write()函数写入管道。write()系统调用将数据从缓冲区向管道文件描述符所指的管道中写入。如<br>果该系统调用成功，将返回实际所写的字节数，否则返回-1。同理，管道的写操作也有其自身的特点：  </p>
+<blockquote>
+<ul>
+<li>(1) 每一次的写请求操作总是附加在管道的末端。</li>
+<li>(2) 当有多个对同一管道的写请求发生时，系统保证小于或等于4kb大小的写请求操作不会交叉进行。</li>
+<li>(3) 如果试图对一个没有被任何进程以读方式打开的管道进行写操作，则将会产生SIGPIPE信号。默认情况下（假<br>如SIGPIPE信号没有被捕获），该进程将会被系统终止。</li>
+<li>(4) 默认情况下，对管道的写操作请求会导致进程阻塞，因为如果设备处于忙状态，write()系统调用会被阻塞并<br>且将被延迟写入，当然也可以通过fcntl()系统调用对管道进行设置。</li>
+</ul>
+</blockquote>
+<h2 id="管道局限性"><a href="#管道局限性" class="headerlink" title="管道局限性"></a>管道局限性</h2><p>管道有以下的几个局限性：  </p>
+<blockquote>
+<ul>
+<li>(1) 数据自己读却不能自己写。</li>
+<li>(2) 数据一旦被读走，便不在管道中存在，不可反复读取。</li>
+<li>(3) 由于管道采用半双工通信方式，因此数据只能在一个方向上流动。</li>
+<li>(4) 只能在有公共祖先的进程间使用管道。</li>
+</ul>
+</blockquote>
+<h2 id="管道函数pipe"><a href="#管道函数pipe" class="headerlink" title="管道函数pipe"></a>管道函数pipe</h2><p>管道是一种基本的IPC机制，由pipe函数创建，该函数声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pipe</span><span class="hljs-params">(<span class="hljs-type">int</span> filedes[<span class="hljs-number">2</span>])</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中，参数filedes表示两个文件描述符，filedes[0]指向管道的读端，filedes[1]指向管道的写端。如果函数调用<br>成功返回0，调用失败则返回-1。<br>调用pipe函数时，在内核中开辟一块缓冲区（称为管道）用于通信，它有一个读端和一个写端，然后通过filedes参数<br>传出给用户程序两个文件描述符，filedes[0]指向管道的读端，filedes[1]指向管道的写端。所以管道在用户程序中<br>看起来就像一个打开的文件，通过read(filedes[0])和write(filedes[1])向这个文件读写数据其实是在读写内核缓冲<br>区。需要注意的是，管道创建时默认打开了文件描述符，且默认是以阻塞（block）模式打开的。  </p>
+<h2 id="读写管道read-x2F-write函数"><a href="#读写管道read-x2F-write函数" class="headerlink" title="读写管道read&#x2F;write函数"></a>读写管道read&#x2F;write函数</h2><p>读写管道的函数和读写文件的函数一样，都是read和write。使用这两个函数读写管道时有两点需要注意：  </p>
+<blockquote>
+<ul>
+<li>(1) 当没有数据可读时，read调用阻塞，即进程暂停执行，一直等到有数据到来为止。</li>
+<li>(2) 当管道满的时候，write调用阻塞，直到有进程读取数据。</li>
+</ul>
+</blockquote>
+<h2 id="等待子进程中断或结束的函数wait"><a href="#等待子进程中断或结束的函数wait" class="headerlink" title="等待子进程中断或结束的函数wait"></a>等待子进程中断或结束的函数wait</h2><p>wait函数用于等待子进程中断或结束，进程一旦调用了wait，就立即阻塞自己，由wait自动分析当前进程的某个子进<br>程是否已经退出，如果让它找到了一个已经变成僵尸的子进程，wait就会收集这个子进程的信息，并把它彻底销毁后<br>返回；如果没有找到这样一个子进程，wait就会一直阻塞在这里，直到有一个出现为止，该函数声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">pid_t</span> <span class="hljs-title">wait</span><span class="hljs-params">(<span class="hljs-type">int</span> *status)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>子进程的结束状态值会由参数status返回，如果不在意结束状态值，则参数status可以设置为NULL。如果执行成功，<br>则返回子进程识别码（PID），如果有错位发生，则返回-1。失败原因存于errno中。   </p>
+<p>管道创建成功后，创建该管道的进程（父进程）同时掌握着管道的读端和写端。为了使用管道实现父子进程间的通信<br>通常可以采用以下方式：  </p>
+<img src="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/1.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/2.png" srcset="/img/loading.gif" lazyload class="">
+<blockquote>
+<p>第一步，父进程调用pipe函数创建管道，得到两个文件描述符fd[0]、fd[1]，分别指向管道的读端和写端。<br>第二步，父进程调用fork创建子进程，此时子进程也拥有了两个指向同一管道的文件描述符。<br>第三步，父进程关闭管道读端，子进程关闭管道写端。此时父进程可以向管道中写入数据，子进程可以将管道中的<br>数据读出。由于管道是利用环形队列实现的，因此数据从写端流入管道，从读端流出。  </p>
+</blockquote>
+<p>示例：父子进程使用管道通信  </p>
+<img src="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/3.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/4.png" srcset="/img/loading.gif" lazyload class="">
+<h2 id="使用管道的特殊情况"><a href="#使用管道的特殊情况" class="headerlink" title="使用管道的特殊情况"></a>使用管道的特殊情况</h2><p>使用管道需要注意以下四种特殊情况（假设都是阻塞I&#x2F;O操作，没有设置O_NONBLOCK标志）：   </p>
+<blockquote>
+<ul>
+<li>(1) 如果所有指向管道写端的文件描述符都关闭了（管道写端引用计数为0），而仍然有进程从管道的读端读数据<br>那么管道中剩余的数据都被读取后，再次read会返回0，就像读到文件末尾一样。  </li>
+<li>(2) 如果有指向管道写端的文件描述符没关闭（管道写端引用计数大于0），而持有管道写端的进程也没有向管道<br>中写数据，这是有进程从管道读端读数据，那么管道中剩余的数据都被读取后，再次read会阻塞，直到管道中有<br>数据可读了才读取数据并返回。</li>
+<li>(3) 如果所有指向管道读端的文件描述符都关闭了（管道读端引用计数为0），这时有进程向管道的写端write，<br>那么该进程会收到信号SIGPIPE，通常会导致进程异常终止。当然，也可以对SIGPIPE信号实施捕捉，不终止进程。</li>
+<li>(4) 如果有指向管道读端的文件描述符没关闭（管道读端引用计数大于0），而持有管道读端的进程也没有从管道<br>中读数据，这时有进程向管道写端写数据，那么在管道被写满时，再次write会阻塞，直到管道中有空位置了才写<br>入数据并返回。</li>
+</ul>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%AE%A1%E9%81%93/">#管道</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>linux进程通信（管道）</div>
+      <div>https://akatsukihi.github.io/2023/02/14/linux进程通信（管道）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>akatsukihi</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月14日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/12/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BF%A1%E5%8F%B7%EF%BC%89/" title="linux进程通信（信号）">
+                        <span class="hidden-mobile">linux进程通信（信号）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'gruvbox-dark';
+      var dark = 'gruvbox-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'akatsukihi/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div id="_footer" class="footer-inner">
+
+  
+    <div class="footer-content">
+	 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.js"></script>
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+  <!-- require MetingJS -->
+  <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<meting-js 
+server="netease" 
+type="playlist" 
+id="8102703245" 
+fixed="true" 
+autoplay="true" 
+loop="all" 
+order="list" 
+preload="auto" 
+list-folded="ture" 
+list-max-height="500px" 
+lrc-type="0">
+</meting-js>
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+
+</body>
+</html>
