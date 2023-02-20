@@ -1,0 +1,755 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="akatsukihi">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="线程概述在多核时代，如何充分利用每个cpu的计算能力是绕不开的话题，从为成千上万的用户同时提供服务，到同时开启成百上千链接的web应用程序，从需要支持并发访问的数据库系统，到手机上一个拥有良好响应能力的app，为了充分利用每个cpu内核，都会想到是否可以使用多线程技术。多线程编程作为现代软件开发的流行技术，正确、恰当的使用多线程可以使程序拥有更加出色的性能。   （1）使软件拥有灵敏的响应在单线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux多线程（一）">
+<meta property="og:url" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="AkatsukiHi">
+<meta property="og:description" content="线程概述在多核时代，如何充分利用每个cpu的计算能力是绕不开的话题，从为成千上万的用户同时提供服务，到同时开启成百上千链接的web应用程序，从需要支持并发访问的数据库系统，到手机上一个拥有良好响应能力的app，为了充分利用每个cpu内核，都会想到是否可以使用多线程技术。多线程编程作为现代软件开发的流行技术，正确、恰当的使用多线程可以使程序拥有更加出色的性能。   （1）使软件拥有灵敏的响应在单线程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/1.png">
+<meta property="article:published_time" content="2023-02-20T08:11:16.000Z">
+<meta property="article:modified_time" content="2023-02-20T11:05:06.432Z">
+<meta property="article:author" content="akatsukihi">
+<meta property="article:tag" content="线程">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>linux多线程（一） - AkatsukiHi</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akatsukihi.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"","Options":"left | right"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>AkatsukiHi</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                我
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/remark/">
+                <i class="iconfont icon-twitch-fill"></i>
+                留言板
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg/nihon.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="linux多线程（一）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-20 17:11" pubdate>
+          2023年2月20日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          29 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">linux多线程（一）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="线程概述"><a href="#线程概述" class="headerlink" title="线程概述"></a>线程概述</h2><p>在多核时代，如何充分利用每个cpu的计算能力是绕不开的话题，从为成千上万的用户同时提供服务，到同时开启成<br>百上千链接的web应用程序，从需要支持并发访问的数据库系统，到手机上一个拥有良好响应能力的app，为了充分利<br>用每个cpu内核，都会想到是否可以使用多线程技术。多线程编程作为现代软件开发的流行技术，正确、恰当的使用多<br>线程可以使程序拥有更加出色的性能。  </p>
+<h4 id="（1）使软件拥有灵敏的响应"><a href="#（1）使软件拥有灵敏的响应" class="headerlink" title="（1）使软件拥有灵敏的响应"></a>（1）使软件拥有灵敏的响应</h4><p>在单线程软件中，当软件中有多个任务时，如读写文件、更新用户界面、网络连接、打印等操作，如果按照先后次序<br>执行，当某个任务执行时间较长时（如读写较大文件），那么用户界面将长时间无法更新，看起来就像软件卡死了一<br>样，用户体验极其不友好。当采用多线程技术处理时，多个任务由不同的线程去执行，不同线程各自占用一段cpu时间<br>即使线程任务没完成，也会相互让出cpu使其它任务有机会得以执行，这样从用户角度看起来，界面会有更新的变化，<br>且其它任务也似乎在并行前进，大大的改善了用户的体验，提高了软件的响应速度和友好程度。</p>
+<h4 id="（2）充分利用多核处理器"><a href="#（2）充分利用多核处理器" class="headerlink" title="（2）充分利用多核处理器"></a>（2）充分利用多核处理器</h4><p>随着多核处理器的普及，单线程程序愈发成为性能瓶颈。比如计算机有2个cpu核，单线程程序在任意时刻只能使用一<br>个核的运算能力，而另一个核始终处于空闲状态，无法发挥多核计算机的性能。如果此时是两个线程的程序，则任意<br>时刻都是两个核在同时运行，程序的运行效率将会提升一倍。</p>
+<h4 id="（3）更高效的通信"><a href="#（3）更高效的通信" class="headerlink" title="（3）更高效的通信"></a>（3）更高效的通信</h4><p>对于同一进程的线程来说，它们共享该进程的地址空间，可以访问相同的数据。通过数据共享的方式使得线程之间的<br>通信比进程之间的通信更加高效和方便。</p>
+<h4 id="（4）线程的开销比进程更小"><a href="#（4）线程的开销比进程更小" class="headerlink" title="（4）线程的开销比进程更小"></a>（4）线程的开销比进程更小</h4><p>创建线程和线程切换等操作所带来的系统开销比进程类似的操作要小得多。由于线程共享进程资源，因此创建线程时<br>不需要再为其分配内存空间等资源，因此床架时间也更短。比如在solaris2操作系统上，创建进程的时间大约是线程<br>创建的30倍；线程作为进程的基本执行单元，当从同一个进程的某个线程切换到另外一个线程时，需要载入的信息比<br>进程间切换时更少，切换速度更快，在solaris2操作系统中，线程的切换比进程快大约5倍左右。  </p>
+<h2 id="操作系统与多线程"><a href="#操作系统与多线程" class="headerlink" title="操作系统与多线程"></a>操作系统与多线程</h2><p>想要在应用程序中实现多线程，必须要有操作系统的支持，linux32位或64位操作系统对应用程序提供了多线程的支持<br>windows NT&#x2F;2000&#x2F;XP&#x2F;7&#x2F;8&#x2F;10&#x2F;11都支持多线程。根据进程与线程的支持情况，可以将操作系统分为以下几类：  </p>
+<blockquote>
+<ul>
+<li>(1) 单进程、单线程，MS-DOS基本是这种操作系统。</li>
+<li>(2) 多进程、单线程，多数unix（以及类unix的linux）是这种操作系统。</li>
+<li>(3) 多进程、多线程，Win32（windows NT&#x2F;2000&#x2F;XP&#x2F;7&#x2F;8&#x2F;10&#x2F;11等）、Solaris2.x和OS&#x2F;2都是这种操作系统。</li>
+<li>(4) 单进程、多线程，Vxworks是这种操作系统。</li>
+</ul>
+</blockquote>
+<p>现代操作系统大多数都支持多线程概念，每个进程中至少有一个线程，该线程称为主线程，可以说cpu中执行的就是线<br>程，线程是程序的最小执行单位，是操作系统分配cpu时间片的最小实体。一个进程的执行说到底是从主线程开始的，<br>如果需要，可以在程序的任何地方开辟新的线程，其它线程都是由主线程创建的。一个进程的所有线程共享该进程的<br>公共资源，比如虚拟地址空间、全局变量等。每个线程也可以拥有自己私有的资源，如堆栈、在堆栈中定义的静态变<br>量、cpu寄存器的状态等。线程总是在某个进程环境中创建，并且会在该进程内部销毁，它与进程的关系是：线程是<br>属于进程的，线程运行在进程空间内，同一进程所产生的线程共享同一内存空间，当进程退出时，该进程所产生的线<br>程都会被强制退出并清除。线程可与属于同一进程的其它线程共享进程所拥有的全部资源，但是其本身基本少不拥有<br>系统资源，只拥有一点在运行中不可缺少的信息（如程序计数器、一组寄存器和线程栈，线程栈用于维护线程在执行<br>代码时需要的所有函数参数和局部变量）。相对于进程而言，线程所占用的资源更少，比如创建进程，系统要为它分<br>配很大的私有空间，占用的资源较多，而对于多线程程序来说，由于多个线程共享一个进程地址空间，因此占用的资<br>源较少。此外，进程间切换时，需要交换整个地址空间，而线程之间切换时，只是切换线程的上下文环境，因此效率<br>更高。在操作系统中引入线程的好处众多：  </p>
+<blockquote>
+<ul>
+<li>(1) 在进程内创建、终止线程比创建、终止进程要快。</li>
+<li>(2) 同一进程内线程间的切换比进程间的切换要快，尤其是用户级线程间的切换。</li>
+<li>(3) 每个进程具有独立的地址空间，而该进程内的所有线程共享该地址空间，因此线程的出现可以解决父子<br>进程模型中子进程必须复制父进程地址空间的问题。</li>
+<li>(4) 线程对解决客户端&#x2F;服务器模型非常有效。</li>
+</ul>
+</blockquote>
+<p>具体到linux c++的开发环境，linux提供了一套POSIX API函数来管理线程，用户既可以使用这些API函数，也可以使<br>用c++自带的线程类。  </p>
+<h2 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h2><p>一个线程从创建到结束是一个生命周期，总是处于以下4个状态中的一个。  </p>
+<h4 id="（1）就绪态"><a href="#（1）就绪态" class="headerlink" title="（1）就绪态"></a>（1）就绪态</h4><p>线程能够运行的条件已经满足，只是在等待处理器（处理器要根据调度策略来把就绪态的线程调度到处理器中运行）<br>处于就绪态的原因可能是线程刚刚被创建（刚创建的线程不一定马上运行，一般先处于就绪态），可能是刚刚从阻塞<br>态中恢复，也可能是被其它线程抢占而处于就绪态。  </p>
+<h4 id="（2）运行态"><a href="#（2）运行态" class="headerlink" title="（2）运行态"></a>（2）运行态</h4><p>运行态表示线程正在处理器中运行，正占用着处理器。  </p>
+<h4 id="（3）阻塞态"><a href="#（3）阻塞态" class="headerlink" title="（3）阻塞态"></a>（3）阻塞态</h4><p>由于在等待处理器之外的其它条件而无法运行的状态叫做阻塞态，这里的其它条件包括I&#x2F;O操作、互斥锁的释放、条件<br>变量的改变等。</p>
+<h4 id="（4）终止态"><a href="#（4）终止态" class="headerlink" title="（4）终止态"></a>（4）终止态</h4><p>终止态就是线程的线程函数运行结束或被其它线程取消后处于的状态。处于终止态的线程虽然已经结束了，但其所占<br>资源还没有被回收，而且还可以被重新复活。因此不应该让线程长时间处于这种状态。线程处于终止态后应该及时进<br>行资源回收。   </p>
+<h2 id="线程函数与线程标识符"><a href="#线程函数与线程标识符" class="headerlink" title="线程函数与线程标识符"></a>线程函数与线程标识符</h2><p>线程函数就是线程创建后进入运行态后要执行的函数。执行线程，说到底就是执行线程函数。这个函数是用户自定义<br>的，然后在创建线程时将自定义的该函数作为参数传入线程创建函数。同理，中断线程的执行就是中断线程函数的执<br>行，以后再恢复线程的时候，就会在前面线程函数暂停的地方开始继续执行下面的代码。结束线程也就是不再运行线<br>程函数。线程的函数可以是一个全局函数或类的静态函数，比如在POSIX线程库中，它通常这样声明：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> *<span class="hljs-title">ThreadProc</span><span class="hljs-params">(<span class="hljs-type">void</span> *argv)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中，参数argv指向要传递给线程的数据，这个参数是在创建线程的时候作为参数传入线程创建函数中的。函数的返<br>回值应该表示线程函数运行的结果：成功还是失败。注意函数名ThreadProc可以是自定义的函数名，这个函数是用户<br>先定义好，然后由系统来调用。   </p>
+<p>在创建线程的时候，系统会为线程分配一个唯一的ID作为线程的标识，这个ID号从线程创建开始存在，一直伴随着线<br>程的结束才消失。线程结束后，该ID就自动不存在，不需要显式的去清除它。通常线程创建成功后就会返回该线程ID</p>
+<h2 id="使用POSIX多线程API"><a href="#使用POSIX多线程API" class="headerlink" title="使用POSIX多线程API"></a>使用POSIX多线程API</h2><p>在使用POSIX多线程函数前，先要熟悉常用的一些API函数，常见的与线程相关的API函数如下：</p>
+<img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/1.png" srcset="/img/loading.gif" lazyload class="">
+<p>使用这些API函数时需要包含头文件pthread.h，并且在编译时需要加上库pthread，表示包含多线程库文件。  </p>
+<h3 id="1-线程的创建"><a href="#1-线程的创建" class="headerlink" title="1.线程的创建"></a>1.线程的创建</h3><p>在POSIX的API中，创建线程的函数是：pthread_create，该函数声明如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pthread_create</span><span class="hljs-params">(<span class="hljs-type">pthread_t</span> *pid, <span class="hljs-type">const</span> <span class="hljs-type">pthread_attr_t</span> *attr, <span class="hljs-type">void</span> *(*start_routine)(<span class="hljs-type">void</span> *), <span class="hljs-type">void</span> *arg)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中，参数pid是一个指针，指向创建成后的线程的ID，pthread_t其实就是unsigned long int；attr是指向线程属性<br>结构pthread_attr_t的指针，如果为NULL，则使用默认属性；start_routine指向线程函数的地址，线程函数就是线程<br>创建后要执行的函数；arg指向要传给线程函数的参数，如果执行成功，函数返回0。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%BA%BF%E7%A8%8B/">#线程</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>linux多线程（一）</div>
+      <div>https://akatsukihi.github.io/2023/02/20/linux多线程（一）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>akatsukihi</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月20日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/02/15/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%89/" title="linux进程通信（消息队列）">
+                        <span class="hidden-mobile">linux进程通信（消息队列）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'gruvbox-dark';
+      var dark = 'gruvbox-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'akatsukihi/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div id="_footer" class="footer-inner">
+
+  
+    <div class="footer-content">
+	 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.js"></script>
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+  <!-- require MetingJS -->
+  <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<meting-js 
+server="netease" 
+type="playlist" 
+id="8102703245" 
+fixed="true" 
+autoplay="true" 
+loop="all" 
+order="list" 
+preload="auto" 
+list-folded="ture" 
+list-max-height="500px" 
+lrc-type="0">
+</meting-js>
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+
+</body>
+</html>
