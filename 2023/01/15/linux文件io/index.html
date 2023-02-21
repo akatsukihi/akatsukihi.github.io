@@ -42,7 +42,7 @@
 <meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/17.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/01/15/linux%E6%96%87%E4%BB%B6io/18.png">
 <meta property="article:published_time" content="2023-01-15T04:12:37.000Z">
-<meta property="article:modified_time" content="2023-02-02T04:54:46.978Z">
+<meta property="article:modified_time" content="2023-02-21T09:56:41.316Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="文件io">
 <meta name="twitter:card" content="summary_large_image">
@@ -410,9 +410,18 @@
 </blockquote>
 <p>函数使用示例如下：  </p>
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/4.png" srcset="/img/loading.gif" lazyload class="">  
-<p>打开lseek.txt文件，可以看到写入的内容前有^@符号，这些不是空格,而是“0“，或者称为文件空洞。如果偏<br>移量设置超出文件的大小，就会造成文件空洞现象，即文件尾部（0字节大小的文件尾部就是文件的开头）到设置<br>之间被”0”填充。示例代码中新创建的文件lseek.txt文件大小为0kb，所以设置文件偏移量后会造成文件空洞<br>的现象。 </p>
+<p></p>
+打开lseek.txt文件，可以看到写入的内容前有^@符号，这些不是空格,而是“0“，或者称为文件空洞。如果偏     
+移量设置超出文件的大小，就会造成文件空洞现象，即文件尾部（0字节大小的文件尾部就是文件的开头）到设置  
+之间被”0”填充。示例代码中新创建的文件lseek.txt文件大小为0kb，所以设置文件偏移量后会造成文件空洞    
+的现象。 
+  
+
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/5.png" srcset="/img/loading.gif" lazyload class="">  
-<p>删除掉刚才的lseek.txt文件，然后新建一个文件lseek.txt,输入123456789ABCDEF，然后再重新执行示例程序，<br>会看到offset test被写入到7后面，并覆盖7以后的内容。  </p>
+<p></p>
+删除掉刚才的lseek.txt文件，然后新建一个文件lseek.txt,输入123456789ABCDEF，然后再重新执行示例程序，  
+会看到offset test被写入到7后面，并覆盖7以后的内容。  
+
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/6.png" srcset="/img/loading.gif" lazyload class="">  
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/7.png" srcset="/img/loading.gif" lazyload class="">  
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/8.png" srcset="/img/loading.gif" lazyload class="">  
@@ -420,7 +429,7 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/stat.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">stat</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path , <span class="hljs-keyword">struct</span> stat *buf)</span></span>;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">fstat</span><span class="hljs-params">(<span class="hljs-type">int</span> fd , <span class="hljs-keyword">struct</span> stat *buf)</span></span>;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">lstat</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path , <span class="hljs-keyword">struct</span> stat *buf)</span></span>;<br></code></pre></td></tr></table></figure>
 <p>其中参数path是文件路径（包含文件名）；fd是文件描述符；buf为指向struct stat的结构体指针，获得的文件<br>属性特征值从这个参数中回传。当函数执行成功时返回0，执行失败时返回-1.<br>fstat函数区别于另外两个系统调用函数的地方在于，fstat系统调用接受的是一个文件描述符，而另外两个则直接<br>接受文件的全路径。文件描述符需要使用open系统调用后才能取得，而文件全路径可以省略此步，直接使用文件的<br>path就可以了。stat函数与lstat的区别是：当文件是一个符号链接时，lstat返回的是该符号链接本身的信息；而<br>stat返回的是该链接指向的文件的信息。<br>结构体struct stat是文件的属性特征描述，该结构定义如下：  </p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">stat</span>&#123;<br>    <span class="hljs-type">mode_t</span>  st_mode;    <span class="hljs-comment">//文件对应的模式、文件、目录等</span><br>    <span class="hljs-type">ino_t</span>   st_ino;     <span class="hljs-comment">//inode节点号</span><br>    <span class="hljs-type">dev_t</span>   st_dev;     <span class="hljs-comment">//设备号码</span><br>    <span class="hljs-type">dev_t</span>   st_rdev;    <span class="hljs-comment">//特殊设备号码</span><br>    <span class="hljs-type">nlink_t</span> st_nlink;   <span class="hljs-comment">//文件的链接数</span><br>    <span class="hljs-type">uid_t</span>   st_uid;     <span class="hljs-comment">//文件所有者</span><br>    <span class="hljs-type">gid_t</span>   st_gid;     <span class="hljs-comment">//文件所有者对应的组</span><br>    <span class="hljs-type">off_t</span>   st_size;    <span class="hljs-comment">//普通文件，对应的文件字节数</span><br>    <span class="hljs-type">time_t</span>  st_atime;   <span class="hljs-comment">//文件最后被访问的时间</span><br>    <span class="hljs-type">time_t</span>  st_mtime;   <span class="hljs-comment">//文件内容最后被修改的时间</span><br>    <span class="hljs-type">time_t</span>  st_ctime;   <span class="hljs-comment">//文件状态改变的时间</span><br>    <span class="hljs-type">blksize_t</span>   st_blksize;    <span class="hljs-comment">//文件内容对应的块大小</span><br>    <span class="hljs-type">blkcnt_t</span>    st_blocks;     <span class="hljs-comment">//文件内容对应的块数量</span><br>&#125;；<br></code></pre></td></tr></table></figure>
-<p>示例代码：  </p>
+<p>示例代码： </p>
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/9.png" srcset="/img/loading.gif" lazyload class="">  
 
 <h4 id="文件锁定"><a href="#文件锁定" class="headerlink" title="文件锁定"></a>文件锁定</h4><p>当一个文件被多个用户共同使用和操作时，会导致共享资源产生竞争的状态，Linux采用给文件上锁的方法来避免产生共享资<br>源竞争。文件锁分为建议性锁和强制性锁，建议锁是指给文件上锁后，只在文件上设置一个锁的标识，其他进程如果要对该<br>文件进行操作时可以检测到有锁的存在，但该锁并不能阻止其它进程对这个文件要进行的操作。类似于红绿灯，红灯并不能<br>阻止车辆闯红灯的行为，更多的是建议规范。而强制性锁则是当给文件上锁后，其它进程要对这个文件进行不兼容的操作（<br>上了读锁，另外一个进程要写入）时，系统内核将会阻止后来的第二个进程，一直到第一个进程将锁解开。一般情况下，内<br>核和系统都不适合使用建议性锁，而应该使用强制性锁，这样可以防止一些破坏性的操作。每个进程对文件进行操作时，例<br>如执行open、read、write等操作时，内核都会检测该文件是否被加了强制性锁，如果加了强制性锁，其它进程对这些文件的<br>操作就会失败，也就是内核强制应用程序（即其它进程）来遵守游戏规则，这就是强制性锁的原理。<br><em><strong>对文件的加索操作是原子性的，并且，由fork产生的子进程不能继承父进程所设置的锁。也就意味着，若一个进程得到一把<br>锁，然后调用fork，那么对于父进程所获得的锁而言，子进程将被视为其它进程。对于从父进程处继承过来的任一描述符，<br>子进程都需要调用fnctl()函数才能获得属于它自己的锁。</strong></em><br>linux下可以使用fcntl()函数来实现文件的锁定。锁定文件在很多场合都很有用，例如为了防止进程的重复启动，可以在进<br>程启动时对&#x2F;var&#x2F;run目录下的.PID文件进行锁定，这样进程重复启动时，会因为无法对该文件上锁而退出。fcntl函数不仅能<br>对整个文件上锁，而且还可以对文件的某一记录上锁，此时的锁又称为记录锁。fcntl函数声明如下：</p>
@@ -460,14 +469,37 @@
 </blockquote>
 <p>如果函数执行成功返回值为0，否则返回-1，此时可用errno查看错误码。函数使用示例代码如下：</p>
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/10.png" srcset="/img/loading.gif" lazyload class="">  
-<p>如上图所示，程序编译并运行，此时程序处于死循环状态，并且文件已经加锁成功（默认为建议锁）。然后往lock.txt的文<br>件中写入数据，可以看到是可以写入成功的，如下图所示:  </p>
+<p></p>
+如上图所示，程序编译并运行，此时程序处于死循环状态，并且文件已经加锁成功（默认为建议锁）。然后往lock.txt的文  
+件中写入数据，可以看到是可以写入成功的，如下图所示:  
+  
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/11.png" srcset="/img/loading.gif" lazyload class="">  
-<p>上图中的lock.txt文件内容开始是空的，然后用echo往该上锁文件中写入数据，再次输出时可以看到写入的数据被输出了，<br>说明被建议锁锁住的文件的确是可以被其它进程修改的,所以建议锁只适合于合作进程。建议锁就是假定所有人都会遵守某<br>些规则去做一件事，例如人与车看到红灯都会停，看到绿灯才会继续走，此时的红绿灯就类似于建议锁，但这是一件需要<br>大家主动去遵守的规则，而并不能避免有些车与人强行闯红灯，而强制锁则完全是无法闯红灯的措施。<br>实现强制锁需要将文件所在的文件系统通过mount命令的“-o mand”选项来挂载，并且使用chmod函数或者chmod命令将文<br>件用户组的x权限去掉（即清楚组可执行位）。如下图所示：<br>首先切换到root用户，并查看我们的文件挂载硬盘信息：  </p>
+<p></p>
+上图中的lock.txt文件内容开始是空的，然后用echo往该上锁文件中写入数据，再次输出时可以看到写入的数据被输出了，  
+说明被建议锁锁住的文件的确是可以被其它进程修改的,所以建议锁只适合于合作进程。建议锁就是假定所有人都会遵守某  
+些规则去做一件事，例如人与车看到红灯都会停，看到绿灯才会继续走，此时的红绿灯就类似于建议锁，但这是一件需要  
+大家主动去遵守的规则，而并不能避免有些车与人强行闯红灯，而强制锁则完全是无法闯红灯的措施。  
+实现强制锁需要将文件所在的文件系统通过mount命令的“-o mand”选项来挂载，并且使用chmod函数或者chmod命令将文  
+件用户组的x权限去掉（即清楚组可执行位）。如下图所示：  
+首先切换到root用户，并查看我们的文件挂载硬盘信息：  
+    
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/12.png" srcset="/img/loading.gif" lazyload class="">  
-<p> 可以看到lock.txt文件是挂载在&#x2F;dev&#x2F;sdc下的，所以进入lock.txt所在目录重新进行挂载，挂载完成后，此时文件系统<br> &#x2F;dev&#x2F;sdc增加了mand选项，然后再修改lock.txt的权限，将用户组的x权限去掉。如下图所示：  </p>
+<p></p>
+ 可以看到lock.txt文件是挂载在/dev/sdc下的，所以进入lock.txt所在目录重新进行挂载，挂载完成后，此时文件系统  
+ /dev/sdc增加了mand选项，然后再修改lock.txt的权限，将用户组的x权限去掉。如下图所示：  
+  
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/13.png" srcset="/img/loading.gif" lazyload class="">  
+<p></p>
+  
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/14.png" srcset="/img/loading.gif" lazyload class="">  
-<p>此时重新运行之前的test_filelock程序，程序处于死循环当中，然后重新打开一个终端shell,尝试向lock.txt中写入新<br>内容，可以发现，#提示符出现不了，说明echo命令被阻塞不动了（内核阻止了该进程），说明强制锁已经生效。然后回<br>到之前的shell使用ctrl+c终止test_filelock程序，可以发现另一个shell的echo进程阻塞被解除了，出现了#提示符，查<br>看lock.txt文件，发现新的内容已经被写入，这说明强制锁解除后，就可以写入新内容了，否则无法写入。从这个例子可<br>以看出，强制锁的实现只是进行了一些系统上的设置，重新加载了文件系统，修改了文件的权限，程序上并没有进行任何<br>更改。</p>
+<p></p>
+此时重新运行之前的test_filelock程序，程序处于死循环当中，然后重新打开一个终端shell,尝试向lock.txt中写入新  
+内容，可以发现，#提示符出现不了，说明echo命令被阻塞不动了（内核阻止了该进程），说明强制锁已经生效。然后回  
+到之前的shell使用ctrl+c终止test_filelock程序，可以发现另一个shell的echo进程阻塞被解除了，出现了#提示符，查  
+看lock.txt文件，发现新的内容已经被写入，这说明强制锁解除后，就可以写入新内容了，否则无法写入。从这个例子可  
+以看出，强制锁的实现只是进行了一些系统上的设置，重新加载了文件系统，修改了文件的权限，程序上并没有进行任何  
+更改。
+
 <h4 id="文件与内存映射"><a href="#文件与内存映射" class="headerlink" title="文件与内存映射"></a>文件与内存映射</h4><p>文件和内存的映射，就是将普通文件映射到内存中，普通文件被映射到进程地址空间后，进程可以像访问普通内存一样对<br>文件进行访问，不需要再调用read或者write等函数进行操作。将普通文件映射到内存的系统函数为mmap,函数声明如下：  </p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/mman.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">void</span> *<span class="hljs-title">mmap</span><span class="hljs-params">(<span class="hljs-type">void</span> *start , <span class="hljs-type">size_t</span> length , <span class="hljs-type">int</span> prot , <span class="hljs-type">int</span> flags , <span class="hljs-type">int</span> fd , <span class="hljs-type">off_t</span> offset)</span></span>;<br></code></pre></td></tr></table></figure>
 <p>其中参数start为映射区域的起始地址，通常为NULL或0，表示由系统自己决定映射到什么地址；length为映射数据的长度<br>，即文件需要映射到内存中的数据的大小；prot表示映射区域的保护方式，有以下取值（或它们的组合）：  </p>
@@ -490,20 +522,35 @@
 <li>MAP_LOCKED: 将映射区锁定，防止页面被交换出内存。</li>
 </ul>
 </blockquote>
-<p>参数flags必须为MAP_SHARED或者MAP_PRIVATE二者之一的类型。MAP_SHARED类型表示多个进程使用的是一个内存映射的副<br>本，任何一个进程都可以对此映射进行修改，且其它进程对此修改是可见的。而MAP_PRIVATE则是多个进程使用的文件内存<br>映射，在写入操作后，会复制一个副本给修改的进程，多个进程之间的副本是不一致的。<br>参数fd表示文件描述符，一般由open()函数返回；<br>参数offset表示被映射数据在文件中的起点；<br>mmap()函数映射后，可以让用户程序直接访问设备内存，相比较在用户空间和内核空间相互复制数据，小路更高，在<br>要求高性能的应用中比较常用。mmap映射内存必须是页面大小的整数倍，面向流的设备不能进行mmap映射，mmap的实<br>现和硬件有关。<br>mmap()使用示例：   </p>
+<p>参数flags必须为MAP_SHARED或者MAP_PRIVATE二者之一的类型。MAP_SHARED类型表示多个进程使用的是一个内存映射的副<br>本，任何一个进程都可以对此映射进行修改，且其它进程对此修改是可见的。而MAP_PRIVATE则是多个进程使用的文件内存<br>映射，在写入操作后，会复制一个副本给修改的进程，多个进程之间的副本是不一致的。<br>参数fd表示文件描述符，一般由open()函数返回；<br>参数offset表示被映射数据在文件中的起点；<br>mmap()函数映射后，可以让用户程序直接访问设备内存，相比较在用户空间和内核空间相互复制数据，小路更高，在<br>要求高性能的应用中比较常用。mmap映射内存必须是页面大小的整数倍，面向流的设备不能进行mmap映射，mmap的实<br>现和硬件有关。<br>mmap()使用示例：  </p>
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/15.png" srcset="/img/loading.gif" lazyload class="">   
+<p></p>
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/16.png" srcset="/img/loading.gif" lazyload class="">     
-<p>以上的程序将文件test.txt的内容先映射到内存mapped_mem，然后使用printf函数将此内存区域的内容输出出来，可<br>以看到，输出的内容正是test.txt文本文件的内容。<br>以上的示例因为使用的是PROT_READ，所以只能读取文件里的内容，不能修改，如果使用PROT_WIRTE，就可以修改文件<br>的内容了。又因为使用了MMAP_PRIVATE，所以只能此进程使用此内存区域，若换用MAP_SHARED，则可以被其它进程访<br>问，如下例示：   </p>
+    
+<p></p>
+以上的程序将文件test.txt的内容先映射到内存mapped_mem，然后使用printf函数将此内存区域的内容输出出来，可
+以看到，输出的内容正是test.txt文本文件的内容。   
+以上的示例因为使用的是PROT_READ，所以只能读取文件里的内容，不能修改，如果使用PROT_WIRTE，就可以修改文件
+的内容了。又因为使用了MMAP_PRIVATE，所以只能此进程使用此内存区域，若换用MAP_SHARED，则可以被其它进程访
+问，如下例示：   
+    
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/17.png" srcset="/img/loading.gif" lazyload class="">    
+<p></p>
 <img src="/2023/01/15/linux%E6%96%87%E4%BB%B6io/18.png" srcset="/img/loading.gif" lazyload class="">     
-<p>可以看到，我们通过对内存映射的修改，文本文件也修改成功了。   </p>
-<h4 id="mmap和共享内存"><a href="#mmap和共享内存" class="headerlink" title="mmap和共享内存"></a>mmap和共享内存</h4><p>共享内存允许两个或者多个进程共享一个给定的存储区，因为数据不需要来回复制，所以是最快的一种进程间通讯机<br>制。共享内存可以通过mmap()映射普通文件（特殊情况下还可以采用匿名映射）机制实现，也可以通过系统V共享内<br>存机制实现。应用接口和原理很简单，内部机制复杂。为了实现更安全的通信，往往还与信号灯等同步机制共同使用<br>。对比如下：   </p>
-<blockquote>
-<ul>
-<li>mmap机制：就是在硬盘上建立一个文件，每个进程存储器里面单独开辟一个空间来进行映射。如果是多进程，那<br>么对实际的物理存储器（主存）消耗不会太大。mmap保存到实际硬盘，实际存储并没有反映到主存上。优点是存储量<br>可以很大（多于主存），缺点是进程间读取和写入速度要比主存的慢。   </li>
-<li>shm机制：每个进程的共享内存都直接映射到实际物理存储器里面。shm保存到物理存储器（主存），实际的存储<br>量直接反映到主存上。优点是进程间访问速度（读写）比磁盘要快，缺点是存储量不能非常大（多于主存）。</li>
-</ul>
-</blockquote>
+    
+<p></p>
+可以看到，我们通过对内存映射的修改，文本文件也修改成功了。   
+#### mmap和共享内存
+共享内存允许两个或者多个进程共享一个给定的存储区，因为数据不需要来回复制，所以是最快的一种进程间通讯机
+制。共享内存可以通过mmap()映射普通文件（特殊情况下还可以采用匿名映射）机制实现，也可以通过系统V共享内
+存机制实现。应用接口和原理很简单，内部机制复杂。为了实现更安全的通信，往往还与信号灯等同步机制共同使用
+。对比如下：   
+> - mmap机制：就是在硬盘上建立一个文件，每个进程存储器里面单独开辟一个空间来进行映射。如果是多进程，那
+么对实际的物理存储器（主存）消耗不会太大。mmap保存到实际硬盘，实际存储并没有反映到主存上。优点是存储量
+可以很大（多于主存），缺点是进程间读取和写入速度要比主存的慢。   
+> - shm机制：每个进程的共享内存都直接映射到实际物理存储器里面。shm保存到物理存储器（主存），实际的存储
+量直接反映到主存上。优点是进程间访问速度（读写）比磁盘要快，缺点是存储量不能非常大（多于主存）。     
+   
 <p>从使用上看，如果分配的存储量不大，就使用shm；如果存储量大，就使用mmap。</p>
 
                 

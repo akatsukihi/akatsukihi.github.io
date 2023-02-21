@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/10/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/5.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/10/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/6.png">
 <meta property="article:published_time" content="2023-02-10T00:06:13.000Z">
-<meta property="article:modified_time" content="2023-02-12T09:27:04.967Z">
+<meta property="article:modified_time" content="2023-02-21T09:52:53.666Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="进程">
 <meta name="twitter:card" content="summary_large_image">
@@ -355,7 +355,10 @@
 </blockquote>
 <h6 id="守护进程的查看"><a href="#守护进程的查看" class="headerlink" title="守护进程的查看"></a>守护进程的查看</h6><p>可以使用命令ps x或者ps axj来查看当前运行着的守护进程。其中，a表示不仅列出当前用户的进程，也列出所有其它<br>用户的进程；x表示不仅列有控制终端的进程，也列出所有无控制终端的进程；j表示列出与作业控制相关的信息。<br>输入：ps axj</p>
 <img src="/2023/02/10/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/2.png" srcset="/img/loading.gif" lazyload class="">
-<p>TTY表示控制终端，可以看到这几个守护进程的控制终端为”?”，意思这些守护进程没有控制终端。UID为0，表示进程<br>的启动者是超级进程。  </p>
+<p></p>
+TTY表示控制终端，可以看到这几个守护进程的控制终端为"?"，意思这些守护进程没有控制终端。UID为0，表示进程
+的启动者是超级进程。  
+  
 <h6 id="守护进程的分类"><a href="#守护进程的分类" class="headerlink" title="守护进程的分类"></a>守护进程的分类</h6><p>根据守护进程的启动和管理方式，可以将守护进程分为独立启动守护进程和超级守护进程两类。<br><strong>独立启动（stand_alone）守护进程</strong>：这类守护进程遂系统启动，启动后就常驻内存，所以会一直占用系统资源。<br>其最大的优点是它会一直启动，当外界有要求时响应速度较快，比如httpd等进程。此类守护进程通常保存在系统目录<br>&#x2F;etc&#x2F;rc.d&#x2F;init.d下。<br><strong>超级守护进程</strong>：系统启动时，由一个统一的守护进程xinet来负责管理一些其它进程。当响应请求到来时，需要通<br>过xinet的转接才可以唤醒被xinet管理的进程。这种进程的优点是，最初只有xinet这一守护进程占用着系统资源，其<br>它的内部服务并不一直占有系统资源，只有数据包或其它请求到来时才会被xinet唤醒。并且还可以通过xinet对它所<br>管理的进程设置一些访问权限，相当于多了一层管理机制。<br>可以用银行业务类比这两类守护进程。<br>独立启动守护进程：银行里有一种单服务的窗口，像取钱、存钱窗口，这种窗口边上始终会坐着一个人，如果有人来<br>取钱或者存钱，可以直接到相应的窗口去办理，这个处理单一服务的始终存在的人就是独立启动的守护进程。<br>超级守护进程：银行有一种综合服务的导台，专为处理咨询、换汇款、大额提款存款等业务，这种导台也始终坐着一个<br>人（xinet），这个人可能不提供具体的业务服务，但是当有人需要服务时他会通知具体办理业务的服务人员，然后由<br>具体的服务人员来处理相关业务，这些负责处理具体业务的服务人员就称为超级守护进程。当然，可能有些服务的业<br>务会有具体的规则，如大额提款限制，超过多少万当天不能提取等。具体办理业务的服务人员就会将此规则告知导台<br>的服务咨询人员，当有人来要提取超过限额的款项时，服务咨询人员就会告知无法办理，也不会去通知具体的业务人<br>员，相当于提供了一层管理机制。需要注意的是，超级守护进程的管理员xinet也是一个守护进程，只不过它的任务类<br>似于传声筒。<br>每个守护进程都会监听一个端口(银行串口、导台)，一些常用守护进程的监听端口是固定的，像httpd监听80端口、<br>sshd监听22端口等，具体的端口信息可以通过cat &#x2F;etc&#x2F;services来查看。每个守护进程都会有一个脚本，可以理解<br>成工作配置文件。守护进程的脚本需要放在指定位置，独立启动守护进程的脚本放在&#x2F;etc&#x2F;init.d&#x2F;目录下，其中也包<br>括xinet的shell脚本；超级守护进程按照xinet中脚本的指示，所管理的守护进程位于&#x2F;etc&#x2F;xinetd.config目录下。   </p>
 <h6 id="守护进程的启动方式"><a href="#守护进程的启动方式" class="headerlink" title="守护进程的启动方式"></a>守护进程的启动方式</h6><p>守护进程一般是随着系统启动而自动激活的。它可以通过以下方式启动：</p>
 <blockquote>
@@ -390,7 +393,43 @@
 <img src="/2023/02/10/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/4.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/10/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/5.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/10/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/6.png" srcset="/img/loading.gif" lazyload class="">
-<p>可以看到log文件的大小不停在增长，kill掉进程后，文件增长停止，shell中的交互并不会影响到守护进程，除非强<br>制终止守护进程。</p>
+<p></p>
+可以看到log文件的大小不停在增长，kill掉进程后，文件增长停止，shell中的交互并不会影响到守护进程，除非强
+制终止守护进程。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 
               </div>
