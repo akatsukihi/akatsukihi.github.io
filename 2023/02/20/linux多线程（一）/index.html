@@ -34,8 +34,13 @@
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/9.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/10.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/11.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/12.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/13.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/14.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/15.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/16.png">
 <meta property="article:published_time" content="2023-02-20T08:11:16.000Z">
-<meta property="article:modified_time" content="2023-02-22T11:01:32.312Z">
+<meta property="article:modified_time" content="2023-02-23T11:18:37.272Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="线程">
 <meta name="twitter:card" content="summary_large_image">
@@ -260,7 +265,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          12k 字
+          14k 字
         
       </span>
     
@@ -271,7 +276,7 @@
         
         
         
-          104 分钟
+          119 分钟
         
       </span>
     
@@ -470,45 +475,54 @@
 <p>其中，参数retval就是线程退出时返回给主线程的值。注意，线程函数的返回类型是void*。另外，在main线程中调<br>用”pthread_exit(NULL)“的时候，将结束main线程，但进程并不立即退出(目的是让子线程有执行的机会)。  </p>
 <p>示例：获取线程退出时的返回值  </p>
 <img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/11.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+从上例可以看到，线程返回值有两种方式传递：一种是调用函数pthread_exit；另一种是直接return。pthread_exit
+函数的参数为void* ，因此需要通过指针的形式传递。接收线程函数返回值时使用了pthread_join函数，该函数有两
+个作用，其一是等待线程结束，其二是获取线程结束时的返回值。它的第二个参数是void**二级指针，所以需要传
+递给它的是指针的地址。还需要注意示例线程函数内部使用的是static变量，这是因为需要确保线程函数返回结束时
+该变量依旧存在未被释放。如果不使用static定义变量，那么函数内部的变量将开辟到栈区，在函数调用结束的时候，
+此内存空间必然是被释放不存在了。  
+   
+<h5 id="（2）线程被动结束"><a href="#（2）线程被动结束" class="headerlink" title="（2）线程被动结束"></a>（2）线程被动结束</h5><p>函数pthread_kill和pthread_cancel可以结束同进程中的其它线程。使用方法是同进程中的一个线程向目标线程使用<br>pthread_kill发送信号。注意：该函数不是杀死线程，而是向目标线程发送信号，接收信号的目标线程必须先用函数<br>sigaction注册该信号的处理函数。pthread_kill声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pthread_kill</span><span class="hljs-params">(<span class="hljs-type">pthread_t</span> threadid, <span class="hljs-type">int</span> signal)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中，参数threadid是目标线程的id，signal是信号类型，通常是大于0的值，如果等于0则是用来检测线程是否存在。<br>函数执行成功就返回0，否则返回错误码，如ESRCH表示线程不存在，EINVAL表示信号不合法.  </p>
+<ul>
+<li>注意：向指定该id的线程发送signal信号，如果线程代码内不做处理，则按照信号默认的行为影响整个进程，<br>也就是说，如果给一个线程发送了SIGQUIT，但该线程却没有实现对该信号处理的signal函数，则整个进程将会退出，<br>所以，如果pthread_kill()函数的第二个参数如果不为0，那么一定要实现目标线程对该信号的处理函数，否则将会<br>影响到整个进程。</li>
+</ul>
+<p>示例:向目标线程发送结束信号</p>
+<img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/12.png" srcset="/img/loading.gif" lazyload class="">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<p></p>
+主线程等待15秒后向子线程发送了终止信号，可以看到子线程在收到信号后随即终止了在运行中的子线程。
+  
+<hr>
+<p>示例：判断线程是否已经结束  </p>
+<img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/13.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+上图在main线程休眠10秒后，测试子线程是否还存活，如果仍旧存活就发送终止信号，结束子线程。
+  
+<hr>
+<p>除了使用pthread_kill函数发送信号来结束线程外，还可以使用函数pthread_cancel来取消目标线程的执行。所谓取<br>消目标线程的执行，也就是发送取消请求，请求目标线程终止其运行。*** 需要注意的是，就算请求发送成功，也<br>不一定意味着目标线程就停止运行了。*** 函数pthread_cancel声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pthread_cancel</span><span class="hljs-params">(<span class="hljs-type">pthread_t</span> threadid)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中，参数threadid表示要被取消的目标线程id，如果发送取消请求成功，则函数返回0，否则返回错误码。发送取消<br>请求成功并不意味着目标线程立即停止运行，即系统并不会马上关闭被取消线程，只有在被取消线程接下来调用一些系<br>统函数如pthread_testcancel(让内核去检测是否需要取消当前线程)，或者C库函数（如printf）时，才会真正的结束<br>目标线程。这种在线程执行过程中检测是否有未响应的取消信号的地方叫作取消点，常见的取消点有printf、read&#x2F;write<br>、sleep、pthread_testcancel等函数调用的地方。如果被取消线程停止成功，就将自动返回常数PTHREAD_CANCELED<br>（这个值是-1），可以使用pthread_join取得该退出值。<br>函数pthread_testcancel让内核去检测是否需要取消当前线程，声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">pthread_testcancel</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>该函数作为锚点让内核有机会去检测是否有取消请求过来。   </p>
+<p>示例：使用取消线程函数（不设置取消点）</p>
+<img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/14.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+上图发送取消信号后，实际线程并未结束，因为没有锚定取消点，所以内核无法终止该线程。  
+   
+<hr>
+<p>示例：使用取消线程函数（设置取消点）  </p>
+<img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/15.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+使用pthread_testcancel()设置取消点后，就可以终止该线程（使用sleep和printf等效果相同）。编译该代码时可能
+会报错，需要添加参数，如下所示：   
+   
+<img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/16.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+  
+<hr>
 
                 
               </div>
@@ -596,6 +610,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/02/23/%E6%A8%B1%E8%8A%B1%E5%BC%80%E4%BA%86/" title="樱花">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">樱花</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
