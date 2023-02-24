@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/15.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/16.png">
 <meta property="article:published_time" content="2023-02-20T08:11:16.000Z">
-<meta property="article:modified_time" content="2023-02-23T11:18:37.272Z">
+<meta property="article:modified_time" content="2023-02-24T09:33:58.485Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="线程">
 <meta name="twitter:card" content="summary_large_image">
@@ -265,7 +265,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          14k 字
+          16k 字
         
       </span>
     
@@ -276,7 +276,7 @@
         
         
         
-          119 分钟
+          135 分钟
         
       </span>
     
@@ -518,11 +518,29 @@
 <p></p>
 使用pthread_testcancel()设置取消点后，就可以终止该线程（使用sleep和printf等效果相同）。编译该代码时可能
 会报错，需要添加参数，如下所示：   
-   
+    
 <img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/16.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
   
 <hr>
+<h3 id="线程资源释放"><a href="#线程资源释放" class="headerlink" title="线程资源释放"></a>线程资源释放</h3><p>线程的主动结束可以认为是线程的正常终止，这种方式是可预见的。被动结束是其它线程要求目标线程结束，这种退<br>出方式不可预知，属于是一种异常终止。不论是可预见的线程终止还差异常终止，都会存在资源释放的问题。在不考<br>虑因运行出错而退出的前提下，保证线程终止时能顺利释放掉自己所占用的资源，尤其是锁资源，一个是必须要解决<br>的问题。<br>需要经常面对的是资源独占锁的使用情形：线程为了访问临界资源而为其加上锁，但在访问过程中被外界取消，如果<br>取消成功了，且还没来得及执行解锁，则该临界资源将永远处于锁定状态而得不到释放。因为外界取消操作是不可预<br>见的，因此需要有一个机制来简化用于资源释放的编程处理，也就是需要一个在线程退出时执行清理的机会。  </p>
+<p>示例代码：   </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> * <span class="hljs-title">threadfunc</span><span class="hljs-params">(<span class="hljs-type">void</span> * argv)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">pthread_mutex_lock</span>(&amp;mutex);<br>    sock = <span class="hljs-built_in">accept</span>(.....);<br>    <span class="hljs-built_in">pthread_mutex_unlock</span>(&amp;mutex);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>该示例中，线程在执行accept时会阻塞等待客户端的连接，当有连接或者出现故障时返回，如果在此过程中有其它线<br>程调用 pthread_cancel或者类似函数请求该线程立即退出，该线程在收到信号后，会从accept中退出，然后终止线程。<br>但是此时还没有执行解锁函数pthread_mutex_unlock(&amp;mutex)，该锁资源没有被释放从而会造成其它线程的死锁问题，<br>即其它等待该锁资源的线程将永远不会得到该锁。所以必须在线程接收到cancel后，用其它方式保证异常退出时可以<br>清理锁资源等。<br>POSIX线程库提供了函数pthread_cleanup_push和pthread_cleanup_pop来处理线程异常退出时的资源清理。这两个函<br>数采用先入后出的栈结构，前者用来把清理资源的函数入栈；后者用来弹出栈顶清理资源的函数，并根据参数来决定<br>是否执行该清理函数。<br>pthread_cleanip_push函数声明如下:</p>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs delphi">#inclede &lt;pthread.h&gt;<br>void pthread_cleanup_push(void <span class="hljs-comment">(*routine)(void*)</span>, void *arg);<br></code></pre></td></tr></table></figure>
+<p>其中，参数routine是一个函数指针，arg是该函数的参数。<br>由pthread_cleanup_push压栈的清理函数在遇到下面三种情况时会执行：  </p>
+<blockquote>
+<ul>
+<li>(1) 线程主动结束时，比如return或者调用pthread_exit的时候。  </li>
+<li>(2) 线程被其它线程取消时，也就是有其它线程对该线程调用了pthread_cancel函数。  </li>
+<li>(3) 调用函数pthread_cleanup_pop，且其参数为非0时。</li>
+</ul>
+</blockquote>
+<p>函数pthread_cleanup_pop声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;pthread.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">pthread_cleanup_pop</span><span class="hljs-params">(<span class="hljs-type">int</span> execute)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中，参数execute用来决定在弹出栈顶清理函数的同时是否执行该清理函数，取0时则表示不执行该清理函数，非0则<br>代表执行该清理函数。需要注意的是函数pthread_cleanup_pop与pthread_cleanup_push需要成对的出现在同一个函数<br>中，否则会出现语法错误。<br>有了上述这两个函数后，上述示例的可能引起死锁的线程就可以改为：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> * <span class="hljs-title">threadfunc</span><span class="hljs-params">(<span class="hljs-type">void</span> * argv)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">pthread_cleanup_push</span>(clean_func, ...);<span class="hljs-comment">/*压栈一个清理函数clean_func*/</span><br>    <span class="hljs-built_in">pthread_mutex_lock</span>(&amp;mutex);<span class="hljs-comment">/*加锁*/</span><br>    socket = <span class="hljs-built_in">accept</span>(....);<span class="hljs-comment">/*调用阻塞函数*/</span><br>    <span class="hljs-built_in">pthread_mutex_unlock</span>(&amp;mutex);<span class="hljs-comment">/*解锁*/</span><br>    <span class="hljs-built_in">pthread_cleanup_pop</span>(<span class="hljs-number">0</span>);<span class="hljs-comment">/*弹出清理函数，参数为0，不执行*/</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>；<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>上述修改之后的代码，如果accept被其它线程cancel然后退出，就会自动调用clean_func函数，在该清理函数中可以<br>处理释放资源；如果accept未被cancel退出，那么线程就继续执行下来的代码，当执行到pthread_mutex_unlock(&amp;mutex)时<br>线程自己正确的释放了锁资源，再执行到pthread_cleanup_pop(0)时，会将未执行的清理函数出栈，并且不会执行它。<br>这样该线程函数就变为了一个较安全的函数了。   </p>
 
                 
               </div>
