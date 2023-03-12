@@ -39,8 +39,12 @@
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/14.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/15.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/16.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/17.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/18.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/19.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/20.png">
 <meta property="article:published_time" content="2023-02-20T08:11:16.000Z">
-<meta property="article:modified_time" content="2023-02-25T03:17:01.862Z">
+<meta property="article:modified_time" content="2023-03-07T08:18:04.506Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="线程">
 <meta name="twitter:card" content="summary_large_image">
@@ -276,7 +280,7 @@
         
         
         
-          135 分钟
+          138 分钟
         
       </span>
     
@@ -541,6 +545,22 @@
 <p>其中，参数execute用来决定在弹出栈顶清理函数的同时是否执行该清理函数，取0时则表示不执行该清理函数，非0则<br>代表执行该清理函数。需要注意的是函数pthread_cleanup_pop与pthread_cleanup_push需要成对的出现在同一个函数<br>中，否则会出现语法错误。<br>有了上述这两个函数后，上述示例的可能引起死锁的线程就可以改为：  </p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> * <span class="hljs-title">threadfunc</span><span class="hljs-params">(<span class="hljs-type">void</span> * argv)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">pthread_cleanup_push</span>(clean_func, ...);<span class="hljs-comment">/*压栈一个清理函数clean_func*/</span><br>    <span class="hljs-built_in">pthread_mutex_lock</span>(&amp;mutex);<span class="hljs-comment">/*加锁*/</span><br>    socket = <span class="hljs-built_in">accept</span>(....);<span class="hljs-comment">/*调用阻塞函数*/</span><br>    <span class="hljs-built_in">pthread_mutex_unlock</span>(&amp;mutex);<span class="hljs-comment">/*解锁*/</span><br>    <span class="hljs-built_in">pthread_cleanup_pop</span>(<span class="hljs-number">0</span>);<span class="hljs-comment">/*弹出清理函数，参数为0，不执行*/</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>；<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>上述修改之后的代码，如果accept被其它线程cancel然后退出，就会自动调用clean_func函数，在该清理函数中可以<br>处理释放资源；如果accept未被cancel退出，那么线程就继续执行下来的代码，当执行到pthread_mutex_unlock(&amp;mutex)时<br>线程自己正确的释放了锁资源，再执行到pthread_cleanup_pop(0)时，会将未执行的清理函数出栈，并且不会执行它。<br>这样该线程函数就变为了一个较安全的函数了。   </p>
+<p>示例：线程主动退出，调用清理函数：  </p>
+<img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/17.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+
+<p>上图示例中，无论是return还是pthread_exit都回引起清理函数的执行，需要注意的是，pthread_cleanup_push和pop<br>函数必须成对出现，否则编译不过。   </p>
+<p>示例：使用pthread_cleanup_pop调用清理函数   </p>
+<img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/18.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>   
+    
+<p>上例可以看出，连续压栈的话，先入栈的函数最后出栈，后入栈的函数在栈顶会先出栈。因此pthread_cleanup_pop(1)<br>执行的是后压入在栈顶的n，所以输出数值应该是2。pthread_exit退出线程时，引发执行的清理函数是先压栈的m，所<br>以后输出1。  </p>
+<p>示例：取消线程时调用清理函数  </p>
+<img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/19.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/20/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/20.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>  
+   
+<p>从上例可以看出，子线程循环打印i值，一直到被取消。由于循环中存在系统调用printf，因此可以取消成功，取消<br>成功的时候将会调用清理函数，清理函数将会输出循环i的最终值。</p>
 
                 
               </div>
