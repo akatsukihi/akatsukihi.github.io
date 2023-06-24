@@ -4,11 +4,36 @@
   
   
   <entry>
+    <title>Z-Library客户端</title>
+    <link href="/2023/06/24/Z-Library%E5%AE%A2%E6%88%B7%E7%AB%AF/"/>
+    <url>/2023/06/24/Z-Library%E5%AE%A2%E6%88%B7%E7%AB%AF/</url>
+    
+    <content type="html"><![CDATA[<h2 id="Long-live-freedom"><a href="#Long-live-freedom" class="headerlink" title="Long live freedom"></a>Long live freedom</h2><p>①　Windows客户端：<a href="https://1lib.sk/soft/zlibrary-setup-latest.exe">下载</a><br>②　苹果客户端：<a href="https://1lib.sk/soft/zlibrary-setup-latest.dmg">下载</a><br>③　安卓客户端：<a href="https://1lib.sk/soft/zlibrary-app-latest.apk">下载</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>tools</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>tool汇总</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>字段拆分</title>
     <link href="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/"/>
     <url>/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/</url>
     
-    <content type="html"><![CDATA[<h2 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h2><p>最近多半年一直在做sql脚本相关的接口开发，最近遇到的一个业务场景是上游输出IF的CSV文件，我们脚本读取该IF<br>并根据内容做对应的数据库update和insert操作。其中给定的一个字段是复合的数据结构，是一个一对多的处理操作<br>。IF的csv中一行对应一个主表的id，该行的一个字段中使用分号”;“拼接了其它表的主键id，然后需要往中间表中<br>按照这种一对多的关系写入指定的邮件信息。   </p><h2 id="处理方式"><a href="#处理方式" class="headerlink" title="处理方式"></a>处理方式</h2><p>这种接口的处理有两种方式，一种是将所有的逻辑都仍在业务代码里面处理，还有一种是在数据库处理，然后业务端<br>只做更新和插入操作。如果放在业务端做处理最容易的实现办法就是循环读取IF的行，然后取到复合字段进行拆分再<br>循环该符合字段进行相应的更新或者插入操作；还有一种就是仍在数据库进行相应的拆分处理，然后取到需要的字段<br>进行中间表的更新和插入。第一种处理方式经常使用，第二种方式使用不频繁所，所以记录一下。</p><blockquote><ul><li>复合字段处理<br>根据数据库不同，处理有所差异，但是大同小异，如果使用的是sql server和Oracle，或者postgreSQL的数据库，则<br>有现成的函数可用，所要做的就是将该复合字段转为xml类型的结构化数据，然后再调用处理xml类型的函数将各节点<br>由一行转为多行数据，再使用各节点的id去关联对应的主表获取所需的字段，如下所示：</li></ul></blockquote><img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/1.png" class=""><p></p><p></p>将上图的std_id转为xml结构化数据，再使用对应的函数将节点数据转为多行处理；     <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/2.png" class=""><p></p><p></p>因为我本地使用的是mysql，该数据库没有对应的xml转换函数，所以此处就需要使用mysql的一张系统表help_topic该表的解释如下：    <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/3.png" class=""><p></p><p></p>使用该表的help_topic_id字段可以根据复合字段的分割数量来控制关联的次数，然后再根据help_topic_id的自增属性配合substring_index函数来获取对应索引的id值。   <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/4.png" class=""><p></p><p></p><img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/5.png" class=""><p></p><p></p><img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/6.png" class=""><p></p><p></p>根据上图可以看出help_topic_id的相关变化，然后再配合substring_index函数就可以将复合的字段转为多行id使用   <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/7.png" class=""><p></p><p></p>]]></content>
+    <content type="html"><![CDATA[<h2 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h2><p>最近多半年一直在做sql脚本相关的接口开发，最近遇到的一个业务场景是上游输出IF的CSV文件，我们脚本读取该IF<br>并根据内容做对应的数据库update和insert操作。其中给定的一个字段是复合的数据结构，是一个一对多的处理操作<br>。IF的csv中一行对应一个主表的id，该行的一个字段中使用分号”;“拼接了其它表的主键id，然后需要往中间表中<br>按照这种一对多的关系写入指定的邮件信息。   </p><h2 id="处理方式"><a href="#处理方式" class="headerlink" title="处理方式"></a>处理方式</h2><p>这种接口的处理有两种方式，一种是将所有的逻辑都仍在业务代码里面处理，还有一种是在数据库处理，然后业务端<br>只做更新和插入操作。如果放在业务端做处理最容易的实现办法就是循环读取IF的行，然后取到复合字段进行拆分再<br>循环该符合字段进行相应的更新或者插入操作；还有一种就是仍在数据库进行相应的拆分处理，然后取到需要的字段<br>进行中间表的更新和插入。第一种处理方式经常使用，第二种方式使用不频繁所，所以记录一下。</p><blockquote><ul><li>复合字段处理<br>根据数据库不同，处理有所差异，但是大同小异，如果使用的是sql server和Oracle，或者postgreSQL的数据库，<br>则有现成的函数可用，所要做的就是将该复合字段转为xml类型的结构化数据，然后再调用处理xml类型的函数将<br>各节点由一行转为多行数据，再使用各节点的id去关联对应的主表获取所需的字段，如下所示：</li></ul></blockquote><img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/1.png" class=""><p></p><p></p>将上图的std_id转为xml结构化数据，再使用对应的函数将节点数据转为多行处理；     <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/2.png" class=""><p></p><p></p>因为我本地使用的是mysql，该数据库没有对应的xml转换函数，所以此处就需要使用mysql的一张系统表help_topic该表的解释如下：    <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/3.png" class=""><p></p><p></p>使用该表的help_topic_id字段可以根据复合字段的分割数量来控制关联的次数，然后再根据help_topic_id的自增属性配合substring_index函数来获取对应索引的id值。   <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/4.png" class=""><p></p><p></p><img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/5.png" class=""><p></p><p></p><img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/6.png" class=""><p></p><p></p>根据上图可以看出help_topic_id的相关变化，然后再配合substring_index函数就可以将复合的字段转为多行id使用   <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/7.png" class=""><p></p><p></p>]]></content>
     
     
     <categories>
