@@ -16,12 +16,12 @@
   <meta name="author" content="akatsukihi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="业务场景最近多半年一直在做sql脚本相关的接口开发，最近遇到的一个业务场景是上游输出IF的CSV文件，我们脚本读取该IF并根据内容做对应的数据库update和insert操作。其中给定的一个字段是复合的数据结构，是一个一对多的处理操作。IF的csv中一行对应一个主表的id，该行的一个字段中使用分号”;“拼接了其它表的主键id，然后需要往中间表中按照这种一对多的关系写入指定的邮件信息。    处理方">
+    <meta name="description" content="业务场景最近遇到的一个业务场景是上游输出IF的CSV文件,然后用脚本读取该IF并根据内容做对应的数据库update和insert操作。其中给定的一个字段是复合的数据结构，是一个一对多的处理操作。IF的csv中一行对应一个主表的id，该行的一个字段中使用分号”;“拼接了其它表的主键id，然后需要往中间表中按照这种一对多的关系写入指定的邮件信息。    处理方式两种处理该接口的方式，一种是将所有的逻辑">
 <meta property="og:type" content="article">
 <meta property="og:title" content="字段拆分">
 <meta property="og:url" content="https://akatsukihi.github.io/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/index.html">
 <meta property="og:site_name" content="AkatsukiHi">
-<meta property="og:description" content="业务场景最近多半年一直在做sql脚本相关的接口开发，最近遇到的一个业务场景是上游输出IF的CSV文件，我们脚本读取该IF并根据内容做对应的数据库update和insert操作。其中给定的一个字段是复合的数据结构，是一个一对多的处理操作。IF的csv中一行对应一个主表的id，该行的一个字段中使用分号”;“拼接了其它表的主键id，然后需要往中间表中按照这种一对多的关系写入指定的邮件信息。    处理方">
+<meta property="og:description" content="业务场景最近遇到的一个业务场景是上游输出IF的CSV文件,然后用脚本读取该IF并根据内容做对应的数据库update和insert操作。其中给定的一个字段是复合的数据结构，是一个一对多的处理操作。IF的csv中一行对应一个主表的id，该行的一个字段中使用分号”;“拼接了其它表的主键id，然后需要往中间表中按照这种一对多的关系写入指定的邮件信息。    处理方式两种处理该接口的方式，一种是将所有的逻辑">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/1.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/2.png">
@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://akatsukihi.github.io/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/6.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/7.png">
 <meta property="article:published_time" content="2023-06-18T04:08:00.000Z">
-<meta property="article:modified_time" content="2023-06-18T05:28:00.831Z">
+<meta property="article:modified_time" content="2023-06-24T03:37:14.881Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="sql函数">
 <meta name="twitter:card" content="summary_large_image">
@@ -256,7 +256,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          830 字
+          805 字
         
       </span>
     
@@ -310,8 +310,8 @@
             
               <div class="markdown-body">
                 
-                <h2 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h2><p>最近多半年一直在做sql脚本相关的接口开发，最近遇到的一个业务场景是上游输出IF的CSV文件，我们脚本读取该IF<br>并根据内容做对应的数据库update和insert操作。其中给定的一个字段是复合的数据结构，是一个一对多的处理操作<br>。IF的csv中一行对应一个主表的id，该行的一个字段中使用分号”;“拼接了其它表的主键id，然后需要往中间表中<br>按照这种一对多的关系写入指定的邮件信息。   </p>
-<h2 id="处理方式"><a href="#处理方式" class="headerlink" title="处理方式"></a>处理方式</h2><p>这种接口的处理有两种方式，一种是将所有的逻辑都仍在业务代码里面处理，还有一种是在数据库处理，然后业务端<br>只做更新和插入操作。如果放在业务端做处理最容易的实现办法就是循环读取IF的行，然后取到复合字段进行拆分再<br>循环该符合字段进行相应的更新或者插入操作；还有一种就是仍在数据库进行相应的拆分处理，然后取到需要的字段<br>进行中间表的更新和插入。第一种处理方式经常使用，第二种方式使用不频繁所，所以记录一下。</p>
+                <h2 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h2><p>最近遇到的一个业务场景是上游输出IF的CSV文件,然后用脚本读取该IF并根据内容做对应的数据库update和insert操<br>作。其中给定的一个字段是复合的数据结构，是一个一对多的处理操作。IF的csv中一行对应一个主表的id，该行的一<br>个字段中使用分号”;“拼接了其它表的主键id，然后需要往中间表中按照这种一对多的关系写入指定的邮件信息。   </p>
+<h2 id="处理方式"><a href="#处理方式" class="headerlink" title="处理方式"></a>处理方式</h2><p>两种处理该接口的方式，一种是将所有的逻辑都仍在业务代码里面处理，还有一种是在数据库处理，然后业务端只做<br>更新和插入操作。如果放在业务端做处理最容易的实现办法就是循环读取IF的行，然后取到复合字段进行拆分再循环<br>该符合字段进行相应的更新或者插入操作；还有一种就是仍在数据库进行相应的拆分处理，然后取到需要的字段进行<br>中间表的更新和插入。第一种处理方式经常使用，第二种方式使用场景不多，记录一下。</p>
 <blockquote>
 <ul>
 <li>复合字段处理<br>根据数据库不同，处理有所差异，但是大同小异，如果使用的是sql server和Oracle，或者postgreSQL的数据库，<br>则有现成的函数可用，所要做的就是将该复合字段转为xml类型的结构化数据，然后再调用处理xml类型的函数将<br>各节点由一行转为多行数据，再使用各节点的id去关联对应的主表获取所需的字段，如下所示：</li>
