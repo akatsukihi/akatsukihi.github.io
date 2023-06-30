@@ -18,37 +18,37 @@
   
     <meta name="description" content="进程的概念进程是操作系统结构的基础。进程是一个具有独立功能的程序对某个数据集合在处理机上的执行过程，进程也是作为资源分配的一个基本单位。linux作为一个多用户、多任务的操作系统，必定支持多进程。多进程也是现代操作系统的基本特征之一，操作系统在裸机硬件层面之上提供了更为简单、可靠、安全、高效的功能，它的首要功能就是管理和协调各种计算机系统资源，包括物理资源和虚拟的资源。为了提高计算机系统中各种资源">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux进程(一)">
-<meta property="og:url" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/index.html">
+<meta property="og:title" content="linux进程（一）">
+<meta property="og:url" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
 <meta property="og:site_name" content="AkatsukiHi">
 <meta property="og:description" content="进程的概念进程是操作系统结构的基础。进程是一个具有独立功能的程序对某个数据集合在处理机上的执行过程，进程也是作为资源分配的一个基本单位。linux作为一个多用户、多任务的操作系统，必定支持多进程。多进程也是现代操作系统的基本特征之一，操作系统在裸机硬件层面之上提供了更为简单、可靠、安全、高效的功能，它的首要功能就是管理和协调各种计算机系统资源，包括物理资源和虚拟的资源。为了提高计算机系统中各种资源">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/1.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/2.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/3.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/4.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/5.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/6.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/7.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/8.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/9.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/10.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/11.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/12.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/13.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/14.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/1.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/2.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/3.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/4.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/5.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/6.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/7.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/8.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/9.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/10.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/11.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/12.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/13.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/14.png">
 <meta property="article:published_time" content="2023-02-02T04:51:01.000Z">
-<meta property="article:modified_time" content="2023-02-21T09:52:04.338Z">
+<meta property="article:modified_time" content="2023-06-30T09:24:48.765Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="进程">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/1.png">
+<meta name="twitter:image" content="https://akatsukihi.github.io/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/1.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>linux进程(一) - AkatsukiHi</title>
+  <title>linux进程（一） - AkatsukiHi</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -114,7 +114,11 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
 
 
 <body>
@@ -240,7 +244,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="linux进程(一)"></span>
+            <span id="subtitle" data-typed-text="linux进程（一）"></span>
           
         </div>
 
@@ -312,7 +316,7 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">linux进程(一)</h1>
+            <h1 style="display: none">linux进程（一）</h1>
             
             
               <div class="markdown-body">
@@ -379,7 +383,7 @@
 <p>可以看到__PID_T_TYPE被定义为__S32_TYPE类型。在文件&#x2F;usr&#x2F;include&#x2F;bits&#x2F;types.h中，可以找到这样的定义：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">define</span> __S32_TYPE  int</span><br></code></pre></td></tr></table></figure>
 <p>可以看到实际上pid_t就是一个int型。在终端下可以使用命令ps -e来查看所有的进程id，譬如:  </p>
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/1.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/1.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 -e表示显示所有进程，也可以使用-A，含义一样。上图第一列为进程ID，即PID，最后一列是进程的名字,其和所对应
 的程序名相同，因此会出现重名的进程，虽然会有重名进程的出现，但是其PID是不同的，因此PID才是一个进程的标
@@ -387,9 +391,9 @@
 
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">//使用示例：  </span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">pid_t</span> pid = <span class="hljs-built_in">getpid</span>();<br>    std::cout&lt;&lt;<span class="hljs-string">&quot;pid = &quot;</span>&lt;&lt;pid&lt;&lt;std::endl;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;  <br>   <br></code></pre></td></tr></table></figure>
 <h4 id="PID文件"><a href="#PID文件" class="headerlink" title="PID文件"></a>PID文件</h4><p>在系统的&#x2F;var&#x2F;run目录下，会看到很多后缀为*.pid的文件。往往新安装的程序在运行后会在&#x2F;var&#x2F;run目录下产生自<br>己的pid文件。pid文件为文本文件，内容只有一行，记录该进程的id。这些pid文件的作用是防止进程启动多个副本。<br>只有获得相应pid文件写入权限的进程才能正常启动，并把自身的pid写入该文件中。pid文件位于固定路径&#x2F;var&#x2F;run<br>，并且文件名也是固定的，即进程名.pid。<br>通常有两种方法配合pid文件来实现进程的重复启动。一种是文件加锁法，另一种是pid读写法。文件加锁法的基本思<br>路是进程运行后会给pid文件加一个文件锁，只有获得该锁的进程才有写入权限（F_WRLCK），以后其它试图获得该锁<br>的进程会自动退出，给文件加锁的函数是fcntl()函数，如果成功锁定，进程则继续往下执行，如果锁定不成功，说<br>明已经有同样的进程在运行了，该进程就退出。pid读写法则是先启动的进程往pid文件中写入自己的进程id号，然后<br>其它进程判断该pid文件中是否已有数据了。<br>使用pid文件判断进程是否运行示例：</p>
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/2.png" srcset="/img/loading.gif" lazyload class="">
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/3.png" srcset="/img/loading.gif" lazyload class="">
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/4.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/2.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/3.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/4.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 check_pid是一个自定义函数，用来检测pid文件是否存在，然后根据pid文件内容判断进程是否运行。整个程序在刚刚
 启动的时候会创建一个test_pid.pid文件，并把本进程的进程号写入该文件中,程序结束的时候，也就是进程退出时会
@@ -400,7 +404,7 @@ check_pid是一个自定义函数，用来检测pid文件是否存在，然后�
 <h2 id="进程的创建"><a href="#进程的创建" class="headerlink" title="进程的创建"></a>进程的创建</h2><h3 id="使用fork创建"><a href="#使用fork创建" class="headerlink" title="使用fork创建"></a>使用fork创建</h3><p>linux可以通过执行系统调用函数fork来创建新的进程，由fork创建的新进程称为子进程，该函数被调用一次，但返回<br>两次。两次返回的区别是子进程的返回值是0，而父进程的返回值是子进程的PID，子进程和父进程继续执行fork之后<br>的指令。父进程和子进程几乎是等同的——它们具有相同的变量值（但变量内存并不共享），打开的文件也都相同，还<br>有其它一些相同属性。如果父进程改变了变量的值，子进程将不会看到这个变化。实际上，子进程是父进程的一个复<br>制，但它们并不共享内存。而且，linux并不完全复制内存页，而是采用了写时复制（copy on write）的技术，这些<br>内存区域由父、子进程共享，而且内核将它们的许可权限改为只读，当有进程试图改修这些区域时，内核就为相关部<br>分做一下复制。<br>系统调用函数fork的声明如下：  </p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">pid_t</span> <span class="hljs-title">fork</span><span class="hljs-params">()</span></span>;<br></code></pre></td></tr></table></figure>
 <p>该函数将创建一个子进程。如果成功，在父进程的程序中将返回子进程的进程id，即pid值；在子进程中函数返回0；<br>如果失败，则在父进程程序中返回-1，并且可以通过errno得到错误码。一个进程成功调用fork函数后，系统先给新<br>的进程分配资源，例如存储数据和代码的空间。然后把原来的进程的所有值都复制到新的进程中，只有少数值与原来<br>的进程的值不同，相当于克隆了一个自己。代码示例如下：   </p>
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/5.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/5.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 通过示例代码可以看到，父进程和子进程的pid是不同的，说明是两个不同的进程。在语句cpid=fork()之前，只有一
 个进程（即父进程）在执行这段代码，但在这条语句之后，就变成两个进程在执行了，这两个进程近乎完全相同，将
@@ -415,15 +419,15 @@ cpid不同这和fork函数的特性有关。fork调用的神奇之处就是它�
 <h4 id="1-execl函数"><a href="#1-execl函数" class="headerlink" title="1.execl函数"></a>1.execl函数</h4><p>函数execl声明如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">execl</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *path , <span class="hljs-type">const</span> <span class="hljs-type">char</span> *arg , ...)</span></span>;<br></code></pre></td></tr></table></figure>
 <p>其中，参数path指向要执行的文件路径（可以是命令的全路径、执行程序的全路径或脚本文件的全路径）；后面的参<br>数arg以及之后的省略号代表执行该程序时传递的参数列表，并且第一个被认为是argv[0]（即path后面的参数const<br>char *arg），第二个被认为是argv[1 ]….相当于main函数中的argv，main函数中的argv[0]是程序的名称，程序<br>所需要的参数是从argv[1]才开始获取的，execl的argv[0]也是按照此习惯设计，即argv[1]才是传给execl要启动的<br>程序的第一个参数，argv[0]可以只写个程序名（对于大多数命令程序来说没什么作用，随便写一个字符串也可以，<br>但不要写NULL，写NULL就认为参数列表就此结束了，而对于自定义程序，则要视情况而定），最后一个参数必须使用<br>空指针NULL结束。函数成功时不返回值，失败则返回-1，失败原因存于errno中，可通过perror()打印。另外需要注<br>意的是，对于系统命令程序，如pwd命令，argv[0]是必须有的，但其值可以是一个无意义的字符串。<br>示例：使用execl执行不带参数的命令程序pwd   </p>
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/6.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/6.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 程序打印当前路径，和单独执行pwd命令是一样的，虽然pwd命令不带参数，但使用execl执行的时候，依然需要argv[0]
 这个选项，不可为NULL。  
 
 <hr>
 <p>使用execl执行可带参数的命令，ls:  </p>
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/7.png" srcset="/img/loading.gif" lazyload class="">
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/8.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/7.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/8.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 通过上面程序的运行结果比较，可以看到execl的第二个参数,即argv[0]没什么用处，即使随便输入一个字符串，程序
 效果也是一样的。说明对于execl函数，只要提供了程序的全路径和argv[1]开始的参数信息就可以了。   
@@ -431,21 +435,21 @@ cpid不同这和fork函数的特性有关。fork调用的神奇之处就是它�
 
 <hr>
 <p>实现自定义程序  </p>
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/9.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/9.png" srcset="/img/loading.gif" lazyload class="">
 
 <p></p>
 
 <hr>
 <p>使用execl调用自定义程序  </p>
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/10.png" srcset="/img/loading.gif" lazyload class="">
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/11.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/10.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/11.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 上面示例的自定义程序调用时传递的参数是不同的，可以对比关于argv传递的参数，理解argv参数传递的方式。
 
 <h4 id="2-execlp函数"><a href="#2-execlp函数" class="headerlink" title="2.execlp函数"></a>2.execlp函数</h4><p>execlp函数声明如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">execlp</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *file , <span class="hljs-type">const</span> <span class="hljs-type">char</span> *arg , ....)</span></span>;<br></code></pre></td></tr></table></figure>
 <p>其中参数file指向要执行的程序，但不需要写出完整路径，函数会从环境变量PATH所指的目录中查找符合参数file的<br>文件名，找到后便执行该文件；后面的参数同execl函数相同，最后一个参数同样需要空指针NULL作为结束。函数成功<br>执行不会返回，执行失败返回-1，错误码存于errno中。<br>示例程序：  </p>
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/12.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/12.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 上图可以看到execlp第一个参数直接写pwd这个命令即可，不需要写全路径，因为环境变量PATH中已经包含了pwd命令
 所在的路径了；第二个参数是空字符串，也可以是其它任意的字符串，但必须要有，不可为NULL，否则程序会报错。
@@ -453,8 +457,8 @@ cpid不同这和fork函数的特性有关。fork调用的神奇之处就是它�
 
 <hr>
 <p>使用execlp调用自定义程序的话，需要将自定义程序的文件路径加入到环境变量PATH中，也可以将自定义程序移动到<br>PATH路径现在已经有的路径下。将上文的test_exemine复制一份到&#x2F;usr&#x2F;bin下，然后用execlp调用此程序示例如下：   </p>
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/13.png" srcset="/img/loading.gif" lazyload class="">
-<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B-%E4%B8%80/14.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/13.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2023/02/02/linux%E5%A4%9A%E8%BF%9B%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/14.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 可以看到execlp调用自定义程序执行成功了，且参数为NULL。  
 实际上，只有函数execvpe才是真正意义上的系统调用，其它的都是在此基础上封装的函数。exec函数族的作用是根
@@ -523,8 +527,8 @@ cpid不同这和fork函数的特性有关。fork调用的神奇之处就是它�
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>linux进程(一)</div>
-      <div>https://akatsukihi.github.io/2023/02/02/linux多进程-一/</div>
+      <div>linux进程（一）</div>
+      <div>https://akatsukihi.github.io/2023/02/02/linux多进程（一）/</div>
     </div>
     <div class="license-meta">
       
