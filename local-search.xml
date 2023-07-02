@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>递归函数</title>
+    <link href="/2023/07/02/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/"/>
+    <url>/2023/07/02/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/</url>
+    
+    <content type="html"><![CDATA[<h2 id="递归（Recursive）"><a href="#递归（Recursive）" class="headerlink" title="递归（Recursive）"></a>递归（Recursive）</h2><p>递归，在数学与计算机科学中，是指在函数的定义中使用函数自身的方法。递归一词还较常用于描述以自相似方法重<br>复事物的过程。例如，当两面镜子相互之间近似平行时，镜中嵌套的图像是以无限递归的形式出现的。也可以理解为<br>自我复制的过程。递归的定义如下：   </p><blockquote><ul><li>在数学和计算机科学中，递归指由一种（或多种）简单的基本情况定义的一类对象或方法，并规定其他所<br>有情况都能被还原为其基本情况。   </li></ul></blockquote><p>递归函数（recursive function）或方法是指自己调用自己的一类过程，分为直接递归和间接递归。在直接递归中,<br>递归函数f的代码包含了调用f的语句；而在间接递归中，递归函数f调用了函数g，g又调用了函数h，如此下去，直<br>到又调用了f。下面先回顾两个数学概念——数学函数的递归定义和归纳证明。    </p><h3 id="递归的数学函数"><a href="#递归的数学函数" class="headerlink" title="递归的数学函数"></a>递归的数学函数</h3><p>数学中经常有这样的函数，它自己定义自己。例如：n的阶乘函数f(n)=n!，n为整数:   </p><script type="math/tex; mode=display">f(n)=\begin{cases}1 & n \leq 1 \\\\nf(n-1) & n > 1 \tag{1-1}\end{cases}</script><p>当n小于或等于1时，f(n)的值为1，例如f(-3)=f(0)=f(1)=1。当n大于1时，f(n)是递归定义的，因为右侧也有f。但<br>这不会导致循环定义，因为右侧f的参数小于左侧f的参数，例如，f(2)=2f(1)，因为f(1)=1,所以f(2)=2*1=2，以此<br>类推f(3)=3f(2)=3*2=6。<br>假定f(n)是直接递归的。要使函数f(n)的递归定义有一个完全的形式，就需要满足如下的条件：   </p><blockquote><ul><li>有一个<strong>基础部分</strong>，它包含n的一个或多个值，对这些值，f(n)是直接定义的（即不用递归就能求解）。为<br>简单起见，假定f的定义域为非负证书，基础部分包含$0\leq n \leq k$，其中k为非负常熟。（$n\geq k$的情形<br>也是可能的，但很少见。   </li><li>在<strong>递归部分</strong>，右侧f有一个小于n的参数，因此重复应用递归部分可以把右侧f的表达式变为基础部分。   </li></ul></blockquote><p>在公式（1-1）中，基础部分是f(n)=1，$n \leq 1$；递归部分是f(n)=nf(n-1),右侧f的参数是n-1，比n小。重复<br>应用递归部分将f(n-1)转变为f(n-2),f(n-3)，…..，直到f(1),而f(1)属于基础部分，例如：  </p><script type="math/tex; mode=display">f(5)=5f(4)=20f(3)=60f(2)=120f(1)</script><p>注意，递归部分的每一次应用都使的更趋近于基础部分，直到最后应用基础部分，得到f(5)=120。从这个例子中可<br>以看到的是：$f(n)=n(n-1)(n-2)…1 (n \geq 1)$。<br>递归定义的另一个例子就是<strong>斐波那契额数列</strong>：   </p><script type="math/tex; mode=display">F_0=0, F_1=1, F_n=F_{n-1} + F_{n-2} \qquad(n > 1) \tag{1-2}</script><p>其中$F<em>0=1$和$F_1=1$是基础部分，$F_n = F</em>{n-1} + F_{n-2}$是递归部分。右侧的函数参数比n小。要使公式<br>（1-2）成为完全递归形式，从n &gt; 1开始反复应用递归部分，每次n的值都要减去1或2，最终将右侧F的表达式转为<br>基础部分的表达式。例如：$F_4 = F_3+F_2 = F_2+F_1+F_1+F_0 = 3F_1+2F_0 = 3$。   </p><h3 id="归纳"><a href="#归纳" class="headerlink" title="归纳"></a>归纳</h3><p>与递归函数有关的第二个概念——归纳证明。<br>在一个归纳证明中，如果要证明下列公式成立：   </p><script type="math/tex; mode=display">\sum_{i=0}^n i=n(n+1)/2 \qquad n\geq 0 \tag{1-3}</script><p>证明方法是，首先检验，对n的一个或多个基础值（一般n=0就可以），公式成立；其次，假设当n从0到m时公式是成立<br>的，其中m是任意一个大于或者等于最大基础值的整数；最后，根据上述的假设证明，当n等于m+1时公式也成立。这种<br>证明方法有三个部分，分别是：  </p><blockquote><ul><li>归纳基础（induction base）</li><li>归纳假设（induction hypothesis）</li><li>归纳步骤 （induction step）   </li></ul></blockquote><p>下面根据上述三段论方法开始证明公式（1-3）。   </p><h4 id="归纳基础"><a href="#归纳基础" class="headerlink" title="归纳基础"></a>归纳基础</h4><p>当n=0时，很显然公式是成立的，等式两边很容易求得都为0。   </p><h4 id="归纳假设"><a href="#归纳假设" class="headerlink" title="归纳假设"></a>归纳假设</h4><p>假设当$n \leq m$时公式成立，其中m是任意大于或等于0的整数（假设n=m时公式也可以成立）。</p><h4 id="归纳步骤"><a href="#归纳步骤" class="headerlink" title="归纳步骤"></a>归纳步骤</h4><p>在此阶段需要证明当n=m+1时公式成立，从归纳假设可知：$\sum_{i=0}^mi=m(m+1)/2$成立，因此：   </p><script type="math/tex; mode=display">\sum_{i=0}^{m+1}i=m+1+\sum_{i=0}^m i=m+1+m(m+1)/2=(m+1)(m+2)/2</script><p>即当n=m+1时公式亦成立，所以公式（1-3）成立。<br>归纳证明看似是一个循环证明——因为在第二步时假设的是一个正确的结论。其实并非如此，就像递归定义并不是<br>循环定义一样。每一个正确的归纳证明都有一个归纳基础部分，它与递归定义的基础部分相似，而在归纳步骤时使<br>用的是在归纳基础部分已经检验的正确结果，反复应用归纳步骤，把证明部分转为基础部分所具有的形式，最后就<br>得以得到最终结果。  </p>]]></content>
+    
+    
+    <categories>
+      
+      <category>基础应用</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>算法</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>异或与掩码</title>
     <link href="/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/"/>
     <url>/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/</url>
@@ -108,7 +133,7 @@
     <link href="/2023/04/30/2023-04-30/"/>
     <url>/2023/04/30/2023-04-30/</url>
     
-    <content type="html"><![CDATA[<p>临时起意，决定回家！时间虽然仓促了一些，但是，人生的面总是见一次少一次。</p><img src="/2023/04/30/2023-04-30/2.jpg" class=""><p></p><p></p>]]></content>
+    <content type="html"><![CDATA[<p>临时起意，打算回家一趟。</p><img src="/2023/04/30/2023-04-30/2.jpg" class=""><p></p><p></p>]]></content>
     
     
     <categories>
