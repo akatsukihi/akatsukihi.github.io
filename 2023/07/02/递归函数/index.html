@@ -24,8 +24,9 @@
 <meta property="og:description" content="递归（Recursive）递归，在数学与计算机科学中，是指在函数的定义中使用函数自身的方法。递归一词还较常用于描述以自相似方法重复事物的过程。例如，当两面镜子相互之间近似平行时，镜中嵌套的图像是以无限递归的形式出现的。也可以理解为自我复制的过程。递归的定义如下：      在数学和计算机科学中，递归指由一种（或多种）简单的基本情况定义的一类对象或方法，并规定其他所有情况都能被还原为其基本情况。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/07/02/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/1.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/07/02/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/2.png">
 <meta property="article:published_time" content="2023-07-02T06:44:39.000Z">
-<meta property="article:modified_time" content="2023-07-03T05:37:13.220Z">
+<meta property="article:modified_time" content="2023-07-04T07:02:14.104Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary_large_image">
@@ -254,7 +255,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.7k 字
+          6.8k 字
         
       </span>
     
@@ -265,7 +266,7 @@
         
         
         
-          48 分钟
+          57 分钟
         
       </span>
     
@@ -352,6 +353,94 @@
 <p></p>
   
 <p>上图显示了该程序的处理过程，其中k&#x3D;0，m&#x3D;2，list[0:2]&#x3D;[a,b,c]。上图是每一次调用permutations之后以及第二<br>次调用swap之后的list[0:2]的布局状态。无阴影部分表示list[0:k-1]前缀，阴影部分表示list[k:m]后缀。数组外<br>的数字是布局编号。在执行permutations(list, 0, 2)的过程中，图的每一条边都会经过两次：一次是在for循环中<br>调用函数permutations，另一次是从函数permutations返回。<br>从布局1开始。for循环的第一个swap调用swap(list[0],list[0])对数组没有改变；<br>布局2是在for循环中调用permutations之后，即permutations(list, 1, 2)的数组状态；<br>从布局2走到布局3,即swap(list[1], list[1]),permutations(list, 2, 2)，因为k&#x3D;m，所以排列abc被输出；<br>输出布局3之后返回，然后执行for循环的第二个swap语句，结果是回到布局2；<br>从布局2走到布局4，排列acb被输出，然后网上返回直到又可以继续，回到布局2，然后回到布局1。<br>从布局1走到布局5和布局6，依次类推，整个过程所经历的布局顺序是：<br>1→2→3→2→4→2→1→5→6→5→7→5→1→8→9→8→10→8→1</p>
+<h3 id="子集"><a href="#子集" class="headerlink" title="子集"></a>子集</h3><p>使用递归输出一个有n个元素的集合的所有子集。  </p>
+<pre><code class="hljs">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+template&lt;typename T&gt;
+void generateSubsets(const std::vector&lt;T&gt;&amp; nums, std::vector&lt;T&gt;&amp; current, int index) &#123;
+    // 输出当前子集
+    for (const T&amp; num : current) &#123;
+        std::cout &lt;&lt; num &lt;&lt; &quot; &quot;;
+    &#125;
+    std::cout &lt;&lt; std::endl;
+
+    // 递归终止条件
+    if (index == nums.size()) &#123;
+        return;
+    &#125;
+
+    // 递归生成子集
+    for (int i = index; i &lt; nums.size(); ++i) &#123;
+        current.push_back(nums[i]);
+        generateSubsets(nums, current, i + 1);
+        current.pop_back();
+    &#125;
+&#125;
+
+template&lt;typename T&gt;
+void printSubsets(const std::vector&lt;T&gt;&amp; nums) &#123;
+    std::vector&lt;T&gt; current;
+    generateSubsets(nums, current, 0);
+&#125;
+
+int main() &#123;
+    int n;
+    std::cout &lt;&lt; &quot;集合中元素总个数: &quot;;
+    std::cin &gt;&gt; n;
+
+    std::vector&lt;std::string&gt; nums(n);
+    for (int i = 0; i &lt; n; ++i) &#123;
+        std::cout &lt;&lt; &quot;请输入元素 &quot; &lt;&lt; i + 1 &lt;&lt; &quot;: &quot;;
+        std::cin &gt;&gt; nums[i];
+    &#125;
+
+    std::cout &lt;&lt; &quot;子集有: &quot; &lt;&lt; std::endl;
+    printSubsets(nums);
+
+    return 0;
+&#125;
+</code></pre>
+<p>输出如下图：  </p>
+<img src="/2023/07/02/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/2.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+<p></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 
               </div>
