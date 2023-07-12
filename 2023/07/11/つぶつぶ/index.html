@@ -16,31 +16,29 @@
   <meta name="author" content="akatsukihi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="异或（Exclusive or）、掩码（Mask）关于异或运算和掩码，如果是经常写上层业务代码的人可能会对这两个概念有点陌生，如果玩过单片机或者写过偏底层的代码则会对这类运算比较熟知了。关于异或和掩码这两个概念，其实并不只是单纯的运算规则，其背后所蕴含的处理问题的思想才是这两个概念的核心所在。异或的英文Exclusive OR，表达了两层含义，exclusive是独有的独占的，or是逻辑运算规则。">
+    <meta name="description" content="max of element最大元素    1234567891011template &lt;typename T&gt;int maxOfElement(const T *t, int n)&amp;#123;    if(n &lt;&#x3D;0)        throw &quot;element must be &gt; 0&quot;;    int maxElementIndex &#x3D; 0;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="异或与掩码">
-<meta property="og:url" content="https://akatsukihi.github.io/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/index.html">
+<meta property="og:title" content="つぶつぶ">
+<meta property="og:url" content="https://akatsukihi.github.io/2023/07/11/%E3%81%A4%E3%81%B6%E3%81%A4%E3%81%B6/index.html">
 <meta property="og:site_name" content="AkatsukiHi">
-<meta property="og:description" content="异或（Exclusive or）、掩码（Mask）关于异或运算和掩码，如果是经常写上层业务代码的人可能会对这两个概念有点陌生，如果玩过单片机或者写过偏底层的代码则会对这类运算比较熟知了。关于异或和掩码这两个概念，其实并不只是单纯的运算规则，其背后所蕴含的处理问题的思想才是这两个概念的核心所在。异或的英文Exclusive OR，表达了两层含义，exclusive是独有的独占的，or是逻辑运算规则。">
+<meta property="og:description" content="max of element最大元素    1234567891011template &lt;typename T&gt;int maxOfElement(const T *t, int n)&amp;#123;    if(n &lt;&#x3D;0)        throw &quot;element must be &gt; 0&quot;;    int maxElementIndex &#x3D; 0;">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/1.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/2.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/3.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/4.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/5.png">
-<meta property="og:image" content="https://akatsukihi.github.io/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/6.png">
-<meta property="article:published_time" content="2023-06-28T10:25:15.000Z">
-<meta property="article:modified_time" content="2023-07-01T02:40:25.040Z">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/07/11/%E3%81%A4%E3%81%B6%E3%81%A4%E3%81%B6/3.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/07/11/%E3%81%A4%E3%81%B6%E3%81%A4%E3%81%B6/1.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/07/11/%E3%81%A4%E3%81%B6%E3%81%A4%E3%81%B6/2.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2023/07/11/%E3%81%A4%E3%81%B6%E3%81%A4%E3%81%B6/4.png">
+<meta property="article:published_time" content="2023-07-11T09:47:57.000Z">
+<meta property="article:modified_time" content="2023-07-12T09:53:13.526Z">
 <meta property="article:author" content="akatsukihi">
-<meta property="article:tag" content="sql函数">
+<meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://akatsukihi.github.io/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/1.png">
+<meta name="twitter:image" content="https://akatsukihi.github.io/2023/07/11/%E3%81%A4%E3%81%B6%E3%81%A4%E3%81%B6/3.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>异或与掩码 - AkatsukiHi</title>
+  <title>つぶつぶ - AkatsukiHi</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -236,7 +234,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="异或与掩码"></span>
+            <span id="subtitle" data-typed-text="つぶつぶ"></span>
           
         </div>
 
@@ -247,8 +245,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-06-28 19:25" pubdate>
-          2023年6月28日 晚上
+        <time datetime="2023-07-11 18:47" pubdate>
+          2023年7月11日 晚上
         </time>
       </span>
     
@@ -259,7 +257,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.2k 字
+          1.3k 字
         
       </span>
     
@@ -270,7 +268,7 @@
         
         
         
-          35 分钟
+          11 分钟
         
       </span>
     
@@ -308,115 +306,53 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">异或与掩码</h1>
+            <h1 style="display: none">つぶつぶ</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="异或（Exclusive-or）、掩码（Mask）"><a href="#异或（Exclusive-or）、掩码（Mask）" class="headerlink" title="异或（Exclusive or）、掩码（Mask）"></a>异或（Exclusive or）、掩码（Mask）</h2><p>关于异或运算和掩码，如果是经常写上层业务代码的人可能会对这两个概念有点陌生，如果玩过单片机或者写过偏<br>底层的代码则会对这类运算比较熟知了。关于异或和掩码这两个概念，其实并不只是单纯的运算规则，其背后所蕴含<br>的处理问题的思想才是这两个概念的核心所在。异或的英文Exclusive OR，表达了两层含义，exclusive是独有的独<br>占的，or是逻辑运算规则。异或运算就是比较两个信息，寻找差异的过程，当找到了所有的差异，异或运算就计算完<br>成了，选一个词来描述的话应该就是求同存异。异或运算可以帮助我们从两堆相似的信息中，发现新的信息，因为相<br>同的信息是已知的旧信息，而不同的信息才是需要关注的新信息，这是一个信息增量的过程。信息的增量表达其实也<br>可以用减法的逻辑完成，减法的深层逻辑表述其实也是描述增量。减法和异或有相似之处，都是剔除相同部分，保留<br>差异部分，不同之处我个人感觉是有方向之分，一个是有向的，一个是无向的，减法更像是有向的增量表示，异或更<br>像是无向的减法，双向减法求出增量，可能使用集合描述更加准确一点吧。生活中其实也随处可见异或思想的例子。<br>譬如经常玩的两张图片找不同的游戏，其实就是一个异或的过程；还有数据压缩方面，如视频文件是由图片帧组成的<br>，相邻的两个图片帧其实很多数据都是重复的，此时就可以使用异或算法将这些冗余的数据去除掉，只留下两帧之间<br>不同的部分，这样就可以大幅压缩视频文件的尺寸。<br>关于掩码的概念维基百科给出的解释是：<em><strong>在计算机学科及数字逻辑中指的是一串二进制数字，通过与目标数字<br>的按位操作，达到屏蔽指定位而实现需求。</strong></em><br>其实，掩码所描述的也是一种思想，核心思想是根据需求来构造一些有特殊含义的数据，然后使用逻辑运算屏蔽或者<br>提取那些自己感兴趣或者重要的数据。   </p>
-<h2 id="利用掩码和异或提取所需数据"><a href="#利用掩码和异或提取所需数据" class="headerlink" title="利用掩码和异或提取所需数据"></a>利用掩码和异或提取所需数据</h2><h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><p>user_info是一张用户表，用户数据变动时需要保留历史数据，所以update、delete操作都是以插入一条新记录来实<br>现的。现在的业务场景是需要将昨天到今天的离职者、以及邮件被锁定的用户找出来。用户在离职时的状态变化是<br>前一天的status为0，后一天状态为1，user_status:0→1 ，邮件被锁定的状态变化也是如此email_locked:0→1。<br>（该表数据中会存在前一天是1，后一天是0，或者前后两天或者多天都是1的历史数据）<br>表里的数据如下：   </p>
-<img src="/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/1.png" srcset="/img/loading.gif" lazyload class="">
-<p></p>
-<p></p>  
-  
-  
-<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>离职的变化实际上是个异或的过程，用前一天的信息异或后一天的数据实际上就可以获取到增量的变化信息，同理<br>邮件锁定也是一个异或的过程。所以只需要将前后两天的数据做差就可以获得到因为离职和邮件锁定的这部分数据。<br>此时就可以使用sql中的except函数来处理这个过程，主流的数据库都已经支持了该函数，语法可能稍微有些许差异<br>，如sql server、Oracle、DB2、PostgreSQL这些数据库都有该函数，可以直接使用（不过MySQL好像不支持该函数）<br>该函数的语法如下：    </p>
-<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><br><span class="hljs-keyword">SELECT</span> column_list<br><span class="hljs-keyword">FROM</span> table1<br><span class="hljs-keyword">EXCEPT</span><br><span class="hljs-keyword">SELECT</span> column_list<br><span class="hljs-keyword">FROM</span> table2;   <br>   <br></code></pre></td></tr></table></figure>
-<p>SQL中的EXCEPT关键字用于返回两个查询的差集结果。它将从第一个查询结果中减去与第二个查询结果匹配的行。<br>当你想得到两个数据集的差异数据时,EXCEPT关键字可以方便地返回差集的结果。EXCEPT与UNION类似,只是UNION返回<br>两个结果集的并集,EXCEPT返回差集。EXCEPT也可以用于三个或更多表, subtraction将被一一执行以获取最终的结果<br>除此之外,EXCEPT还有以下特点:  </p>
-<blockquote>
-<ul>
-<li><ol>
-<li>列名和数据类型必须相同或兼容。</li>
-</ol>
-</li>
-<li><ol start="2">
-<li>除过滤行外,EXCEPT不会更改行的顺序。</li>
-</ol>
-</li>
-<li><ol start="3">
-<li>可以将EXCEPT与ORDER BY一起使用,以控制结果中的行顺序。</li>
-</ol>
-</li>
-<li><ol start="4">
-<li>可以在EXCEPT中使用WHERE子句来过滤一组结果。</li>
-</ol>
-</li>
-<li><ol start="5">
-<li>PostgreSQL支持EXCEPT ALL来包含重复行,MySQL没有这个功能。</li>
-</ol>
-</li>
-<li><ol start="6">
-<li>许多数据库将EXCEPT称为MINUS,包括Oracle,PostgreSQL等。</li>
-</ol>
-</li>
-</ul>
-</blockquote>
-<p>这就是SQL中的EXCEPT关键字及其主要特性和用法。   </p>
-<p>离职的数据抽取可以使用按时间倒序排列，取各user最新的那一条，并且小于等于前一天，且user_status&#x3D;0的旧结果<br>集，然后except第二个新结果集，新结果集的条件应该是将小于等于前一天的条件变为今天，其它条件不做更改。<br>这样新的结果集中取出的数据是不包含离职者的信息，然后做差就会获取到离职者的增量信息；关于Email变化的增量<br>部分其实是被包含进了merge出的结果集中，因为如果email的变化者也是离职者，那么它是一定会出现在增量部分的<br>如果email的变化者非离职者，那就将它的字段提到可merge的列中，如果出现变化则也会出现在增量的信息当中；<br>但是此时会出现一个问题，那就是该email的异或过程可能出现方向的问题，即0 -&gt; 1是正常需要的，但1 -&gt;0的变化<br>是我们题目中不想获取的数据，这部分扰动信息就需要使用上文提到的掩码的思想来处理了。<br>因为第一次的except已经取到了离职者和Email锁定的所有差异信息了，所以现在需要将这部分信息作为旧信息，然后<br>利用掩码的处理方式来构造一部分新的信息来再次异或，消除掉扰动的多余数据。构造的方法就是将第一次except中<br>的新结果集进行改造，因为merge出的增量信息中是包含了Email的双向变化的数据，所以我们需要将其中的1-&gt;0的这<br>部分数据再次merge掉，需要merge掉的信息其实是存在于第一次except中的新结果集中的Email为0的数据，因为旧数<br>据是1，新数据是0，所以在异或处理时他们会被处理到第一次的增量结果里，现在只需要将新数据里的0改为1，则可<br>以使用掩码的方式屏蔽掉这部分数据的出现。   </p>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><h5 id="前一天的在职者"><a href="#前一天的在职者" class="headerlink" title="前一天的在职者"></a>前一天的在职者</h5><p>旧结果集  </p>
-<pre><code class="hljs">select user_id,email_locked,user_status from 
-(
-    select *,row_number() over(partition by user_id order by created_at desc,user_status desc) as rank
-    from user_info where created_at &lt;= &#39;20230628&#39;
-)tmp1 where tmp1.rank = 1 and tmp1.user_status = &#39;0&#39;    
-</code></pre>
-<img src="/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/2.png" srcset="/img/loading.gif" lazyload class="">
-<p></p>
-<p></p>  
-   
-<h5 id="后一天的在职者"><a href="#后一天的在职者" class="headerlink" title="后一天的在职者"></a>后一天的在职者</h5><p>新结果集  </p>
-<pre><code class="hljs">select user_id,email_locked,user_status from
-(
-    select *,row_number() over(partition by user_id order by created_at desc,user_status desc) as rank
-    from user_info where created_at &lt;= &#39;20230629&#39;
-)tmp2 where tmp2.rank = 1 and tmp2.user_status = &#39;0&#39;  
-</code></pre>
-<img src="/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/3.png" srcset="/img/loading.gif" lazyload class="">
-<p></p>
-<p></p>    
-    
-<h5 id="离职者"><a href="#离职者" class="headerlink" title="离职者"></a>离职者</h5><p>增量结果集  </p>
-<pre><code class="hljs">select user_id,email_locked,user_status from
-(
-    select *,row_number() over(partition by user_id order by created_at desc,user_status desc) as rank
-    from user_info where created_at &lt;= &#39;20230628&#39;
-)tmp1 where tmp1.rank = 1 and tmp1.user_status = &#39;0&#39;
-except
-select user_id,email_locked,user_status from
-(
-    select *,row_number() over(partition by user_id order by created_at desc,user_status desc) as rank
-    from user_info where created_at &lt;= &#39;20230629&#39;
-)tmp2 where tmp2.rank = 1 and tmp2.user_status = &#39;0&#39;  
-</code></pre>
-<img src="/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/4.png" srcset="/img/loading.gif" lazyload class="">
-<p></p>
-<p></p>    
-    
-<h5 id="消除干扰信息"><a href="#消除干扰信息" class="headerlink" title="消除干扰信息"></a>消除干扰信息</h5><p>利用掩码的方法从增量结果集中屏蔽掉扰动信息  </p>
-<pre><code class="hljs">select user_id,email_locked,user_status from
-(
-    select *,row_number() over(partition by user_id order by created_at desc,user_status desc) as rank
-    from user_info where created_at &lt;= &#39;20230628&#39;
-)tmp1 where tmp1.rank = 1 and tmp1.user_status = &#39;0&#39;
-except
-select user_id,email_locked,user_status from
-(
-    select *,row_number() over(partition by user_id order by created_at desc,user_status desc) as rank
-    from user_info where created_at &lt;= &#39;20230629&#39;
-)tmp2 where tmp2.rank = 1 and tmp2.user_status = &#39;0&#39;
-except
-select user_id,case when email_locked=&#39;0&#39; then &#39;1&#39; else email_locked end,user_status from
-(
-    select *,row_number() over(partition by user_id order by created_at desc,user_status desc) as rank
-    from user_info where created_at &lt;= &#39;20230629&#39;
-)tmp3 where tmp3.rank = 1 and tmp3.user_status = &#39;0&#39;  
-</code></pre>
-<img src="/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/5.png" srcset="/img/loading.gif" lazyload class="">
-<p></p>
-<p></p>    
-<img src="/2023/06/28/except%E5%BC%82%E6%88%96%E4%B8%8E%E6%8E%A9%E7%A0%81/6.png" srcset="/img/loading.gif" lazyload class="">
+                <h2 id="max-of-element"><a href="#max-of-element" class="headerlink" title="max of element"></a>max of element</h2><p>最大元素   </p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs excel">template &lt;typename <span class="hljs-built_in">T</span>&gt;<br><span class="hljs-built_in">int</span> maxOfElement(const <span class="hljs-built_in">T</span> *<span class="hljs-built_in">t</span>, <span class="hljs-built_in">int</span> <span class="hljs-built_in">n</span>)&#123;<br>    <span class="hljs-built_in">if</span>(<span class="hljs-built_in">n</span> &lt;=<span class="hljs-number">0</span>)<br>        throw <span class="hljs-string">&quot;element must be &gt; 0&quot;</span>;<br>    <span class="hljs-built_in">int</span> maxElementIndex = <span class="hljs-number">0</span>;<br>    for(<span class="hljs-built_in">int</span> i=<span class="hljs-number">1</span>; i&lt;<span class="hljs-built_in">n</span>; i++)<br>        <span class="hljs-built_in">if</span>(<span class="hljs-built_in">t</span>[maxElementIndex] &lt; <span class="hljs-built_in">t</span>[i])<br>            maxElementIndex = i;<br>    return maxElementIndex;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<img src="/2023/07/11/%E3%81%A4%E3%81%B6%E3%81%A4%E3%81%B6/3.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 <p></p>
+
+
+<h2 id="rank"><a href="#rank" class="headerlink" title="rank"></a>rank</h2><p>一个元素在一个序列中的名次是所有比它小的元素个数加上在它左边出现的与它相同的元素个数<br>该过程需要执行(n-1)n&#x2F;2次比较  </p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">template&lt;<span class="hljs-keyword">class</span> <span class="hljs-symbol">T</span>&gt;<br><span class="hljs-symbol">void</span> <span class="hljs-symbol">rank</span>(<span class="hljs-symbol">T</span> <span class="hljs-symbol">a</span>[], <span class="hljs-symbol">int</span> <span class="hljs-symbol">n, <span class="hljs-symbol">int</span></span> <span class="hljs-symbol">r</span>[])&#123;<br>    <span class="hljs-comment">//初始化</span><br>    <span class="hljs-keyword">for</span>(<span class="hljs-built_in">int</span> i=<span class="hljs-number">0</span>; i&lt;n; i++)<br>        r[i] = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-built_in">int</span> i=<span class="hljs-number">1</span>; i&lt;n; i++)&#123;<br>        <span class="hljs-keyword">for</span>(<span class="hljs-built_in">int</span> j=<span class="hljs-number">0</span>; j&lt;i; j++)&#123;<br>            <span class="hljs-keyword">if</span>(a[j] &lt;= a[i])<br>                r[i]++;<br>            <span class="hljs-keyword">else</span><br>                r[j]++;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<img src="/2023/07/11/%E3%81%A4%E3%81%B6%E3%81%A4%E3%81%B6/1.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+<p></p>
+
+<h2 id="rank-sort"><a href="#rank-sort" class="headerlink" title="rank sort"></a>rank sort</h2><p>移动各元素到对应的名次，按递增顺序重排<br>该过程利用rank后的数据，需要执行2n次数据移动  </p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs excel">template&lt;typename <span class="hljs-built_in">T</span>&gt;<br>void ranksort(<span class="hljs-built_in">T</span> a[], <span class="hljs-built_in">int</span> <span class="hljs-built_in">n</span>, <span class="hljs-built_in">int</span> r[])&#123;<br>    <span class="hljs-built_in">T</span> *u = new <span class="hljs-built_in">T</span>[<span class="hljs-built_in">n</span>];<br>    for(<span class="hljs-built_in">int</span> i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-built_in">n</span>; i++)&#123;<br>        u[r[i]] = a[i];<br>    &#125;<br>    for(<span class="hljs-built_in">int</span> i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-built_in">n</span>; i++)&#123;<br>        a[i] = u[i];<br>    &#125;<br>    delete []u;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<img src="/2023/07/11/%E3%81%A4%E3%81%B6%E3%81%A4%E3%81%B6/2.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+<p></p>
+
+<h2 id="selection-sort"><a href="#selection-sort" class="headerlink" title="selection sort"></a>selection sort</h2><p>rank和rank sort的这一过程可以合并到一起实现。首先找出最大元素，把它移动到序列中的最后一位a[n-1],然后<br>在余下的n-1个中再找最大的元素，把它移动到a[n-2]位置，如此循环往复直到最后一个元素。这就是选择排序。<br>根据最大元素的查找可以知道，每次都会进行n-1次比较，而选择排序在每次查找新的max元素时都会减少一次比较<br>，所以它的比较次数应该是n-1+n-2+n-3…+1 &#x3D; (n-1)n&#x2F;2。找到最大元素时需要将其放置在合适位置，元素要移<br>动互换的指定位置需要3次完成，所以总的移动次数为3(n-1)。     </p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs excel">template&lt;class <span class="hljs-built_in">T</span>&gt;<br>void selectSort(<span class="hljs-built_in">T</span> *<span class="hljs-built_in">t</span>, <span class="hljs-built_in">int</span> <span class="hljs-built_in">n</span>)&#123;<br>    for(<span class="hljs-built_in">int</span> size=<span class="hljs-built_in">n</span>; size&gt;<span class="hljs-number">1</span>; size--)&#123;<br>        <span class="hljs-built_in">int</span> <span class="hljs-built_in">index</span> = maxOfElement(<span class="hljs-built_in">t</span>, size);<br>        <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>] = <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>] ^ <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>];<br>        <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>] = <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>] ^ <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>];<br>        <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>] = <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>] ^ <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>];<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<img src="/2023/07/11/%E3%81%A4%E3%81%B6%E3%81%A4%E3%81%B6/4.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+<p></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
                 
@@ -436,7 +372,7 @@ select user_id,case when email_locked=&#39;0&#39; then &#39;1&#39; else email_lo
     
       <span class="category-chain">
         
-  <a href="/categories/sql/" class="category-chain-item">sql</a>
+  <a href="/categories/%E7%AE%97%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="category-chain-item">算法与数据结构</a>
   
   
 
@@ -451,7 +387,7 @@ select user_id,case when email_locked=&#39;0&#39; then &#39;1&#39; else email_lo
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/sql%E5%87%BD%E6%95%B0/">#sql函数</a>
+        <a href="/tags/%E7%AE%97%E6%B3%95/">#算法</a>
       
     </div>
   
@@ -463,8 +399,8 @@ select user_id,case when email_locked=&#39;0&#39; then &#39;1&#39; else email_lo
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>异或与掩码</div>
-      <div>https://akatsukihi.github.io/2023/06/28/except异或与掩码/</div>
+      <div>つぶつぶ</div>
+      <div>https://akatsukihi.github.io/2023/07/11/つぶつぶ/</div>
     </div>
     <div class="license-meta">
       
@@ -476,7 +412,7 @@ select user_id,case when email_locked=&#39;0&#39; then &#39;1&#39; else email_lo
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年6月28日</div>
+          <div>2023年7月11日</div>
         </div>
       
       
@@ -506,18 +442,12 @@ select user_id,case when email_locked=&#39;0&#39; then &#39;1&#39; else email_lo
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/07/02/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/" title="递归">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">递归</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/06/24/Z-Library%E5%AE%A2%E6%88%B7%E7%AB%AF/" title="Z-Library客户端">
-                        <span class="hidden-mobile">Z-Library客户端</span>
+                      <a href="/2023/07/02/%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0/" title="递归">
+                        <span class="hidden-mobile">递归</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
