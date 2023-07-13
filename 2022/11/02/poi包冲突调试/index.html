@@ -318,31 +318,18 @@
               <div class="markdown-body">
                 
                 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>媳妇她们项目组在做一个老旧项目的升级移行工作，她最近主要在负责batch这块的改修，其中有一个功能是关于<br>excel生成的，之前老项目中是HSSF的导出，现在她要升级为XSSF的导出，所以得引入一些poi的包，由于导入了<br>部分新包，所以项目产生了莫名其妙的报错。</p>
-<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>由于她们的项目是很老的项目，没有使用maven管理，所以排查起来很是费劲。先是在本地建了一个maven的项目，<br>然后导入了主要的两个poi包，poi-5.2.2.jar和poi-ooxml-5.2.2.jar，查看了它们的依赖关系，锁定了需要的最<br>小依赖，写了段简略的读写测试代码，运行调试通过。最后将项目所有包导入，运行报错，试着删除和poi有依赖<br>冲突可能的包，直到测试代码可以正常运行。最后锁定了一个名为poi-2.5.1-final-20040804.jar的包，删掉此<br>包后测试代码正常执行导入导出，但是奇怪的是再次导入此包后测试代码仍然可以正常运行，以为是项目缓存<br>导致的，所以将project又clean了继续运行，然而测试代码仍然正常结束。重复了几次，发现只有在第一次导入<br>所有包时运行报错，删除poi-2.5.1-final-20040804.jar包后就正常运行，再次导入后又不会引发冲突错误，更<br>令人费解的是正式项目的引用包中是没有poi-2.5.1-final-20040804.jar的。<br><br>报错如下：</p>
-<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Exception <span class="hljs-keyword">in</span> thread <span class="hljs-string">&quot;main&quot;</span> java.lang.NoSuchMethodError: org.apache.poi.util.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">IOUtils</span>.</span></span>copy(Ljava/io/InputStream;Ljava/io/OutputStream;)J<br>	at org.apache.poi.openxml4j.opc.internal.marshallers.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZipPartMarshaller</span>.</span></span>marshall(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZipPartMarshaller</span>.</span></span>java:<span class="hljs-number">89</span>)<br>	at org.apache.poi.openxml4j.opc.internal.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">MemoryPackagePart</span>.</span></span>save(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">MemoryPackagePart</span>.</span></span>java:<span class="hljs-number">111</span>)<br>	at org.apache.poi.openxml4j.opc.internal.marshallers.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DefaultMarshaller</span>.</span></span>marshall(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DefaultMarshaller</span>.</span></span>java:<span class="hljs-number">46</span>)<br>	at org.apache.poi.openxml4j.opc.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZipPackage</span>.</span></span>save<span class="hljs-constructor">Impl(ZipPackage.<span class="hljs-params">java</span>:584)</span><br>	at org.apache.poi.openxml4j.opc.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">OPCPackage</span>.</span></span>save(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">OPCPackage</span>.</span></span>java:<span class="hljs-number">1490</span>)<br>	at org.apache.poi.ooxml.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">POIXMLDocument</span>.</span></span>write(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">POIXMLDocument</span>.</span></span>java:<span class="hljs-number">227</span>)<br>	at testlib.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Test</span>.</span></span>main(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Test</span>.</span></span>java:<span class="hljs-number">31</span>)<br></code></pre></td></tr></table></figure>
-<p>或者报错是关于btye[]的方法peekFirstNBtyes之类。</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>由于错误log中所报的这些方法经过跟踪确实是存在的，删掉poi-2.5.1-final-20040804.jar包也确实不再报错，所以可以<br>确定的是问题肯定出在了poi-2.5.1-final-20040804.jar这个jar包上，但是为什么只有第一次存在这个jar包引用时会出错<br>删掉再导入后又不会引发冲突，为什么正式项目中没有此包也报错？本能觉得是项目结构构筑的问题，所以就查看了关于<br>build path的详细信息，发现关于order and export的一段描述是越上层的优先级越高，而我本地的build path中的导致<br>报错的poi-2.5.1-final-20040804.jar包却在最底层，所以我将该包的优先级调为了上层又复现了之前的错误，为什么只<br>有第一次导入会导致报错，删除后重新导入就不会引发错误的问题至此已经解决，还有第二个问题是正式项目中没有此包<br>为什么也会报错，这个问题经过查看build path后发现老项目中引用了一个外部工程common，而位于顶层的common当中<br>引用了poi-2.5.1-final-20040804.jar此包，经过优先级重调，第二个问题也顺利解决。<br><br>模拟第一次报错：</p>
-<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/1.png" srcset="/img/loading.gif" lazyload class="">
-
+<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>由于她们的项目是很老的项目，没有使用maven管理，所以排查起来很是费劲。先是在本地建了一个maven的项目，<br>然后导入了主要的两个poi包，poi-5.2.2.jar和poi-ooxml-5.2.2.jar，查看了它们的依赖关系，锁定了需要的最<br>小依赖，写了段简略的读写测试代码，运行调试通过。最后将项目所有包导入，运行报错，试着删除和poi有依赖<br>冲突可能的包，直到测试代码可以正常运行。最后锁定了一个名为poi-2.5.1-final-20040804.jar的包，删掉此<br>包后测试代码正常执行导入导出，但是奇怪的是再次导入此包后测试代码仍然可以正常运行，以为是项目缓存<br>导致的，所以将project又clean了继续运行，然而测试代码仍然正常结束。重复了几次，发现只有在第一次导入<br>所有包时运行报错，删除poi-2.5.1-final-20040804.jar包后就正常运行，再次导入后又不会引发冲突错误，更<br>令人费解的是正式项目的引用包中是没有poi-2.5.1-final-20040804.jar的。<br><br>报错如下：<br><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">Exception <span class="hljs-keyword">in</span> thread <span class="hljs-string">&quot;main&quot;</span> java.lang.NoSuchMethodError: org.apache.poi.util.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">IOUtils</span>.</span></span>copy(Ljava/io/InputStream;Ljava/io/OutputStream;)J<br>	at org.apache.poi.openxml4j.opc.internal.marshallers.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZipPartMarshaller</span>.</span></span>marshall(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZipPartMarshaller</span>.</span></span>java:<span class="hljs-number">89</span>)<br>	at org.apache.poi.openxml4j.opc.internal.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">MemoryPackagePart</span>.</span></span>save(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">MemoryPackagePart</span>.</span></span>java:<span class="hljs-number">111</span>)<br>	at org.apache.poi.openxml4j.opc.internal.marshallers.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DefaultMarshaller</span>.</span></span>marshall(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DefaultMarshaller</span>.</span></span>java:<span class="hljs-number">46</span>)<br>	at org.apache.poi.openxml4j.opc.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">ZipPackage</span>.</span></span>save<span class="hljs-constructor">Impl(ZipPackage.<span class="hljs-params">java</span>:584)</span><br>	at org.apache.poi.openxml4j.opc.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">OPCPackage</span>.</span></span>save(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">OPCPackage</span>.</span></span>java:<span class="hljs-number">1490</span>)<br>	at org.apache.poi.ooxml.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">POIXMLDocument</span>.</span></span>write(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">POIXMLDocument</span>.</span></span>java:<span class="hljs-number">227</span>)<br>	at testlib.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Test</span>.</span></span>main(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Test</span>.</span></span>java:<span class="hljs-number">31</span>)<br></code></pre></td></tr></table></figure><br>或者报错是关于btye[]的方法peekFirstNBtyes之类。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>由于错误log中所报的这些方法经过跟踪确实是存在的，删掉poi-2.5.1-final-20040804.jar包也确实不再报错，所以可以<br>确定的是问题肯定出在了poi-2.5.1-final-20040804.jar这个jar包上，但是为什么只有第一次存在这个jar包引用时会出错<br>删掉再导入后又不会引发冲突，为什么正式项目中没有此包也报错？本能觉得是项目结构构筑的问题，所以就查看了关于<br>build path的详细信息，发现关于order and export的一段描述是越上层的优先级越高，而我本地的build path中的导致<br>报错的poi-2.5.1-final-20040804.jar包却在最底层，所以我将该包的优先级调为了上层又复现了之前的错误，为什么只<br>有第一次导入会导致报错，删除后重新导入就不会引发错误的问题至此已经解决，还有第二个问题是正式项目中没有此包<br>为什么也会报错，这个问题经过查看build path后发现老项目中引用了一个外部工程common，而位于顶层的common当中<br>引用了poi-2.5.1-final-20040804.jar此包，经过优先级重调，第二个问题也顺利解决。<br><br>模拟第一次报错：<br><img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/1.png" srcset="/img/loading.gif" lazyload class=""></p>
 <p></p>
-  
+
 <hr>
-<p>删除冲突包执行成功：</p>
-<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/2.png" srcset="/img/loading.gif" lazyload class="">
-<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/3.png" srcset="/img/loading.gif" lazyload class="">
-
+<p>删除冲突包执行成功：<br><img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/2.png" srcset="/img/loading.gif" lazyload class=""><br><img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/3.png" srcset="/img/loading.gif" lazyload class=""></p>
 <p></p>
-  
+
 <hr>
-<p>再次导入冲突包执行依然成功：</p>
-<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/4.png" srcset="/img/loading.gif" lazyload class="">
-<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/5.png" srcset="/img/loading.gif" lazyload class="">
-<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/6.png" srcset="/img/loading.gif" lazyload class="">
-<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/7.png" srcset="/img/loading.gif" lazyload class="">
-<img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/8.png" srcset="/img/loading.gif" lazyload class="">
-
+<p>再次导入冲突包执行依然成功：<br><img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/4.png" srcset="/img/loading.gif" lazyload class=""><br><img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/5.png" srcset="/img/loading.gif" lazyload class=""><br><img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/6.png" srcset="/img/loading.gif" lazyload class=""><br><img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/7.png" srcset="/img/loading.gif" lazyload class=""><br><img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/8.png" srcset="/img/loading.gif" lazyload class=""></p>
 <p></p>
-  
+
 <hr>
 <p>更改引用顺序，重现错误：  </p>
 <img src="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/9.png" srcset="/img/loading.gif" lazyload class="">
@@ -802,5 +789,20 @@ lrc-type="0">
     <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
   </noscript>
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

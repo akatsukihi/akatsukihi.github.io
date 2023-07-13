@@ -323,70 +323,56 @@
 <li>thread:该头文件主要声明了std::thread类，另外std::this_thread命名空间也在该头文件中。</li>
 <li>mutex:该头文件主要声明了互斥锁（mutex）相关的类，包括std::mutex系列类、std::lock_guard、std::unique_lock以及其它的类型和函数。  </li>
 <li>condition_variable:该头文件主要声明了与条件变量相关的类，包括std::condition_variable和std::condition_variable_any。</li>
-<li>future:该头文件主要声明了std::promise、std::package_task两个Provider类，以及std::future和std::shared_future两个Future类，另外一些与之相关<br>的类型和函数，std::async函数就声明在此头文件中。</li>
+<li>future:该头文件主要声明了std::promise、std::package_task两个Provider类，以及std::future和std::shared_future两个Future类，另外一些与之相关<br>的类型和函数，std::async函数就声明在此头文件中。   </li>
 </ul>
 </blockquote>
 <p>其中，std::thread类是很重要的类，以下是这个类的一些成员函数：   </p>
 <img src="/2023/03/07/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/1.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-  
+
 <h2 id="线程的创建"><a href="#线程的创建" class="headerlink" title="线程的创建"></a>线程的创建</h2><p>在c++11中，创建线程的方式是使用类std::thread的构造函数，std::thread在#include<thread>头文件中声明，因此<br>使用std::thread时需要包含头文件thread，即#include<thread>。std::thread的构造函数有3种形式：不带参数的默<br>认构造函数、初始化构造函数、移动构造函数。<br>虽然类thread的初始化可以提供很丰富和方便的形式，但其实现的底层依然是创建一个pthread线程并运行，有些实现<br>甚至是直接调用pthread_create来创建。   </p>
-<h3 id="1-默认构造函数"><a href="#1-默认构造函数" class="headerlink" title="1.默认构造函数"></a>1.默认构造函数</h3><p>默认构造函数是不带参数的，声明如下：  </p>
-<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">thread</span>();<br></code></pre></td></tr></table></figure>
-<p>默认构造函数刚定义的thread对象，其线程是不会马上运行的。   </p>
+<h3 id="1-默认构造函数"><a href="#1-默认构造函数" class="headerlink" title="1.默认构造函数"></a>1.默认构造函数</h3><p>默认构造函数是不带参数的，声明如下：<br><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">thread</span>();<br></code></pre></td></tr></table></figure><br>默认构造函数刚定义的thread对象，其线程是不会马上运行的。   </p>
 <p>示例：创建批量线程  </p>
 <img src="/2023/03/07/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/2.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-  
+
 <p>上例定义了5个线程对象，刚定义的时候并不会执行线程，之后将另外初始化构造函数创建的返回值赋给它们就开始<br>运行。创建的线程都是可连接线程，所以使用join等待它们结束，多次运行该程序会发现输出的内容有变动，这和CPU<br>的调度有关系。   </p>
-<h3 id="2-初始化构造函数"><a href="#2-初始化构造函数" class="headerlink" title="2.初始化构造函数"></a>2.初始化构造函数</h3><p>初始化构造函数的意思是把线程函数的指针和线程函数的参数传入到线程类的构造函数中。这种形式最常用，由于传<br>入了线程函数，因此在定义线程对象的时候，就会开始执行线程函数，如果线程函数需要参数，可以在构造函数中传<br>入。初始化构造函数的形式如下：  </p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">class</span> Fn, <span class="hljs-keyword">class</span>...Args&gt;</span><br><span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">thread</span><span class="hljs-params">(Fn&amp;&amp; fn, Args&amp;&amp;... args)</span></span>;<br></code></pre></td></tr></table></figure>
-<p>其中，fn是线程函数指针；args是可选的，是要传入线程函数的参数。线程对象定义后，主线程会继续执行后面的代<br>码，此时就可能会出现刚创建的子线程还没执行完主线程就结束了，比如控制台程序，主线程一旦结束就意味着进程<br>结束了。这种情况时需要让主线程等待，等待子线程全部运行结束后再继续执行主线程。另一种情况是主线程是为了<br>统计各个子线程工作的结果而需要等待子线程结束后再继续执行。类thread提供了成员函数join来等待子线程结束，<br>即子线程的线程函数执行完毕后，join才返回，因此join是一个阻塞函数。函数join会让主线程挂起（休眠，让出CPU）<br>直到子线程退出，同时join能让子线程所占的资源得到释放。子线程退出后，主线程会接收到系统的信号，从休眠中<br>恢复。这一过程和POSIX类似，只是函数形式不同而已。join函数声明如下：  </p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">join</span>()</span>;<br></code></pre></td></tr></table></figure>
-<p>需要注意的是，这样创建的线程是可连接线程，所以线程对象必须在销毁时调用join函数，或者将其设置为可分离的。  </p>
+<h3 id="2-初始化构造函数"><a href="#2-初始化构造函数" class="headerlink" title="2.初始化构造函数"></a>2.初始化构造函数</h3><p>初始化构造函数的意思是把线程函数的指针和线程函数的参数传入到线程类的构造函数中。这种形式最常用，由于传<br>入了线程函数，因此在定义线程对象的时候，就会开始执行线程函数，如果线程函数需要参数，可以在构造函数中传<br>入。初始化构造函数的形式如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">template</span>&lt;<span class="hljs-keyword">class</span> Fn, <span class="hljs-keyword">class</span>...Args&gt;</span><br><span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">thread</span><span class="hljs-params">(Fn&amp;&amp; fn, Args&amp;&amp;... args)</span></span>;<br></code></pre></td></tr></table></figure></p>
+<p>其中，fn是线程函数指针；args是可选的，是要传入线程函数的参数。线程对象定义后，主线程会继续执行后面的代<br>码，此时就可能会出现刚创建的子线程还没执行完主线程就结束了，比如控制台程序，主线程一旦结束就意味着进程<br>结束了。这种情况时需要让主线程等待，等待子线程全部运行结束后再继续执行主线程。另一种情况是主线程是为了<br>统计各个子线程工作的结果而需要等待子线程结束后再继续执行。类thread提供了成员函数join来等待子线程结束，<br>即子线程的线程函数执行完毕后，join才返回，因此join是一个阻塞函数。函数join会让主线程挂起（休眠，让出CPU）<br>直到子线程退出，同时join能让子线程所占的资源得到释放。子线程退出后，主线程会接收到系统的信号，从休眠中<br>恢复。这一过程和POSIX类似，只是函数形式不同而已。join函数声明如下：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">join</span>()</span>;<br></code></pre></td></tr></table></figure><br>需要注意的是，这样创建的线程是可连接线程，所以线程对象必须在销毁时调用join函数，或者将其设置为可分离的。  </p>
 <p>示例：传递结构体和多个参数给线程函数  </p>
 <img src="/2023/03/07/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/3.png" srcset="/img/loading.gif" lazyload class="">
 <p></p> 
-  
-<p>默认创建的线程都是可连接线程，可连接线程需要调用join函数来等待其结束并释放资源。上面的例子使用了join函<br>数来等待其结束。除了使用join方式来等待结束外，还可以把可连接线程进行分离，即调用detach成员函数，变成可<br>分离线程，线程自己结束后就可以被系统自动回收资源了。而且主线程并不需要等待子线程结束，主线成可以自己先<br>结束。将线程进行分离的成员函数是detach，声明如下：</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">detach</span>()</span>;<br></code></pre></td></tr></table></figure>
+
+<p>默认创建的线程都是可连接线程，可连接线程需要调用join函数来等待其结束并释放资源。上面的例子使用了join函<br>数来等待其结束。除了使用join方式来等待结束外，还可以把可连接线程进行分离，即调用detach成员函数，变成可<br>分离线程，线程自己结束后就可以被系统自动回收资源了。而且主线程并不需要等待子线程结束，主线成可以自己先<br>结束。将线程进行分离的成员函数是detach，声明如下：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">detach</span>()</span>;<br></code></pre></td></tr></table></figure></p>
 <p>示例：将可连接线程转为分离线程</p>
 <img src="/2023/03/07/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/4.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-  
+
 <p>上例中，调用detach来分离线程，这样做主线程可以不用等子线程结束而先于子线程结束。在主线程中调用了<br>pthread_exit(NULL)来结束主线程，之前提到过，在main线程中调用pthread_exit(NULL)的时候，将结束main线程，<br>但进程并不会立即退出，要等所有的线程全部结束后才会结束，所以能看到子线程函数打印的内容。主线程中先打印<br>p的值，这是因为打印p的时候，线程还没有切换到子线程。   </p>
-<h3 id="3-移动（move）构造函数"><a href="#3-移动（move）构造函数" class="headerlink" title="3.移动（move）构造函数"></a>3.移动（move）构造函数</h3><p>通过移动构造函数的方式来创建线程是c++11创建线程的另一种常用方式。它通过向thread构造函数中传入一个c++对象<br>来创建线程。这种形式的构造函数定义如下：  </p>
-<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey"><span class="hljs-keyword">thread</span>(<span class="hljs-keyword">thread</span>&amp;&amp; t)<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
-<p>调用成功之后，t不代表任何thread对象。  </p>
+<h3 id="3-移动（move）构造函数"><a href="#3-移动（move）构造函数" class="headerlink" title="3.移动（move）构造函数"></a>3.移动（move）构造函数</h3><p>通过移动构造函数的方式来创建线程是c++11创建线程的另一种常用方式。它通过向thread构造函数中传入一个c++对象<br>来创建线程。这种形式的构造函数定义如下：<br><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey"><span class="hljs-keyword">thread</span>(<span class="hljs-keyword">thread</span>&amp;&amp; t)<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure><br>调用成功之后，t不代表任何thread对象。  </p>
 <p>示例：使用移动构造函数  </p>
 <img src="/2023/03/07/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/5.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>  
-  
+
 <p>上例中，td1并不会执行，执行的是td2，因为td1的线程函数所有权已经被转移给td2了。  </p>
-<h2 id="线程的标识符"><a href="#线程的标识符" class="headerlink" title="线程的标识符"></a>线程的标识符</h2><p>线程的标识符（ID）可以用来唯一标识某个thread对象所对应的线程，这样就可以用来区别不同的线程。<br>两个标识符相同的thread对象，意味着所代表的线程是同一个线程，或者代表着这两个对象都还没有线程。两个标识<br>符不同的thread对象代表着不同的线程，或者一个thread对象已经有线程了，而另一个还没有。类thread提供了成员<br>函数getid来获取线程id，该函数声明如下：  </p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">thread::id <span class="hljs-title">get_id</span><span class="hljs-params">()</span></span>;<br></code></pre></td></tr></table></figure>
-<p>其中，id是线程标识符的类型，它是类thread的成员，用来唯一标识某个线程。  </p>
+<h2 id="线程的标识符"><a href="#线程的标识符" class="headerlink" title="线程的标识符"></a>线程的标识符</h2><p>线程的标识符（ID）可以用来唯一标识某个thread对象所对应的线程，这样就可以用来区别不同的线程。<br>两个标识符相同的thread对象，意味着所代表的线程是同一个线程，或者代表着这两个对象都还没有线程。两个标识<br>符不同的thread对象代表着不同的线程，或者一个thread对象已经有线程了，而另一个还没有。类thread提供了成员<br>函数getid来获取线程id，该函数声明如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">thread::id <span class="hljs-title">get_id</span><span class="hljs-params">()</span></span>;<br></code></pre></td></tr></table></figure><br>其中，id是线程标识符的类型，它是类thread的成员，用来唯一标识某个线程。  </p>
 <p>示例：线程判断  </p>
 <img src="/2023/03/07/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/6.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-  
+
 <p>示例中，this_thread是一个命名空间（namespace），用来标识当前线程。它的主要作用是提供一些函数来访问当前<br>线程，一共有4个函数：get_id、yield、sleep_until、sleep_for。  </p>
 <h2 id="当前线程this-thread"><a href="#当前线程this-thread" class="headerlink" title="当前线程this_thread"></a>当前线程this_thread</h2><p>实际线程开发中，经常需要访问当前线程。c++11提供了一个命名空间this_thread来引用当前线程，该命名空间集合<br>了4个有用的函数，get_id、yield、sleep_until、sleep_for。函数get_id和类thread的成员函数get_id是同一个意<br>思，都是用来获取线程id的。  </p>
-<h3 id="1-让出CPU时间"><a href="#1-让出CPU时间" class="headerlink" title="1.让出CPU时间"></a>1.让出CPU时间</h3><p>调用函数yield的线程将让出属于自己的cpu时间片，以便其它线程有机会运行，该函数声明如下：  </p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">yield</span>()</span>;<br></code></pre></td></tr></table></figure>
-<p>调用该函数的线程放弃执行，回到就绪状态。  </p>
+<h3 id="1-让出CPU时间"><a href="#1-让出CPU时间" class="headerlink" title="1.让出CPU时间"></a>1.让出CPU时间</h3><p>调用函数yield的线程将让出属于自己的cpu时间片，以便其它线程有机会运行，该函数声明如下：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">yield</span>()</span>;<br></code></pre></td></tr></table></figure><br>调用该函数的线程放弃执行，回到就绪状态。  </p>
 <p>示例：创建10个线程，每个线程都是让一个变量从1累加到一百万，谁先完成就打印它的编号，以此排名。为了公平<br>起见，创建线程的时候，先不让它们占用cpu时间，直到main线程改变全局变量值，各个子线程才一起开始累加。  </p>
 <img src="/2023/03/07/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/7.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-  
+
 <p>多次运行示例会发现每次结果都是不同的。线程刚刚启动的时候，一直在while循环中让出属于自己的cpu时间片，这<br>就是yield的作用，this_thread在子线程中使用，代表这个子线程本身。一旦跳出while，就开始给变量累加直到100<br>万，最后输出该线程的序号，先跑完一百万累加的序号先被输出。atomic用来定义在全局变量ready上的操作都是原子<br>的，它确保了在同一时刻只有唯一的线程对这个资源进行访问。   </p>
-<h3 id="2-线程暂停一段时间"><a href="#2-线程暂停一段时间" class="headerlink" title="2.线程暂停一段时间"></a>2.线程暂停一段时间</h3><p>命名空间this_thread还有两个函数，即sleep_until、sleep_for，用来阻塞线程，暂停执行一段时间。函数sleep_until<br>和sleep_for声明如下：  </p>
-<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">template&lt;<span class="hljs-keyword">class</span> Clock, <span class="hljs-keyword">class</span> Duration&gt;<br>void sleep<span class="hljs-constructor">_until(<span class="hljs-params">const</span> <span class="hljs-params">chrono</span>::<span class="hljs-params">time_point</span>&lt;Clock, Duration&gt;&amp; <span class="hljs-params">abs_time</span>)</span>;<br><br>template&lt;<span class="hljs-keyword">class</span> Rep, <span class="hljs-keyword">class</span> Period&gt;<br>void sleep<span class="hljs-constructor">_for(<span class="hljs-params">const</span> <span class="hljs-params">chrono</span>::<span class="hljs-params">duration</span>&lt;Rep, Period&gt;&amp; <span class="hljs-params">rel_time</span>)</span>;<br></code></pre></td></tr></table></figure>
-<p>其中，参数abs_time标识函数阻塞线程到abs_time时间点，到了这个时间点后再继续执行。函数sleep_for的功能类似，只<br>是它是挂起线程一段时间，时间长度由参数决定，参数rel_time标识线程挂起的时间段，在这段时间内线程暂停执行。  </p>
+<h3 id="2-线程暂停一段时间"><a href="#2-线程暂停一段时间" class="headerlink" title="2.线程暂停一段时间"></a>2.线程暂停一段时间</h3><p>命名空间this_thread还有两个函数，即sleep_until、sleep_for，用来阻塞线程，暂停执行一段时间。函数sleep_until<br>和sleep_for声明如下：<br><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">template&lt;<span class="hljs-keyword">class</span> Clock, <span class="hljs-keyword">class</span> Duration&gt;<br>void sleep<span class="hljs-constructor">_until(<span class="hljs-params">const</span> <span class="hljs-params">chrono</span>::<span class="hljs-params">time_point</span>&lt;Clock, Duration&gt;&amp; <span class="hljs-params">abs_time</span>)</span>;<br><br>template&lt;<span class="hljs-keyword">class</span> Rep, <span class="hljs-keyword">class</span> Period&gt;<br>void sleep<span class="hljs-constructor">_for(<span class="hljs-params">const</span> <span class="hljs-params">chrono</span>::<span class="hljs-params">duration</span>&lt;Rep, Period&gt;&amp; <span class="hljs-params">rel_time</span>)</span>;<br></code></pre></td></tr></table></figure><br>其中，参数abs_time标识函数阻塞线程到abs_time时间点，到了这个时间点后再继续执行。函数sleep_for的功能类似，只<br>是它是挂起线程一段时间，时间长度由参数决定，参数rel_time标识线程挂起的时间段，在这段时间内线程暂停执行。  </p>
 <p>示例：暂停线程到下一分钟  </p>
 <img src="/2023/03/07/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/8.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-  
+
 <p>示例中main线程从sleep_until处开始挂起，然后到下一个整分时间继续执行。  </p>
 <p>示例：暂停10秒  </p>
 <img src="/2023/03/07/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89/9.png" srcset="/img/loading.gif" lazyload class="">
@@ -883,5 +869,20 @@ lrc-type="0">
     <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
   </noscript>
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
