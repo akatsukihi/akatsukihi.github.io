@@ -258,6 +258,67 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2023/02/15/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%89/" target="_self">
+          linux进程通信（消息队列）
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/02/15/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%89/" target="_self">
+        <div>
+          消息队列消息队列也是进程间常用的通信方法。从多方面看，消息队列类似于有名管道，但是却没有打开和关闭管道的复杂关联性，同样的，消息队列也无法解决类似于管道上的阻塞问题。消息队列提供了非亲缘关系的进程间通信，与有名管道相比，它的优点在于独立于发送与接收的进程，这减少了在打开与关闭有名管道之间同步的困难性。消息队列提供了一种由一个进程向另一个进程发送数据块的方法，每一个数据块被看作有一个类型，而接收进程
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-02-15 19:17" pubdate>
+              2023-02-15
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">#消息队列</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/" target="_self">
           linux进程通信（管道）
         </a>
@@ -503,7 +564,7 @@
       <h1 class="index-header">
         
         <a href="/2023/01/31/C-%E4%B8%8B%E7%9A%84%E6%96%87%E4%BB%B6IO/" target="_self">
-          C++下的文件IO
+          c++下的文件IO
         </a>
       </h1>
 
@@ -534,7 +595,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/c/" class="category-chain-item">c++</a>
+  <a href="/categories/c-c/" class="category-chain-item">c/c++</a>
   
   
 
@@ -747,7 +808,7 @@
       <h1 class="index-header">
         
         <a href="/2022/11/11/powershell%E8%84%9A%E6%9C%AC/" target="_self">
-          power shell脚本命令
+          powershell脚本命令
         </a>
       </h1>
 
@@ -778,7 +839,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/shell/" class="category-chain-item">shell</a>
+  <a href="/categories/powershell/" class="category-chain-item">powershell</a>
   
   
 
@@ -793,68 +854,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/powershell/">#powershell</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/" target="_self">
-          poi包冲突调试
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/11/02/poi%E5%8C%85%E5%86%B2%E7%AA%81%E8%B0%83%E8%AF%95/" target="_self">
-        <div>
-          背景媳妇她们项目组在做一个老旧项目的升级移行工作，她最近主要在负责batch这块的改修，其中有一个功能是关于excel生成的，之前老项目中是HSSF的导出，现在她要升级为XSSF的导出，所以得引入一些poi的包，由于导入了部分新包，所以项目产生了莫名其妙的报错。 过程由于她们的项目是很老的项目，没有使用maven管理，所以排查起来很是费劲。先是在本地建了一个maven的项目，然后导入了主要的两个p
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-11-02 16:26" pubdate>
-              2022-11-02
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/java/" class="category-chain-item">java</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/jar%E5%8C%85%E5%86%B2%E7%AA%81/">#jar包冲突</a>
+              <a href="/tags/shell/">#shell</a>
             
           </div>
         

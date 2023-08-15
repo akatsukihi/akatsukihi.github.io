@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>2023/08/11</title>
+    <link href="/2023/08/11/2023-08-11/"/>
+    <url>/2023/08/11/2023-08-11/</url>
+    
+    <content type="html"><![CDATA[<p>最近一直在忙搬家的事情，所以好久没更新内容了，趁着今天是祝日休息有时间，所以打算写一下昨天遇到的一个<br>bug。现象是在脚本的函数外定义了一个集合，然后在函数内部调用该集合的+&#x3D;操作符时报错，抛出的异常错误是没<br>有名为op_Addition的方法，但是如果要debug去调试时，则该+&#x3D;操作是不会抛异常的，函数正常终了，非debug模式<br>就会抛出异常。</p><h2 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h2><p>异常的情况如下所示：   </p><img src="/2023/08/11/2023-08-11/1.png" class=""><p></p><p></p>如上所示，定义了一个全局变量datas，在函数中往该datas追加数据，但是报错没有该op_Addition方法。但是debug  时的情况却正常结束，如下：      <img src="/2023/08/11/2023-08-11/2.png" class=""><p></p><p></p><img src="/2023/08/11/2023-08-11/3.png" class=""><p></p><p></p>     <h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>图一报错的原因是因为在使用复合赋值运算符时，全局的datas变量和函数内部的datas变量不是同一个变量，复合赋<br>值运算符不使用动态范围，变量始终在当前范围内，所以函数内所创建的datas是一个新的变量，而非全局定义的datas<br>所以会报错PSObject没有对应的方法。解决的办法就是将该复合赋值运算符改为一般的写法，或者将全局的变量定义<br>为强类型的ArrayList集合，并使用add的方法。具体的报错原因官方文档如下：      </p><img src="/2023/08/11/2023-08-11/5.png" class=""><p></p><p></p><p>图二和图三是使用debug模式时，该脚本正常结束，查了官方的文档，也没找到关于debug时变量作用域变化的相关信<br>息，自己验证了一下，在debug的模式下，全局的datas变量和函数内部的datas是同一个变量，如下所示：   </p><img src="/2023/08/11/2023-08-11/4.png" class=""><p></p><p></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>powershell</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>shell</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>夏祭り・足立の花火</title>
     <link href="/2023/07/23/%E5%A4%8F%E7%A5%AD%E3%82%8A%E3%83%BB%E8%B6%B3%E7%AB%8B%E3%81%AE%E8%8A%B1%E7%81%AB/"/>
     <url>/2023/07/23/%E5%A4%8F%E7%A5%AD%E3%82%8A%E3%83%BB%E8%B6%B3%E7%AB%8B%E3%81%AE%E8%8A%B1%E7%81%AB/</url>
@@ -413,14 +438,14 @@
     
     <categories>
       
-      <category>Garmin</category>
+      <category>tools</category>
       
     </categories>
     
     
     <tags>
       
-      <tag>app</tag>
+      <tag>Garmin</tag>
       
     </tags>
     
@@ -604,7 +629,7 @@
   
   
   <entry>
-    <title>C++下的文件IO</title>
+    <title>c++下的文件IO</title>
     <link href="/2023/01/31/C-%E4%B8%8B%E7%9A%84%E6%96%87%E4%BB%B6IO/"/>
     <url>/2023/01/31/C-%E4%B8%8B%E7%9A%84%E6%96%87%E4%BB%B6IO/</url>
     
@@ -613,7 +638,7 @@
     
     <categories>
       
-      <category>c++</category>
+      <category>c/c++</category>
       
     </categories>
     
@@ -704,7 +729,7 @@
   
   
   <entry>
-    <title>power shell脚本命令</title>
+    <title>powershell脚本命令</title>
     <link href="/2022/11/11/powershell%E8%84%9A%E6%9C%AC/"/>
     <url>/2022/11/11/powershell%E8%84%9A%E6%9C%AC/</url>
     
@@ -713,14 +738,14 @@
     
     <categories>
       
-      <category>shell</category>
+      <category>powershell</category>
       
     </categories>
     
     
     <tags>
       
-      <tag>powershell</tag>
+      <tag>shell</tag>
       
     </tags>
     
@@ -763,7 +788,7 @@
     
     <categories>
       
-      <category>C/C++</category>
+      <category>c/c++</category>
       
     </categories>
     
@@ -788,14 +813,14 @@
     
     <categories>
       
-      <category>vim</category>
+      <category>tools</category>
       
     </categories>
     
     
     <tags>
       
-      <tag>个人配置</tag>
+      <tag>vim</tag>
       
     </tags>
     
