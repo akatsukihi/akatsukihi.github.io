@@ -315,7 +315,9 @@
             
               <div class="markdown-body">
                 
-                <h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>所谓管道，是指用于连接都进程和写进程，以实现它们之间通信的共享文件，故又称作管道文件。这种进程通信方式<br>首创于unix系统，它能传送大量的数据并且十分有效，很多操作系统都引入了这种通信方式，linux同样也支持管道。<br>管道是一种以先进先出的方式保存一定数量数据的特殊文件，而且管道一般是单向的。写进程将数据写入管道的一端<br>读进程从管道另一端读取数据，以便腾出空间使写进程可以继续写入新发数据，所以所有的数据只能读取一次。linux<br>下管道的大小有一定的限制。实际上，管道是一个固定大小的缓冲区，在linux中，该缓冲区的大小为一个页面，即4kb<br>。<br>为了协调进程之间的通信，管道通信机制必须能够提供读写进程之间的同步机制。如果一个进程试图写入一个已满的<br>管道，在默认情况下，系统会自动阻塞该进程，直到管道能够有空间接收数据。同样，如果试图读一个空的管道，进<br>程也会被阻塞，直到管道有可读的数据。此外，如果一个进程以读方式打开一个管道，而没有另外的进程以写方式打<br>开该管道，则同样会造成该进程阻塞（因为没有数据会写到这个管道里）。同样，当一个进程试图对没有读进程的管<br>道进行写操作时，则会出现异常，导致进程终止。管道是一个进程连结数据流到另一个进程的通道，它通常用作把一<br>个进程的输出通过管道连接到另一个进程的输入。在shell中，可以通过使用符号”|“来使用管道。如：<br><figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs tap">akatsuki@312hours:~/akatsuki_info/linuxio$ ls -l | grep test<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16256 </span>Feb<span class="hljs-number"> 13 </span>18:49 test_kill<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki  <span class="hljs-number"> 885 </span>Feb<span class="hljs-number"> 13 </span>18:58 test_kill.cpp<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16240 </span>Feb<span class="hljs-number"> 14 </span>12:10 test_sigaction<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki <span class="hljs-number"> 1028 </span>Feb<span class="hljs-number"> 14 </span>12:10 test_sigaction.cpp<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16424 </span>Feb<span class="hljs-number"> 14 </span>15:54 test_sigmask<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki <span class="hljs-number"> 1413 </span>Feb<span class="hljs-number"> 14 </span>17:06 test_sigmask.cpp<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16096 </span>Feb<span class="hljs-number"> 14 </span>17:31 test_signal<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki  <span class="hljs-number"> 317 </span>Feb<span class="hljs-number"> 14 </span>17:32 test_signal.cpp<br>akatsuki@312hours:~/akatsuki_info/linuxio$<br></code></pre></td></tr></table></figure><br>ls进程会把当前目录中的文件或者文件夹都列出来，现在将本来要输出到屏幕上的数据通过管道输出到grep进程中，<br>作为grep进程的输入，然后grep进程对输入的信息进行筛选，把存在test字符串的那行打印在屏幕上。  </p>
+                <h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><p>所谓管道，是指用于连接都进程和写进程，以实现它们之间通信的共享文件，故又称作管道文件。这种进程通信方式<br>首创于unix系统，它能传送大量的数据并且十分有效，很多操作系统都引入了这种通信方式，linux同样也支持管道。<br>管道是一种以先进先出的方式保存一定数量数据的特殊文件，而且管道一般是单向的。写进程将数据写入管道的一端<br>读进程从管道另一端读取数据，以便腾出空间使写进程可以继续写入新发数据，所以所有的数据只能读取一次。linux<br>下管道的大小有一定的限制。实际上，管道是一个固定大小的缓冲区，在linux中，该缓冲区的大小为一个页面，即4kb<br>。<br>为了协调进程之间的通信，管道通信机制必须能够提供读写进程之间的同步机制。如果一个进程试图写入一个已满的<br>管道，在默认情况下，系统会自动阻塞该进程，直到管道能够有空间接收数据。同样，如果试图读一个空的管道，进<br>程也会被阻塞，直到管道有可读的数据。此外，如果一个进程以读方式打开一个管道，而没有另外的进程以写方式打<br>开该管道，则同样会造成该进程阻塞（因为没有数据会写到这个管道里）。同样，当一个进程试图对没有读进程的管<br>道进行写操作时，则会出现异常，导致进程终止。管道是一个进程连结数据流到另一个进程的通道，它通常用作把一<br>个进程的输出通过管道连接到另一个进程的输入。在shell中，可以通过使用符号”|“来使用管道。如：   </p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs tap">akatsuki@312hours:~/akatsuki_info/linuxio$ ls -l | grep test<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16256 </span>Feb<span class="hljs-number"> 13 </span>18:49 test_kill<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki  <span class="hljs-number"> 885 </span>Feb<span class="hljs-number"> 13 </span>18:58 test_kill.cpp<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16240 </span>Feb<span class="hljs-number"> 14 </span>12:10 test_sigaction<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki <span class="hljs-number"> 1028 </span>Feb<span class="hljs-number"> 14 </span>12:10 test_sigaction.cpp<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16424 </span>Feb<span class="hljs-number"> 14 </span>15:54 test_sigmask<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki <span class="hljs-number"> 1413 </span>Feb<span class="hljs-number"> 14 </span>17:06 test_sigmask.cpp<br>-rwxr-xr-x<span class="hljs-number"> 1 </span>akatsuki akatsuki<span class="hljs-number"> 16096 </span>Feb<span class="hljs-number"> 14 </span>17:31 test_signal<br>-rw-r--r--<span class="hljs-number"> 1 </span>akatsuki akatsuki  <span class="hljs-number"> 317 </span>Feb<span class="hljs-number"> 14 </span>17:32 test_signal.cpp<br>akatsuki@312hours:~/akatsuki_info/linuxio$<br></code></pre></td></tr></table></figure>
+<p>ls进程会把当前目录中的文件或者文件夹都列出来，现在将本来要输出到屏幕上的数据通过管道输出到grep进程中，<br>作为grep进程的输入，然后grep进程对输入的信息进行筛选，把存在test字符串的那行打印在屏幕上。  </p>
 <h2 id="管道读写的特点"><a href="#管道读写的特点" class="headerlink" title="管道读写的特点"></a>管道读写的特点</h2><p>管道读写是通过标准的无缓冲的输入系统调用函数read()和输出系统调用函数write()实现的。系统调用read()将从一<br>个由管道文件描述符所指的管道中读取指定的字节数到缓冲区中。如果调用成功，函数将返回实际所读的字节数。如<br>果失败，将返回-1。由于管道文件有特殊性，所以读取时有其自身的特点：  </p>
 <blockquote>
 <ul>
@@ -330,7 +332,7 @@
 <li>(1) 每一次的写请求操作总是附加在管道的末端。</li>
 <li>(2) 当有多个对同一管道的写请求发生时，系统保证小于或等于4kb大小的写请求操作不会交叉进行。</li>
 <li>(3) 如果试图对一个没有被任何进程以读方式打开的管道进行写操作，则将会产生SIGPIPE信号。默认情况下（假<br>如SIGPIPE信号没有被捕获），该进程将会被系统终止。</li>
-<li>(4) 默认情况下，对管道的写操作请求会导致进程阻塞，因为如果设备处于忙状态，write()系统调用会被阻塞并<br>且将被延迟写入，当然也可以通过fcntl()系统调用对管道进行设置。  </li>
+<li>(4) 默认情况下，对管道的写操作请求会导致进程阻塞，因为如果设备处于忙状态，write()系统调用会被阻塞并<br>且将被延迟写入，当然也可以通过fcntl()系统调用对管道进行设置。</li>
 </ul>
 </blockquote>
 <h2 id="管道局限性"><a href="#管道局限性" class="headerlink" title="管道局限性"></a>管道局限性</h2><p>管道有以下的几个局限性：  </p>
@@ -339,19 +341,21 @@
 <li>(1) 数据自己读却不能自己写。</li>
 <li>(2) 数据一旦被读走，便不在管道中存在，不可反复读取。</li>
 <li>(3) 由于管道采用半双工通信方式，因此数据只能在一个方向上流动。</li>
-<li>(4) 只能在有公共祖先的进程间使用管道。  </li>
+<li>(4) 只能在有公共祖先的进程间使用管道。</li>
 </ul>
 </blockquote>
-<h2 id="管道函数pipe"><a href="#管道函数pipe" class="headerlink" title="管道函数pipe"></a>管道函数pipe</h2><p>管道是一种基本的IPC机制，由pipe函数创建，该函数声明如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pipe</span><span class="hljs-params">(<span class="hljs-type">int</span> filedes[<span class="hljs-number">2</span>])</span></span>;<br></code></pre></td></tr></table></figure></p>
+<h2 id="管道函数pipe"><a href="#管道函数pipe" class="headerlink" title="管道函数pipe"></a>管道函数pipe</h2><p>管道是一种基本的IPC机制，由pipe函数创建，该函数声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">pipe</span><span class="hljs-params">(<span class="hljs-type">int</span> filedes[<span class="hljs-number">2</span>])</span></span>;<br></code></pre></td></tr></table></figure>
 <p>其中，参数filedes表示两个文件描述符，filedes[0]指向管道的读端，filedes[1]指向管道的写端。如果函数调用<br>成功返回0，调用失败则返回-1。<br>调用pipe函数时，在内核中开辟一块缓冲区（称为管道）用于通信，它有一个读端和一个写端，然后通过filedes参数<br>传出给用户程序两个文件描述符，filedes[0]指向管道的读端，filedes[1]指向管道的写端。所以管道在用户程序中<br>看起来就像一个打开的文件，通过read(filedes[0])和write(filedes[1])向这个文件读写数据其实是在读写内核缓冲<br>区。需要注意的是，管道创建时默认打开了文件描述符，且默认是以阻塞（block）模式打开的。  </p>
-<h2 id="读写管道read-write函数"><a href="#读写管道read-write函数" class="headerlink" title="读写管道read/write函数"></a>读写管道read/write函数</h2><p>读写管道的函数和读写文件的函数一样，都是read和write。使用这两个函数读写管道时有两点需要注意：  </p>
+<h2 id="读写管道read-x2F-write函数"><a href="#读写管道read-x2F-write函数" class="headerlink" title="读写管道read&#x2F;write函数"></a>读写管道read&#x2F;write函数</h2><p>读写管道的函数和读写文件的函数一样，都是read和write。使用这两个函数读写管道时有两点需要注意：  </p>
 <blockquote>
 <ul>
 <li>(1) 当没有数据可读时，read调用阻塞，即进程暂停执行，一直等到有数据到来为止。</li>
-<li>(2) 当管道满的时候，write调用阻塞，直到有进程读取数据。  </li>
+<li>(2) 当管道满的时候，write调用阻塞，直到有进程读取数据。</li>
 </ul>
 </blockquote>
-<h2 id="等待子进程中断或结束的函数wait"><a href="#等待子进程中断或结束的函数wait" class="headerlink" title="等待子进程中断或结束的函数wait"></a>等待子进程中断或结束的函数wait</h2><p>wait函数用于等待子进程中断或结束，进程一旦调用了wait，就立即阻塞自己，由wait自动分析当前进程的某个子进<br>程是否已经退出，如果让它找到了一个已经变成僵尸的子进程，wait就会收集这个子进程的信息，并把它彻底销毁后<br>返回；如果没有找到这样一个子进程，wait就会一直阻塞在这里，直到有一个出现为止，该函数声明如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">pid_t</span> <span class="hljs-title">wait</span><span class="hljs-params">(<span class="hljs-type">int</span> *status)</span></span>;<br></code></pre></td></tr></table></figure></p>
+<h2 id="等待子进程中断或结束的函数wait"><a href="#等待子进程中断或结束的函数wait" class="headerlink" title="等待子进程中断或结束的函数wait"></a>等待子进程中断或结束的函数wait</h2><p>wait函数用于等待子进程中断或结束，进程一旦调用了wait，就立即阻塞自己，由wait自动分析当前进程的某个子进<br>程是否已经退出，如果让它找到了一个已经变成僵尸的子进程，wait就会收集这个子进程的信息，并把它彻底销毁后<br>返回；如果没有找到这样一个子进程，wait就会一直阻塞在这里，直到有一个出现为止，该函数声明如下：  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/types.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sys/wait.h&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">pid_t</span> <span class="hljs-title">wait</span><span class="hljs-params">(<span class="hljs-type">int</span> *status)</span></span>;<br></code></pre></td></tr></table></figure>
 <p>子进程的结束状态值会由参数status返回，如果不在意结束状态值，则参数status可以设置为NULL。如果执行成功，<br>则返回子进程识别码（PID），如果有错位发生，则返回-1。失败原因存于errno中。   </p>
 <p>管道创建成功后，创建该管道的进程（父进程）同时掌握着管道的读端和写端。为了使用管道实现父子进程间的通信<br>通常可以采用以下方式：  </p>
 <img src="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/1.png" srcset="/img/loading.gif" lazyload class="">
@@ -362,7 +366,7 @@
 <p>示例：父子进程使用管道通信  </p>
 <img src="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/3.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/4.png" srcset="/img/loading.gif" lazyload class="">
-<h2 id="使用管道的特殊情况"><a href="#使用管道的特殊情况" class="headerlink" title="使用管道的特殊情况"></a>使用管道的特殊情况</h2><p>使用管道需要注意以下四种特殊情况（假设都是阻塞I/O操作，没有设置O_NONBLOCK标志）：   </p>
+<h2 id="使用管道的特殊情况"><a href="#使用管道的特殊情况" class="headerlink" title="使用管道的特殊情况"></a>使用管道的特殊情况</h2><p>使用管道需要注意以下四种特殊情况（假设都是阻塞I&#x2F;O操作，没有设置O_NONBLOCK标志）：   </p>
 <blockquote>
 <ul>
 <li>(1) 如果所有指向管道写端的文件描述符都关闭了（管道写端引用计数为0），而仍然有进程从管道的读端读数据<br>那么管道中剩余的数据都被读取后，再次read会返回0，就像读到文件末尾一样。  </li>
@@ -371,13 +375,50 @@
 <li>(4) 如果有指向管道读端的文件描述符没关闭（管道读端引用计数大于0），而持有管道读端的进程也没有从管道<br>中读数据，这时有进程向管道写端写数据，那么在管道被写满时，再次write会阻塞，直到管道中有空位置了才写<br>入数据并返回。</li>
 </ul>
 </blockquote>
-<h2 id="有名管道"><a href="#有名管道" class="headerlink" title="有名管道"></a>有名管道</h2><p>有名管道与无名管道最大的区别是有名管道可以用于非亲缘关系间的进程通信，而无名管道多用于亲缘关系间的通讯；<br>有名管道通讯时需要创建一个特殊的管道文件来作为非亲缘进程通讯的载体，通讯时需要使用open函数取得该载体的<br>文件描述符，在通讯进程完全结束退出后，该管道文件仍然会存在于用户空间。创建管道文件的函数声明如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">mkfifo</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *pathname , <span class="hljs-type">mode_t</span> mode)</span></span>;<br></code></pre></td></tr></table></figure><br>其中pathname为将要创建的管道文件路径名称，mode为文件权限，创建的权限仍然与umask相关联。函数成功时返回0，<br>失败时返回-1。mkfifo函数先在用户空间创建管道文件，此时并没有在内核中创建管道，只有当open函数打开该管道文<br>件时，此时才会调用系统函数开始在内核中创建管道。   </p>
+<h2 id="有名管道"><a href="#有名管道" class="headerlink" title="有名管道"></a>有名管道</h2><p>有名管道与无名管道最大的区别是有名管道可以用于非亲缘关系间的进程通信，而无名管道多用于亲缘关系间的通讯；<br>有名管道通讯时需要创建一个特殊的管道文件来作为非亲缘进程通讯的载体，通讯时需要使用open函数取得该载体的<br>文件描述符，在通讯进程完全结束退出后，该管道文件仍然会存在于用户空间。创建管道文件的函数声明如下：   </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;unistd.h&gt;</span></span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">mkfifo</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *pathname , <span class="hljs-type">mode_t</span> mode)</span></span>;<br></code></pre></td></tr></table></figure>
+<p>其中pathname为将要创建的管道文件路径名称，mode为文件权限，创建的权限仍然与umask相关联。函数成功时返回0，<br>失败时返回-1。mkfifo函数先在用户空间创建管道文件，此时并没有在内核中创建管道，只有当open函数打开该管道文<br>件时，此时才会调用系统函数开始在内核中创建管道。   </p>
 <p>示例：使用有名管道实现非亲缘进程间通信  </p>
 <img src="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/5.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/6.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/7.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/14/linux%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%EF%BC%88%E7%AE%A1%E9%81%93%EF%BC%89/8.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>可以看到，非亲缘关系的进程test_wfifo和test_rfifo使用了mkfifo所创建的管道文件完成了互相通信。</p>
+<p></p>
+可以看到，非亲缘关系的进程test_wfifo和test_rfifo使用了mkfifo所创建的管道文件完成了互相通信。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 
               </div>
@@ -833,20 +874,5 @@ lrc-type="0">
     <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
   </noscript>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

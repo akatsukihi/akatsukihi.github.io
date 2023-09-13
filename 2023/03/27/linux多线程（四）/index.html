@@ -16,12 +16,12 @@
   <meta name="author" content="akatsukihi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="c++11&#x2F;14下的线程同步c++11&#x2F;14提供了两种方式进行线程同步，即互斥锁和条件变量。c++11中的条件变量在实际编程中用的不多。同posix线程库一样，c++也提供了互斥锁来同步线程对共享资源的访问，而且是语言级别上的支持。c++中与互斥锁相关的类（包括锁类型）和函数都声明在头文件中，如果需要使用互斥锁和相关的类，就必须包含头文件。c++中的互斥锁有四种，对应着四种不同的类：      (">
+    <meta name="description" content="c++11&#x2F;14下的线程同步c++11&#x2F;14提供了两种方式进行线程同步，即互斥锁和条件变量。c++11中的条件变量在实际编程中用的不多。同posix线程库一样，c++也提供了互斥锁来同步线程对共享资源的访问，而且是语言级别上的支持。c++中与互斥锁相关的类（包括锁类型）和函数都声明在头文件中，如果需要使用互斥锁和相关的类，就必须包含头文件。c++中的互斥锁有四种，对应着四种不同">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux多线程（四）">
 <meta property="og:url" content="https://akatsukihi.github.io/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/index.html">
 <meta property="og:site_name" content="AkatsukiHi">
-<meta property="og:description" content="c++11&#x2F;14下的线程同步c++11&#x2F;14提供了两种方式进行线程同步，即互斥锁和条件变量。c++11中的条件变量在实际编程中用的不多。同posix线程库一样，c++也提供了互斥锁来同步线程对共享资源的访问，而且是语言级别上的支持。c++中与互斥锁相关的类（包括锁类型）和函数都声明在头文件中，如果需要使用互斥锁和相关的类，就必须包含头文件。c++中的互斥锁有四种，对应着四种不同的类：      (">
+<meta property="og:description" content="c++11&#x2F;14下的线程同步c++11&#x2F;14提供了两种方式进行线程同步，即互斥锁和条件变量。c++11中的条件变量在实际编程中用的不多。同posix线程库一样，c++也提供了互斥锁来同步线程对共享资源的访问，而且是语言级别上的支持。c++中与互斥锁相关的类（包括锁类型）和函数都声明在头文件中，如果需要使用互斥锁和相关的类，就必须包含头文件。c++中的互斥锁有四种，对应着四种不同">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/1.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/2.png">
@@ -319,7 +319,7 @@
             
               <div class="markdown-body">
                 
-                <h2 id="c-11-14下的线程同步"><a href="#c-11-14下的线程同步" class="headerlink" title="c++11/14下的线程同步"></a>c++11/14下的线程同步</h2><p>c++11/14提供了两种方式进行线程同步，即互斥锁和条件变量。c++11中的条件变量在实际编程中用的不多。同posix<br>线程库一样，c++也提供了互斥锁来同步线程对共享资源的访问，而且是语言级别上的支持。c++中与互斥锁相关的类<br>（包括锁类型）和函数都声明在头文件<mutex>中，如果需要使用互斥锁和相关的类，就必须包含头文件<mutex>。<br>c++中的互斥锁有四种，对应着四种不同的类：   </p>
+                <h2 id="c-11-x2F-14下的线程同步"><a href="#c-11-x2F-14下的线程同步" class="headerlink" title="c++11&#x2F;14下的线程同步"></a>c++11&#x2F;14下的线程同步</h2><p>c++11&#x2F;14提供了两种方式进行线程同步，即互斥锁和条件变量。c++11中的条件变量在实际编程中用的不多。同posix<br>线程库一样，c++也提供了互斥锁来同步线程对共享资源的访问，而且是语言级别上的支持。c++中与互斥锁相关的类<br>（包括锁类型）和函数都声明在头文件<mutex>中，如果需要使用互斥锁和相关的类，就必须包含头文件<mutex>。<br>c++中的互斥锁有四种，对应着四种不同的类：   </p>
 <blockquote>
 <ul>
 <li>(1) 基本互斥锁，对应的类为std::mutex。</li>
@@ -332,36 +332,79 @@
 <h3 id="基本互斥锁-std-mutex"><a href="#基本互斥锁-std-mutex" class="headerlink" title="基本互斥锁 std::mutex"></a>基本互斥锁 std::mutex</h3><p>类std::mutex是最基本的互斥锁，用来同步线程对临界资源的互斥访问。它的成员函数如下所示：  </p>
 <img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/1.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-
-<p>函数lock用来对一个互斥锁上锁，如果互斥锁当前没有被上锁，则当前线程（调用线程，调用该函数的线程）可以成<br>功对互斥锁上锁，即当前线程拥有互斥锁，直到当前线程调用解锁函数unlock。如果互斥锁已经被其它线程上锁了，<br>则当前线程挂起，直到互斥锁被其它线程解锁。如果互斥锁已经被当前线程上锁了，则再次调用该函数时将死锁，若<br>需要递归上锁，则可以调用成员函数recursive_mutex。lock函数声明如下：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">lock</span>()</span>;<br></code></pre></td></tr></table></figure><br>函数unlock用来对一个互斥锁解锁，释放调用线程对其拥有的所有权。如果有其它线程因为要对互斥锁上锁而阻塞着<br>则互斥锁被调用线程解锁后，阻塞着的其它线程就可以继续往下执行了。即能对互斥锁上锁了。如果互斥锁当前没有<br>被调用线程上锁，则调用线程调用unlock后将产生不可预知的结果，函数unlock声明如下：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">unlock</span>()</span>;<br></code></pre></td></tr></table></figure><br>注意：lock和unlock都要被调用线程配对使用。</p>
+  
+<p>函数lock用来对一个互斥锁上锁，如果互斥锁当前没有被上锁，则当前线程（调用线程，调用该函数的线程）可以成<br>功对互斥锁上锁，即当前线程拥有互斥锁，直到当前线程调用解锁函数unlock。如果互斥锁已经被其它线程上锁了，<br>则当前线程挂起，直到互斥锁被其它线程解锁。如果互斥锁已经被当前线程上锁了，则再次调用该函数时将死锁，若<br>需要递归上锁，则可以调用成员函数recursive_mutex。lock函数声明如下：  </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">lock</span>()</span>;<br></code></pre></td></tr></table></figure>
+<p>函数unlock用来对一个互斥锁解锁，释放调用线程对其拥有的所有权。如果有其它线程因为要对互斥锁上锁而阻塞着<br>则互斥锁被调用线程解锁后，阻塞着的其它线程就可以继续往下执行了。即能对互斥锁上锁了。如果互斥锁当前没有<br>被调用线程上锁，则调用线程调用unlock后将产生不可预知的结果，函数unlock声明如下：  </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">unlock</span>()</span>;<br></code></pre></td></tr></table></figure>
+<p>注意：lock和unlock都要被调用线程配对使用。</p>
 <p>示例：多线程累加到1000万   </p>
 <img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/2.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-
+  
 <h3 id="定时互斥锁std-timed-mutex"><a href="#定时互斥锁std-timed-mutex" class="headerlink" title="定时互斥锁std::timed_mutex"></a>定时互斥锁std::timed_mutex</h3><p>类std::timed_mutex是定时互斥锁，与基本互斥锁类似，不同点在于多了定时。</p>
 <img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/3.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-
-<p>函数try_lock()尝试给互斥锁上锁，如果互斥锁被其它线程占有，则当前线程也不会阻塞，线程调用该函数会出现3<br>中情况：① 如果当前互斥锁没有被其它线程占有，则该线程锁住互斥锁，直到该线程调用unlock释放互斥锁；②如果<br>当前互斥锁被其它线程锁住，则当前调用线程返回false，而并不会被阻塞掉；③如果当前互斥锁被当前调用线程锁住<br>则会产生死锁。try_lock()声明如下：<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-built_in">bool</span> <span class="hljs-title">try_lock</span>()</span>;<br></code></pre></td></tr></table></figure><br>如果函数成功上锁，则返回true，否则返回false。该函数不会阻塞，不能上锁时将立即返回false。  </p>
+  
+<p>函数try_lock()尝试给互斥锁上锁，如果互斥锁被其它线程占有，则当前线程也不会阻塞，线程调用该函数会出现3<br>中情况：① 如果当前互斥锁没有被其它线程占有，则该线程锁住互斥锁，直到该线程调用unlock释放互斥锁；②如果<br>当前互斥锁被其它线程锁住，则当前调用线程返回false，而并不会被阻塞掉；③如果当前互斥锁被当前调用线程锁住<br>则会产生死锁。try_lock()声明如下：  </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-built_in">bool</span> <span class="hljs-title">try_lock</span>()</span>;<br></code></pre></td></tr></table></figure>
+<p>如果函数成功上锁，则返回true，否则返回false。该函数不会阻塞，不能上锁时将立即返回false。  </p>
 <p>示例：使用非阻塞上锁方式累加到1000万</p>
 <img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/4.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-
+  
 <h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><p>线程池就是一堆已经创建好了的线程，初始都处于空闲等待状态，当有新的任务需要处理的时候，就从这堆线程中<br>取一个空闲等待的线程来处理该任务，当任务处理完毕后，就再次把该线程放回池中（一般就是将线程状态置为空闲）<br>以供后面的任务继续使用。当池子里的线程全都处于忙碌状态时，线程池中没有可用的空闲等待线程，此时根据需要<br>选择创建一个新的线程并置入池中，或者通知任务当前线程池里所有线程都在忙，稍后再进行尝试，这个过程如下：  </p>
 <img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/5.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-
+  
 <p>线程池的创建和销毁相对于进程的创建和销毁来说是轻量级的（开销比进程小），但是当任务需要进行大量线程的创<br>建和销毁操作时，这些开销合在一起就比较大了。比如，当设计一个压力性能测试框架的时候，需要连续产生大量的<br>并发操作。线程池在这种场合是非常适用的。线程池的好处就在于线程复用，某个线程在处理完一个任务后，可以继<br>续处理下一个任务，而不用销毁后再创建，这样可以避免无谓的开销，因此线程池尤其适用于连续产生大量并发任务<br>的场合。  </p>
 <h3 id="一个简单的线程池"><a href="#一个简单的线程池" class="headerlink" title="一个简单的线程池"></a>一个简单的线程池</h3><img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/6.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/7.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/8.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/9.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
-
+   
 <p>测试类如下：   </p>
 <img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/10.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/11.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/03/27/linux%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89/12.png" srcset="/img/loading.gif" lazyload class="">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 
               </div>
@@ -817,20 +860,5 @@ lrc-type="0">
     <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
   </noscript>
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
