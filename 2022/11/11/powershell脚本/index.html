@@ -24,7 +24,7 @@
 <meta property="og:description" content="最近开始支援其他项目组做一些脚本开发的工作，memo一下常用的数据处理命令。    去除输入文件的首行，重新生成新的文件：12$x &#x3D; Get-Content -Path &quot;..test.csv&quot;set-Content -Path &quot;..new.csv&quot; -Value ($x[1..($x.Length-1)]) 获取文件的当前路径 $PSScriptRoo">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-11-11T01:03:12.000Z">
-<meta property="article:modified_time" content="2023-08-11T08:17:52.980Z">
+<meta property="article:modified_time" content="2023-09-21T02:23:36.882Z">
 <meta property="article:author" content="akatsukihi">
 <meta property="article:tag" content="shell">
 <meta name="twitter:card" content="summary_large_image">
@@ -774,5 +774,20 @@ lrc-type="0">
     <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
   </noscript>
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
