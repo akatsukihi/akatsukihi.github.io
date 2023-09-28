@@ -1,0 +1,893 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="akatsukihi">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="数据准备加载pandas提供了一些用于将表格型数据读取为DataFrame对象的函数：     read_csv        从文件、url、文件型对象中加载带分隔符的数据。默认分隔符为逗号 read_table      从文件、url、文件型对象中加载带分隔符的数据。默认分隔符为制表符（’\t’） read_fwf        读取定宽列格式数据（没有分隔符） read_clipboard">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据处理（五）">
+<meta property="og:url" content="https://akatsukihi.github.io/2023/09/27/%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%EF%BC%88%E4%BA%94%EF%BC%89/index.html">
+<meta property="og:site_name" content="AkatsukiHi">
+<meta property="og:description" content="数据准备加载pandas提供了一些用于将表格型数据读取为DataFrame对象的函数：     read_csv        从文件、url、文件型对象中加载带分隔符的数据。默认分隔符为逗号 read_table      从文件、url、文件型对象中加载带分隔符的数据。默认分隔符为制表符（’\t’） read_fwf        读取定宽列格式数据（没有分隔符） read_clipboard">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-27T05:08:16.000Z">
+<meta property="article:modified_time" content="2023-09-28T10:36:15.024Z">
+<meta property="article:author" content="akatsukihi">
+<meta property="article:tag" content="script">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>数据处理（五） - AkatsukiHi</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akatsukihi.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"","Options":"left | right"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>akatsukihi</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/remark/">
+                <i class="iconfont icon-twitch-fill"></i>
+                留言板
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg/nihon.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="数据处理（五）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-09-27 14:08" pubdate>
+          2023年9月27日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          124 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数据处理（五）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h2><h3 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h3><p>pandas提供了一些用于将表格型数据读取为DataFrame对象的函数：  </p>
+<blockquote>
+<ul>
+<li>read_csv        从文件、url、文件型对象中加载带分隔符的数据。默认分隔符为逗号</li>
+<li>read_table      从文件、url、文件型对象中加载带分隔符的数据。默认分隔符为制表符（’\t’）</li>
+<li>read_fwf        读取定宽列格式数据（没有分隔符）</li>
+<li>read_clipboard  读取剪贴板中的数据，可以看作read_table的剪贴板版。再将网页转换为表格时很有用</li>
+<li>read_excel      从Excel的xls或者xlsx文件中读取表格数据</li>
+<li>read_hdf        读取pandas写的HDF5文件</li>
+<li>read_html       读取HTML文档中的所有表格</li>
+<li>read_json       读取json字符串中的数据</li>
+<li>read_msgpack    二进制格式编码的pandas数据</li>
+<li>read_pickle     读取python pickle格式中存储的任意对象</li>
+<li>read_sas        读取存储于SAS系统自定义存储格式的SAS数据集</li>
+<li>read_sql        （使用SQLAIchemy）读取SQL查询结果为pandas的DataFrame</li>
+<li>read_stata      读取Stata文件格式的数据集</li>
+<li>read_feather    读取Feather二进制文件格式</li>
+</ul>
+</blockquote>
+<h3 id="处理缺失值"><a href="#处理缺失值" class="headerlink" title="处理缺失值"></a>处理缺失值</h3><p>数据的不整合，有缺失是经常会出现的问题，pandas可以很轻松的处理这些缺失数据，并且pandas对象的所有描述<br>性统计默认情况下都是不包括缺失数据的。对于数值类型的数据，pandas使用NaN（not a number）来表示，又称为<br>哨兵值，可以很方便的检测出：  </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">In</span> [<span class="hljs-number">12</span>]: s1 = pd.Series([<span class="hljs-string">&#x27;ab&#x27;</span>,np.<span class="hljs-keyword">nan</span>,<span class="hljs-string">&#x27;bc&#x27;</span>,<span class="hljs-string">&#x27;bb&#x27;</span>])<br><br><span class="hljs-keyword">In</span> [<span class="hljs-number">13</span>]: s1<br><span class="hljs-keyword">Out</span>[<span class="hljs-number">13</span>]:<br><span class="hljs-number">0</span>     ab<br><span class="hljs-number">1</span>    <span class="hljs-keyword">NaN</span><br><span class="hljs-number">2</span>     bc<br><span class="hljs-number">3</span>     bb<br>dtype: <span class="hljs-keyword">object</span><br><br><span class="hljs-keyword">In</span> [<span class="hljs-number">14</span>]: s1.<span class="hljs-keyword">isnull</span>()<br><span class="hljs-keyword">Out</span>[<span class="hljs-number">14</span>]:<br><span class="hljs-number">0</span>    <span class="hljs-keyword">False</span><br><span class="hljs-number">1</span>     <span class="hljs-keyword">True</span><br><span class="hljs-number">2</span>    <span class="hljs-keyword">False</span><br><span class="hljs-number">3</span>    <span class="hljs-keyword">False</span><br>dtype: <span class="hljs-type">bool</span><br><br>python的内置<span class="hljs-keyword">None</span>值也可以作为NA缺失值<br><span class="hljs-keyword">In</span> [<span class="hljs-number">15</span>]: s1[<span class="hljs-number">0</span>]=<span class="hljs-keyword">None</span><br><br><span class="hljs-keyword">In</span> [<span class="hljs-number">16</span>]: s1.<span class="hljs-keyword">isnull</span>()<br><span class="hljs-keyword">Out</span>[<span class="hljs-number">16</span>]:<br><span class="hljs-number">0</span>     <span class="hljs-keyword">True</span><br><span class="hljs-number">1</span>     <span class="hljs-keyword">True</span><br><span class="hljs-number">2</span>    <span class="hljs-keyword">False</span><br><span class="hljs-number">3</span>    <span class="hljs-keyword">False</span><br>dtype: <span class="hljs-type">bool</span><br><br></code></pre></td></tr></table></figure>
+<p>pandas中一些关于缺失值数据处理的函数：  </p>
+<blockquote>
+<ul>
+<li>dropna    根据各索引标签的值中是否存在缺失数据对轴标签进行过滤，可通过阈值调节对缺失值的容忍度</li>
+<li>fillna    用指定值或插值方法（如ffill或bfill）填充缺失数据</li>
+<li>isnull    返回一个含有布尔值的对象，这些布尔值表示哪些值是缺失值NA，该对象的类型与源类型一样</li>
+<li>notnull   isnull的否定式</li>
+</ul>
+</blockquote>
+<p>滤除掉缺失数据的办法有很多种，可以通过pandas.isnull或布尔索引的手工方法，也可以使用dropna。对于Series<br>，dropna返回一个仅含非空数据和索引值的Series,默认会丢弃任何含有缺失值的行：  </p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><br><span class="hljs-keyword">In</span> [<span class="hljs-number">8</span>]: data = pd.Series([<span class="hljs-number">1</span>,np.<span class="hljs-keyword">nan</span>,<span class="hljs-number">-1</span>,np.<span class="hljs-keyword">nan</span>,<span class="hljs-number">-2</span>,<span class="hljs-number">5</span>])<br><br><span class="hljs-keyword">In</span> [<span class="hljs-number">9</span>]: data<br><span class="hljs-keyword">Out</span>[<span class="hljs-number">9</span>]:<br><span class="hljs-number">0</span>    <span class="hljs-number">1.0</span><br><span class="hljs-number">1</span>    <span class="hljs-keyword">NaN</span><br><span class="hljs-number">2</span>   <span class="hljs-number">-1.0</span><br><span class="hljs-number">3</span>    <span class="hljs-keyword">NaN</span><br><span class="hljs-number">4</span>   <span class="hljs-number">-2.0</span><br><span class="hljs-number">5</span>    <span class="hljs-number">5.0</span><br>dtype: float64<br><br><span class="hljs-keyword">In</span> [<span class="hljs-number">10</span>]: data.dropna()<br><span class="hljs-keyword">Out</span>[<span class="hljs-number">10</span>]:<br><span class="hljs-number">0</span>    <span class="hljs-number">1.0</span><br><span class="hljs-number">2</span>   <span class="hljs-number">-1.0</span><br><span class="hljs-number">4</span>   <span class="hljs-number">-2.0</span><br><span class="hljs-number">5</span>    <span class="hljs-number">5.0</span><br>dtype: float64<br><br><span class="hljs-keyword">In</span> [<span class="hljs-number">11</span>]: data.<span class="hljs-keyword">notnull</span>()<br><span class="hljs-keyword">Out</span>[<span class="hljs-number">11</span>]:<br><span class="hljs-number">0</span>     <span class="hljs-keyword">True</span><br><span class="hljs-number">1</span>    <span class="hljs-keyword">False</span><br><span class="hljs-number">2</span>     <span class="hljs-keyword">True</span><br><span class="hljs-number">3</span>    <span class="hljs-keyword">False</span><br><span class="hljs-number">4</span>     <span class="hljs-keyword">True</span><br><span class="hljs-number">5</span>     <span class="hljs-keyword">True</span><br>dtype: <span class="hljs-type">bool</span><br><br><span class="hljs-keyword">In</span> [<span class="hljs-number">12</span>]: data[data.<span class="hljs-keyword">notnull</span>()]<br><span class="hljs-keyword">Out</span>[<span class="hljs-number">12</span>]:<br><span class="hljs-number">0</span>    <span class="hljs-number">1.0</span><br><span class="hljs-number">2</span>   <span class="hljs-number">-1.0</span><br><span class="hljs-number">4</span>   <span class="hljs-number">-2.0</span><br><span class="hljs-number">5</span>    <span class="hljs-number">5.0</span><br>dtype: float64<br><br></code></pre></td></tr></table></figure>
+<p>对于DataFrame对象，通常是需要丢弃全是NA或含有NA缺失值的行或列，dropna默认的行为是丢弃含有缺失值的行；<br>也可以使用参数how=’all’来仅丢弃全是NaN的那些行；列滤除时只需要再传入参数axis=1或者axis=’columns’:  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><br>In <span class="hljs-selector-attr">[16]</span>: frame = pd<span class="hljs-selector-class">.DataFrame</span>(<span class="hljs-selector-attr">[[-2,3.,0]</span>,<span class="hljs-selector-attr">[9.,np.nan,np.nan]</span>,<span class="hljs-selector-attr">[np.nan,np.nan,np.nan]</span>,<span class="hljs-selector-attr">[np.nan,7.,2.]</span>])<br><br>In <span class="hljs-selector-attr">[17]</span>: data = frame<span class="hljs-selector-class">.dropna</span>()<br><br>In <span class="hljs-selector-attr">[18]</span>: frame<br>Out<span class="hljs-selector-attr">[18]</span>:<br>     <span class="hljs-number">0</span>    <span class="hljs-number">1</span>    <span class="hljs-number">2</span><br><span class="hljs-number">0</span> -<span class="hljs-number">2.0</span>  <span class="hljs-number">3.0</span>  <span class="hljs-number">0.0</span><br><span class="hljs-number">1</span>  <span class="hljs-number">9.0</span>  NaN  NaN<br><span class="hljs-number">2</span>  NaN  NaN  NaN<br><span class="hljs-number">3</span>  NaN  <span class="hljs-number">7.0</span>  <span class="hljs-number">2.0</span><br><br>In <span class="hljs-selector-attr">[19]</span>: data<br>Out<span class="hljs-selector-attr">[19]</span>:<br>     <span class="hljs-number">0</span>    <span class="hljs-number">1</span>    <span class="hljs-number">2</span><br><span class="hljs-number">0</span> -<span class="hljs-number">2.0</span>  <span class="hljs-number">3.0</span>  <span class="hljs-number">0.0</span><br><br>In <span class="hljs-selector-attr">[20]</span>: frame<span class="hljs-selector-class">.dropna</span>(how=<span class="hljs-string">&#x27;all&#x27;</span>)<br>Out<span class="hljs-selector-attr">[20]</span>:<br>     <span class="hljs-number">0</span>    <span class="hljs-number">1</span>    <span class="hljs-number">2</span><br><span class="hljs-number">0</span> -<span class="hljs-number">2.0</span>  <span class="hljs-number">3.0</span>  <span class="hljs-number">0.0</span><br><span class="hljs-number">1</span>  <span class="hljs-number">9.0</span>  NaN  NaN<br><span class="hljs-number">3</span>  NaN  <span class="hljs-number">7.0</span>  <span class="hljs-number">2.0</span><br><br>In <span class="hljs-selector-attr">[21]</span>: frame<span class="hljs-selector-attr">[4]</span> = None<br><br>In <span class="hljs-selector-attr">[22]</span>: frame<br>Out<span class="hljs-selector-attr">[22]</span>:<br>     <span class="hljs-number">0</span>    <span class="hljs-number">1</span>    <span class="hljs-number">2</span>     <span class="hljs-number">4</span><br><span class="hljs-number">0</span> -<span class="hljs-number">2.0</span>  <span class="hljs-number">3.0</span>  <span class="hljs-number">0.0</span>  None<br><span class="hljs-number">1</span>  <span class="hljs-number">9.0</span>  NaN  NaN  None<br><span class="hljs-number">2</span>  NaN  NaN  NaN  None<br><span class="hljs-number">3</span>  NaN  <span class="hljs-number">7.0</span>  <span class="hljs-number">2.0</span>  None<br><br>In <span class="hljs-selector-attr">[23]</span>: frame<span class="hljs-selector-class">.dropna</span>(axis=<span class="hljs-number">1</span>,how=<span class="hljs-string">&#x27;all&#x27;</span>)<br>Out<span class="hljs-selector-attr">[23]</span>:<br>     <span class="hljs-number">0</span>    <span class="hljs-number">1</span>    <span class="hljs-number">2</span><br><span class="hljs-number">0</span> -<span class="hljs-number">2.0</span>  <span class="hljs-number">3.0</span>  <span class="hljs-number">0.0</span><br><span class="hljs-number">1</span>  <span class="hljs-number">9.0</span>  NaN  NaN<br><span class="hljs-number">2</span>  NaN  NaN  NaN<br><span class="hljs-number">3</span>  NaN  <span class="hljs-number">7.0</span>  <span class="hljs-number">2.0</span><br><br></code></pre></td></tr></table></figure>
+<p>还可以利用thresh参数只保留一部分观测数据：  </p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs dns"><br>In [<span class="hljs-number">25</span>]: df = pd.DataFrame(np.random.randn(<span class="hljs-number">7</span>,<span class="hljs-number">3</span>))<br><br>In [<span class="hljs-number">26</span>]: df.iloc[:<span class="hljs-number">4</span>,<span class="hljs-number">1</span>] = np.nan<br><br>In [<span class="hljs-number">27</span>]: df.iloc[:<span class="hljs-number">2</span>,<span class="hljs-number">2</span>] = np.nan<br><br>In [<span class="hljs-number">28</span>]: df<br>Out[<span class="hljs-number">28</span>]:<br>          <span class="hljs-number">0</span>         <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">0</span>  <span class="hljs-number">0.541423</span>       NaN       NaN<br><span class="hljs-number">1</span>  <span class="hljs-number">0.416524</span>       NaN       NaN<br><span class="hljs-number">2</span> -<span class="hljs-number">0.352319</span>       NaN -<span class="hljs-number">0.803247</span><br><span class="hljs-number">3</span> -<span class="hljs-number">0.357339</span>       NaN  <span class="hljs-number">0.446972</span><br><span class="hljs-number">4</span> -<span class="hljs-number">0.317904</span> -<span class="hljs-number">1.816965</span> -<span class="hljs-number">1.134849</span><br><span class="hljs-number">5</span>  <span class="hljs-number">0.407714</span> -<span class="hljs-number">0.496257</span>  <span class="hljs-number">0.669890</span><br><span class="hljs-number">6</span>  <span class="hljs-number">0.083866</span> -<span class="hljs-number">0.813837</span>  <span class="hljs-number">0.272087</span><br><br>In [<span class="hljs-number">29</span>]: df.dropna(thresh=<span class="hljs-number">3</span>)<br>Out[<span class="hljs-number">29</span>]:<br>          <span class="hljs-number">0</span>         <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">4</span> -<span class="hljs-number">0.317904</span> -<span class="hljs-number">1.816965</span> -<span class="hljs-number">1.134849</span><br><span class="hljs-number">5</span>  <span class="hljs-number">0.407714</span> -<span class="hljs-number">0.496257</span>  <span class="hljs-number">0.669890</span><br><span class="hljs-number">6</span>  <span class="hljs-number">0.083866</span> -<span class="hljs-number">0.813837</span>  <span class="hljs-number">0.272087</span><br><br>In [<span class="hljs-number">30</span>]: df.dropna(thresh=<span class="hljs-number">2</span>)<br>Out[<span class="hljs-number">30</span>]:<br>          <span class="hljs-number">0</span>         <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">2</span> -<span class="hljs-number">0.352319</span>       NaN -<span class="hljs-number">0.803247</span><br><span class="hljs-number">3</span> -<span class="hljs-number">0.357339</span>       NaN  <span class="hljs-number">0.446972</span><br><span class="hljs-number">4</span> -<span class="hljs-number">0.317904</span> -<span class="hljs-number">1.816965</span> -<span class="hljs-number">1.134849</span><br><span class="hljs-number">5</span>  <span class="hljs-number">0.407714</span> -<span class="hljs-number">0.496257</span>  <span class="hljs-number">0.669890</span><br><span class="hljs-number">6</span>  <span class="hljs-number">0.083866</span> -<span class="hljs-number">0.813837</span>  <span class="hljs-number">0.272087</span><br><br>In [<span class="hljs-number">31</span>]: df.dropna(thresh=<span class="hljs-number">1</span>)<br>Out[<span class="hljs-number">31</span>]:<br>          <span class="hljs-number">0</span>         <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">0</span>  <span class="hljs-number">0.541423</span>       NaN       NaN<br><span class="hljs-number">1</span>  <span class="hljs-number">0.416524</span>       NaN       NaN<br><span class="hljs-number">2</span> -<span class="hljs-number">0.352319</span>       NaN -<span class="hljs-number">0.803247</span><br><span class="hljs-number">3</span> -<span class="hljs-number">0.357339</span>       NaN  <span class="hljs-number">0.446972</span><br><span class="hljs-number">4</span> -<span class="hljs-number">0.317904</span> -<span class="hljs-number">1.816965</span> -<span class="hljs-number">1.134849</span><br><span class="hljs-number">5</span>  <span class="hljs-number">0.407714</span> -<span class="hljs-number">0.496257</span>  <span class="hljs-number">0.669890</span><br><span class="hljs-number">6</span>  <span class="hljs-number">0.083866</span> -<span class="hljs-number">0.813837</span>  <span class="hljs-number">0.272087</span><br><br>In [<span class="hljs-number">32</span>]: df.dropna(thresh=<span class="hljs-number">0</span>)<br>Out[<span class="hljs-number">32</span>]:<br>          <span class="hljs-number">0</span>         <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">0</span>  <span class="hljs-number">0.541423</span>       NaN       NaN<br><span class="hljs-number">1</span>  <span class="hljs-number">0.416524</span>       NaN       NaN<br><span class="hljs-number">2</span> -<span class="hljs-number">0.352319</span>       NaN -<span class="hljs-number">0.803247</span><br><span class="hljs-number">3</span> -<span class="hljs-number">0.357339</span>       NaN  <span class="hljs-number">0.446972</span><br><span class="hljs-number">4</span> -<span class="hljs-number">0.317904</span> -<span class="hljs-number">1.816965</span> -<span class="hljs-number">1.134849</span><br><span class="hljs-number">5</span>  <span class="hljs-number">0.407714</span> -<span class="hljs-number">0.496257</span>  <span class="hljs-number">0.669890</span><br><span class="hljs-number">6</span>  <span class="hljs-number">0.083866</span> -<span class="hljs-number">0.813837</span>  <span class="hljs-number">0.272087</span><br><br></code></pre></td></tr></table></figure>
+<p>某些情况下，缺失值所在的行或列会有其它重要的数据不应该被过滤掉，此时可以通过其它方式来处理这些缺失值<br>，fillna方法是常用的手段之一，可以使用fillna函数将缺失值替换为一个常数值。fillna接收字典类型，并且根据<br>字典类型对不同的列实施填充不同的值，fillna默认会返回新的对象，但也可以使用inplace参数就地修改：   </p>
+<blockquote>
+<ul>
+<li>value       用于填充缺失值的标量值或字典对象</li>
+<li>method      插值方式。如果函数调用时未指定其它参数的话，默认为ffill</li>
+<li>axis        待填充的轴，默认axis=0</li>
+<li>inplace     修改调用者对象而不产生副本</li>
+<li>limit       (对于前向和后向填充)可以连续填充的最大数量</li>
+</ul>
+</blockquote>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><code class="hljs dns"><br>In [<span class="hljs-number">35</span>]: df<br>Out[<span class="hljs-number">35</span>]:<br>          <span class="hljs-number">0</span>         <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">0</span>  <span class="hljs-number">0.541423</span>       NaN       NaN<br><span class="hljs-number">1</span>  <span class="hljs-number">0.416524</span>       NaN       NaN<br><span class="hljs-number">2</span> -<span class="hljs-number">0.352319</span>       NaN -<span class="hljs-number">0.803247</span><br><span class="hljs-number">3</span> -<span class="hljs-number">0.357339</span>       NaN  <span class="hljs-number">0.446972</span><br><span class="hljs-number">4</span> -<span class="hljs-number">0.317904</span> -<span class="hljs-number">1.816965</span> -<span class="hljs-number">1.134849</span><br><span class="hljs-number">5</span>  <span class="hljs-number">0.407714</span> -<span class="hljs-number">0.496257</span>  <span class="hljs-number">0.669890</span><br><span class="hljs-number">6</span>  <span class="hljs-number">0.083866</span> -<span class="hljs-number">0.813837</span>  <span class="hljs-number">0.272087</span><br><br>In [<span class="hljs-number">36</span>]: df.fillna(<span class="hljs-number">0</span>)<br>Out[<span class="hljs-number">36</span>]:<br>          <span class="hljs-number">0</span>         <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">0</span>  <span class="hljs-number">0.541423</span>  <span class="hljs-number">0.000000</span>  <span class="hljs-number">0.000000</span><br><span class="hljs-number">1</span>  <span class="hljs-number">0.416524</span>  <span class="hljs-number">0.000000</span>  <span class="hljs-number">0.000000</span><br><span class="hljs-number">2</span> -<span class="hljs-number">0.352319</span>  <span class="hljs-number">0.000000</span> -<span class="hljs-number">0.803247</span><br><span class="hljs-number">3</span> -<span class="hljs-number">0.357339</span>  <span class="hljs-number">0.000000</span>  <span class="hljs-number">0.446972</span><br><span class="hljs-number">4</span> -<span class="hljs-number">0.317904</span> -<span class="hljs-number">1.816965</span> -<span class="hljs-number">1.134849</span><br><span class="hljs-number">5</span>  <span class="hljs-number">0.407714</span> -<span class="hljs-number">0.496257</span>  <span class="hljs-number">0.669890</span><br><span class="hljs-number">6</span>  <span class="hljs-number">0.083866</span> -<span class="hljs-number">0.813837</span>  <span class="hljs-number">0.272087</span><br><br>In [<span class="hljs-number">37</span>]: df<br>Out[<span class="hljs-number">37</span>]:<br>          <span class="hljs-number">0</span>         <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">0</span>  <span class="hljs-number">0.541423</span>       NaN       NaN<br><span class="hljs-number">1</span>  <span class="hljs-number">0.416524</span>       NaN       NaN<br><span class="hljs-number">2</span> -<span class="hljs-number">0.352319</span>       NaN -<span class="hljs-number">0.803247</span><br><span class="hljs-number">3</span> -<span class="hljs-number">0.357339</span>       NaN  <span class="hljs-number">0.446972</span><br><span class="hljs-number">4</span> -<span class="hljs-number">0.317904</span> -<span class="hljs-number">1.816965</span> -<span class="hljs-number">1.134849</span><br><span class="hljs-number">5</span>  <span class="hljs-number">0.407714</span> -<span class="hljs-number">0.496257</span>  <span class="hljs-number">0.669890</span><br><span class="hljs-number">6</span>  <span class="hljs-number">0.083866</span> -<span class="hljs-number">0.813837</span>  <span class="hljs-number">0.272087</span><br><br>In [<span class="hljs-number">38</span>]: ret = df.fillna(&#123;<span class="hljs-number">1:10,2:8</span>.<span class="hljs-number">8</span>&#125;)<br><br>In [<span class="hljs-number">39</span>]: ret<br>Out[<span class="hljs-number">39</span>]:<br>          <span class="hljs-number">0</span>          <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">0</span>  <span class="hljs-number">0.541423</span>  <span class="hljs-number">10.000000</span>  <span class="hljs-number">8.800000</span><br><span class="hljs-number">1</span>  <span class="hljs-number">0.416524</span>  <span class="hljs-number">10.000000</span>  <span class="hljs-number">8.800000</span><br><span class="hljs-number">2</span> -<span class="hljs-number">0.352319</span>  <span class="hljs-number">10.000000</span> -<span class="hljs-number">0.803247</span><br><span class="hljs-number">3</span> -<span class="hljs-number">0.357339</span>  <span class="hljs-number">10.000000</span>  <span class="hljs-number">0.446972</span><br><span class="hljs-number">4</span> -<span class="hljs-number">0.317904</span>  -<span class="hljs-number">1.816965</span> -<span class="hljs-number">1.134849</span><br><span class="hljs-number">5</span>  <span class="hljs-number">0.407714</span>  -<span class="hljs-number">0.496257</span>  <span class="hljs-number">0.669890</span><br><span class="hljs-number">6</span>  <span class="hljs-number">0.083866</span>  -<span class="hljs-number">0.813837</span>  <span class="hljs-number">0.272087</span><br><br><br>In [<span class="hljs-number">41</span>]: df = pd.DataFrame(np.random.randn(<span class="hljs-number">6</span>,<span class="hljs-number">3</span>))<br><br>In [<span class="hljs-number">42</span>]: df.iloc[<span class="hljs-number">2</span>:,<span class="hljs-number">1</span>]=np.nan<br><br>In [<span class="hljs-number">43</span>]: df.iloc[<span class="hljs-number">4</span>:,<span class="hljs-number">2</span>]=np.nan<br><br>In [<span class="hljs-number">44</span>]: df<br>Out[<span class="hljs-number">44</span>]:<br>          <span class="hljs-number">0</span>         <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">0</span> -<span class="hljs-number">0.931168</span>  <span class="hljs-number">2.077455</span>  <span class="hljs-number">0.311366</span><br><span class="hljs-number">1</span> -<span class="hljs-number">1.849988</span> -<span class="hljs-number">0.142057</span>  <span class="hljs-number">1.190534</span><br><span class="hljs-number">2</span> -<span class="hljs-number">0.751264</span>       NaN  <span class="hljs-number">1.461994</span><br><span class="hljs-number">3</span> -<span class="hljs-number">0.409568</span>       NaN -<span class="hljs-number">3.216811</span><br><span class="hljs-number">4</span>  <span class="hljs-number">0.667922</span>       NaN       NaN<br><span class="hljs-number">5</span>  <span class="hljs-number">0.705172</span>       NaN       NaN<br><br>In [<span class="hljs-number">45</span>]: df.fillna(method=&#x27;ffill&#x27;)<br>&lt;ipython-input-<span class="hljs-number">45</span>-<span class="hljs-number">5</span>c0beae7dc1e&gt;:<span class="hljs-number">1</span>: FutureWarning: DataFrame.fillna with &#x27;method&#x27; is deprecated and will raise in a future version. Use obj.ffill() or obj.bfill() instead.<br>  df.fillna(method=&#x27;ffill&#x27;)<br>Out[<span class="hljs-number">45</span>]:<br>          <span class="hljs-number">0</span>         <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">0</span> -<span class="hljs-number">0.931168</span>  <span class="hljs-number">2.077455</span>  <span class="hljs-number">0.311366</span><br><span class="hljs-number">1</span> -<span class="hljs-number">1.849988</span> -<span class="hljs-number">0.142057</span>  <span class="hljs-number">1.190534</span><br><span class="hljs-number">2</span> -<span class="hljs-number">0.751264</span> -<span class="hljs-number">0.142057</span>  <span class="hljs-number">1.461994</span><br><span class="hljs-number">3</span> -<span class="hljs-number">0.409568</span> -<span class="hljs-number">0.142057</span> -<span class="hljs-number">3.216811</span><br><span class="hljs-number">4</span>  <span class="hljs-number">0.667922</span> -<span class="hljs-number">0.142057</span> -<span class="hljs-number">3.216811</span><br><span class="hljs-number">5</span>  <span class="hljs-number">0.705172</span> -<span class="hljs-number">0.142057</span> -<span class="hljs-number">3.216811</span><br><br>In [<span class="hljs-number">46</span>]: df.fillna(method=&#x27;ffill&#x27;,limit=<span class="hljs-number">2</span>)<br>&lt;ipython-input-<span class="hljs-number">46</span>-cdf<span class="hljs-number">585d53c11</span>&gt;:<span class="hljs-number">1</span>: FutureWarning: DataFrame.fillna with &#x27;method&#x27; is deprecated and will raise in a future version. Use obj.ffill() or obj.bfill() instead.<br>  df.fillna(method=&#x27;ffill&#x27;,limit=<span class="hljs-number">2</span>)<br>Out[<span class="hljs-number">46</span>]:<br>          <span class="hljs-number">0</span>         <span class="hljs-number">1</span>         <span class="hljs-number">2</span><br><span class="hljs-number">0</span> -<span class="hljs-number">0.931168</span>  <span class="hljs-number">2.077455</span>  <span class="hljs-number">0.311366</span><br><span class="hljs-number">1</span> -<span class="hljs-number">1.849988</span> -<span class="hljs-number">0.142057</span>  <span class="hljs-number">1.190534</span><br><span class="hljs-number">2</span> -<span class="hljs-number">0.751264</span> -<span class="hljs-number">0.142057</span>  <span class="hljs-number">1.461994</span><br><span class="hljs-number">3</span> -<span class="hljs-number">0.409568</span> -<span class="hljs-number">0.142057</span> -<span class="hljs-number">3.216811</span><br><span class="hljs-number">4</span>  <span class="hljs-number">0.667922</span>       NaN -<span class="hljs-number">3.216811</span><br><span class="hljs-number">5</span>  <span class="hljs-number">0.705172</span>       NaN -<span class="hljs-number">3.216811</span><br><br></code></pre></td></tr></table></figure>
+<h3 id="处理重复数据"><a href="#处理重复数据" class="headerlink" title="处理重复数据"></a>处理重复数据</h3><p>重复数据可以使用duplicated函数进行检测，DataFrame的duplicated方法返回一个布尔型的Series，表示各行是否<br>重复;还有一个drop_duplicates方法，用来去除重复行，这两个方法默认都会判断全部的列，也可以指定部分列进行<br>重复项的判断，两个方法默认都是保留第一个出现的重复项的值组合，也可以使用参数keep=’last’用来保留最后一<br>个：  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><br>In <span class="hljs-selector-attr">[51]</span>: df = pd<span class="hljs-selector-class">.DataFrame</span>(&#123;<span class="hljs-string">&#x27;k1&#x27;</span>:<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;one&#x27;</span>,<span class="hljs-string">&#x27;two&#x27;</span>]</span>*<span class="hljs-number">3</span>+<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;two&#x27;</span>]</span>,<span class="hljs-string">&#x27;k2&#x27;</span>:<span class="hljs-selector-attr">[1,1,2,3,3,4,4]</span>&#125;)<br><br>In <span class="hljs-selector-attr">[52]</span>: df<br>Out<span class="hljs-selector-attr">[52]</span>:<br>    k1  k2<br><span class="hljs-number">0</span>  one   <span class="hljs-number">1</span><br><span class="hljs-number">1</span>  two   <span class="hljs-number">1</span><br><span class="hljs-number">2</span>  one   <span class="hljs-number">2</span><br><span class="hljs-number">3</span>  two   <span class="hljs-number">3</span><br><span class="hljs-number">4</span>  one   <span class="hljs-number">3</span><br><span class="hljs-number">5</span>  two   <span class="hljs-number">4</span><br><span class="hljs-number">6</span>  two   <span class="hljs-number">4</span><br><br>In <span class="hljs-selector-attr">[53]</span>: df<span class="hljs-selector-class">.duplicated</span>()<br>Out<span class="hljs-selector-attr">[53]</span>:<br><span class="hljs-number">0</span>    False<br><span class="hljs-number">1</span>    False<br><span class="hljs-number">2</span>    False<br><span class="hljs-number">3</span>    False<br><span class="hljs-number">4</span>    False<br><span class="hljs-number">5</span>    False<br><span class="hljs-number">6</span>     True<br>dtype: bool<br><br>In <span class="hljs-selector-attr">[54]</span>: df<span class="hljs-selector-class">.drop_duplicates</span>()<br>Out<span class="hljs-selector-attr">[54]</span>:<br>    k1  k2<br><span class="hljs-number">0</span>  one   <span class="hljs-number">1</span><br><span class="hljs-number">1</span>  two   <span class="hljs-number">1</span><br><span class="hljs-number">2</span>  one   <span class="hljs-number">2</span><br><span class="hljs-number">3</span>  two   <span class="hljs-number">3</span><br><span class="hljs-number">4</span>  one   <span class="hljs-number">3</span><br><span class="hljs-number">5</span>  two   <span class="hljs-number">4</span><br><br>In <span class="hljs-selector-attr">[55]</span>: df<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;v&#x27;</span>]</span>=<span class="hljs-built_in">range</span>(<span class="hljs-number">7</span>)<br><br>In <span class="hljs-selector-attr">[56]</span>: df<br>Out<span class="hljs-selector-attr">[56]</span>:<br>    k1  k2  v<br><span class="hljs-number">0</span>  one   <span class="hljs-number">1</span>  <span class="hljs-number">0</span><br><span class="hljs-number">1</span>  two   <span class="hljs-number">1</span>  <span class="hljs-number">1</span><br><span class="hljs-number">2</span>  one   <span class="hljs-number">2</span>  <span class="hljs-number">2</span><br><span class="hljs-number">3</span>  two   <span class="hljs-number">3</span>  <span class="hljs-number">3</span><br><span class="hljs-number">4</span>  one   <span class="hljs-number">3</span>  <span class="hljs-number">4</span><br><span class="hljs-number">5</span>  two   <span class="hljs-number">4</span>  <span class="hljs-number">5</span><br><span class="hljs-number">6</span>  two   <span class="hljs-number">4</span>  <span class="hljs-number">6</span><br><br>In <span class="hljs-selector-attr">[57]</span>: df<span class="hljs-selector-class">.drop_duplicates</span>(<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;k1&#x27;</span>]</span>)<br>Out<span class="hljs-selector-attr">[57]</span>:<br>    k1  k2  v<br><span class="hljs-number">0</span>  one   <span class="hljs-number">1</span>  <span class="hljs-number">0</span><br><span class="hljs-number">1</span>  two   <span class="hljs-number">1</span>  <span class="hljs-number">1</span><br><br>In <span class="hljs-selector-attr">[58]</span>: df<span class="hljs-selector-class">.drop_duplicates</span>(<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;k1&#x27;</span>,<span class="hljs-string">&#x27;k2&#x27;</span>]</span>)<br>Out<span class="hljs-selector-attr">[58]</span>:<br>    k1  k2  v<br><span class="hljs-number">0</span>  one   <span class="hljs-number">1</span>  <span class="hljs-number">0</span><br><span class="hljs-number">1</span>  two   <span class="hljs-number">1</span>  <span class="hljs-number">1</span><br><span class="hljs-number">2</span>  one   <span class="hljs-number">2</span>  <span class="hljs-number">2</span><br><span class="hljs-number">3</span>  two   <span class="hljs-number">3</span>  <span class="hljs-number">3</span><br><span class="hljs-number">4</span>  one   <span class="hljs-number">3</span>  <span class="hljs-number">4</span><br><span class="hljs-number">5</span>  two   <span class="hljs-number">4</span>  <span class="hljs-number">5</span><br><br>In <span class="hljs-selector-attr">[59]</span>: df<span class="hljs-selector-class">.drop_duplicates</span>(<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;k1&#x27;</span>,<span class="hljs-string">&#x27;k2&#x27;</span>]</span>,keep=<span class="hljs-string">&#x27;last&#x27;</span>)<br>Out<span class="hljs-selector-attr">[59]</span>:<br>    k1  k2  v<br><span class="hljs-number">0</span>  one   <span class="hljs-number">1</span>  <span class="hljs-number">0</span><br><span class="hljs-number">1</span>  two   <span class="hljs-number">1</span>  <span class="hljs-number">1</span><br><span class="hljs-number">2</span>  one   <span class="hljs-number">2</span>  <span class="hljs-number">2</span><br><span class="hljs-number">3</span>  two   <span class="hljs-number">3</span>  <span class="hljs-number">3</span><br><span class="hljs-number">4</span>  one   <span class="hljs-number">3</span>  <span class="hljs-number">4</span><br><span class="hljs-number">6</span>  two   <span class="hljs-number">4</span>  <span class="hljs-number">6</span><br><br></code></pre></td></tr></table></figure>
+<h3 id="使用函数映射处理数据"><a href="#使用函数映射处理数据" class="headerlink" title="使用函数映射处理数据"></a>使用函数映射处理数据</h3><p>对于许多结果集，有时需要根据其它的结果集做相对应的数据映射或者其它处理，此时可以使用匿名函数的方式，或<br>者其它可以用来映射的函数方式处理起来相对简单且容易：  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><br>In <span class="hljs-selector-attr">[64]</span>: df = pd<span class="hljs-selector-class">.DataFrame</span>(&#123;<span class="hljs-string">&#x27;city&#x27;</span>:<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;guangyuan&#x27;</span>,<span class="hljs-string">&#x27;mianzhu&#x27;</span>,<span class="hljs-string">&#x27;ChengDu&#x27;</span>,<span class="hljs-string">&#x27;TongChuan&#x27;</span>,<span class="hljs-string">&#x27;hanzhong&#x27;</span>,<span class="hljs-string">&#x27;xian&#x27;</span>,<span class="hljs-string">&#x27;baoji&#x27;</span>,<span class="hljs-string">&#x27;DaTong&#x27;</span>,<span class="hljs-string">&#x27;taiyuan&#x27;</span>]</span>,<br>    ...: <span class="hljs-string">&#x27;person&#x27;</span>:<span class="hljs-selector-attr">[130,300,2200,80,140,1500,500,200,900]</span>&#125;)<br><br>In <span class="hljs-selector-attr">[65]</span>: df<br>Out<span class="hljs-selector-attr">[65]</span>:<br>        city  person<br><span class="hljs-number">0</span>  guangyuan     <span class="hljs-number">130</span><br><span class="hljs-number">1</span>    mianzhu     <span class="hljs-number">300</span><br><span class="hljs-number">2</span>    ChengDu    <span class="hljs-number">2200</span><br><span class="hljs-number">3</span>  TongChuan      <span class="hljs-number">80</span><br><span class="hljs-number">4</span>   hanzhong     <span class="hljs-number">140</span><br><span class="hljs-number">5</span>       xian    <span class="hljs-number">1500</span><br><span class="hljs-number">6</span>      baoji     <span class="hljs-number">500</span><br><span class="hljs-number">7</span>     DaTong     <span class="hljs-number">200</span><br><span class="hljs-number">8</span>    taiyuan     <span class="hljs-number">900</span><br><br>In <span class="hljs-selector-attr">[66]</span>: city2province = &#123;<span class="hljs-string">&#x27;guangyuan&#x27;</span>:<span class="hljs-string">&#x27;sichuan&#x27;</span>,<span class="hljs-string">&#x27;mianzhu&#x27;</span>:<span class="hljs-string">&#x27;sichuan&#x27;</span>,<span class="hljs-string">&#x27;chengdu&#x27;</span>:<span class="hljs-string">&#x27;sichuan&#x27;</span>,<span class="hljs-string">&#x27;tongchuan&#x27;</span>:<span class="hljs-string">&#x27;shannxi&#x27;</span>,<span class="hljs-string">&#x27;hanzhong&#x27;</span>:<span class="hljs-string">&#x27;shannxi&#x27;</span>,<br>    ...: <span class="hljs-string">&#x27;xian&#x27;</span>:<span class="hljs-string">&#x27;shannxi&#x27;</span>,<span class="hljs-string">&#x27;baoji&#x27;</span>:<span class="hljs-string">&#x27;shannxi&#x27;</span>,<span class="hljs-string">&#x27;datong&#x27;</span>:<span class="hljs-string">&#x27;shanxi&#x27;</span>,<span class="hljs-string">&#x27;taiyuan&#x27;</span>:<span class="hljs-string">&#x27;shanxi&#x27;</span>&#125;<br><br>In <span class="hljs-selector-attr">[67]</span>: lowercityname = df<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;city&#x27;</span>]</span><span class="hljs-selector-class">.str</span><span class="hljs-selector-class">.lower</span>()<br><br>In <span class="hljs-selector-attr">[68]</span>: lowercityname<br>Out<span class="hljs-selector-attr">[68]</span>:<br><span class="hljs-number">0</span>    guangyuan<br><span class="hljs-number">1</span>      mianzhu<br><span class="hljs-number">2</span>      chengdu<br><span class="hljs-number">3</span>    tongchuan<br><span class="hljs-number">4</span>     hanzhong<br><span class="hljs-number">5</span>         xian<br><span class="hljs-number">6</span>        baoji<br><span class="hljs-number">7</span>       datong<br><span class="hljs-number">8</span>      taiyuan<br>Name: city, dtype: <span class="hljs-selector-tag">object</span><br><br>In <span class="hljs-selector-attr">[69]</span>: df<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;province&#x27;</span>]</span> = lowercityname<span class="hljs-selector-class">.map</span>(city2province)<br><br>In <span class="hljs-selector-attr">[70]</span>: df<br>Out<span class="hljs-selector-attr">[70]</span>:<br>        city  person province<br><span class="hljs-number">0</span>  guangyuan     <span class="hljs-number">130</span>  sichuan<br><span class="hljs-number">1</span>    mianzhu     <span class="hljs-number">300</span>  sichuan<br><span class="hljs-number">2</span>    ChengDu    <span class="hljs-number">2200</span>  sichuan<br><span class="hljs-number">3</span>  TongChuan      <span class="hljs-number">80</span>  shannxi<br><span class="hljs-number">4</span>   hanzhong     <span class="hljs-number">140</span>  shannxi<br><span class="hljs-number">5</span>       xian    <span class="hljs-number">1500</span>  shannxi<br><span class="hljs-number">6</span>      baoji     <span class="hljs-number">500</span>  shannxi<br><span class="hljs-number">7</span>     DaTong     <span class="hljs-number">200</span>   shanxi<br><span class="hljs-number">8</span>    taiyuan     <span class="hljs-number">900</span>   shanxi<br><br>In <span class="hljs-selector-attr">[71]</span>: df<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;city&#x27;</span>]</span><span class="hljs-selector-class">.map</span>(lambda x: city2province<span class="hljs-selector-attr">[x.lower()]</span>)<br>Out<span class="hljs-selector-attr">[71]</span>:<br><span class="hljs-number">0</span>    sichuan<br><span class="hljs-number">1</span>    sichuan<br><span class="hljs-number">2</span>    sichuan<br><span class="hljs-number">3</span>    shannxi<br><span class="hljs-number">4</span>    shannxi<br><span class="hljs-number">5</span>    shannxi<br><span class="hljs-number">6</span>    shannxi<br><span class="hljs-number">7</span>     shanxi<br><span class="hljs-number">8</span>     shanxi<br>Name: city, dtype: <span class="hljs-selector-tag">object</span><br><br></code></pre></td></tr></table></figure>
+<h3 id="replace数据替换"><a href="#replace数据替换" class="headerlink" title="replace数据替换"></a>replace数据替换</h3><p>使用replace可以处理数据集中的一些特殊数据，例如缺失值，除了使用fillna函数外，还可以使用replace替换实现：  </p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs subunit">In [73]: df = pd.Series([8,<span class="hljs-string">-999</span>,5,<span class="hljs-string">-999</span>,<span class="hljs-string">-1000</span>,<span class="hljs-string">-1</span>,<span class="hljs-string">-1</span>])<br><br>In [74]: df<br>Out[74]:<br>0       8<br>1    <span class="hljs-string">-999</span><br>2       5<br>3    <span class="hljs-string">-999</span><br>4   <span class="hljs-string">-1000</span><br>5      <span class="hljs-string">-1</span><br>6      <span class="hljs-string">-1</span><br>dtype: int64<br><br>In [75]: df.replace(<span class="hljs-string">-999</span>, np.nan)<br>Out[75]:<br>0       8.0<br>1       NaN<br>2       5.0<br>3       NaN<br>4   <span class="hljs-string">-1000</span>.0<br>5      <span class="hljs-string">-1</span>.0<br>6      <span class="hljs-string">-1</span>.0<br>dtype: float64<br><br>In [76]: df.replace([<span class="hljs-string">-999</span>,<span class="hljs-string">-1000</span>,<span class="hljs-string">-1</span>], np.nan)<br>Out[76]:<br>0    8.0<br>1    NaN<br>2    5.0<br>3    NaN<br>4    NaN<br>5    NaN<br>6    NaN<br>dtype: float64<br><br>In [77]: df.replace([<span class="hljs-string">-999</span>,<span class="hljs-string">-1000</span>,<span class="hljs-string">-1</span>], [np.nan,1000,1])<br>Out[77]:<br>0       8.0<br>1       NaN<br>2       5.0<br>3       NaN<br>4    1000.0<br>5       1.0<br>6       1.0<br>dtype: float64<br><br>In [78]: df.replace(&#123;<span class="hljs-string">-999</span>:999, <span class="hljs-string">-1000</span>:np.nan,<span class="hljs-string">-1</span>:888&#125;)<br>Out[78]:<br>0      8.0<br>1    999.0<br>2      5.0<br>3    999.0<br>4      NaN<br>5    888.0<br>6    888.0<br>dtype: float64<br><br></code></pre></td></tr></table></figure>
+<h3 id="字符串处理"><a href="#字符串处理" class="headerlink" title="字符串处理"></a>字符串处理</h3><p>python的文本处理能力简单而强大，大部分的文本运算都直接做成了字符串对象的内置方法，对于更为复杂的模式<br>匹配和文本操作，则需要借助正则表达式。pandas对此进行了加强，它能够对整组数据应用字符串表达式和正则表达<br>式，而且也可以处理缺失数据。   </p>
+<h4 id="python的内置字符串方法"><a href="#python的内置字符串方法" class="headerlink" title="python的内置字符串方法"></a>python的内置字符串方法</h4><blockquote>
+<ul>
+<li>count                   返回字串在字符串中的出现次数（非重叠）</li>
+<li>endswith,startswith    如果字符串以某个后缀结尾（或以某个前缀开头），则返回True</li>
+<li>join                    将字符串用作连接其它字符串序列的分隔符</li>
+<li>index                   如果在字符串中找到子串，则返回子串第一个字符所在的位置。如果没找到，则引发ValueError</li>
+<li>find                    如果在字符串中找到子串，则返回第一个发现的子串的第一个字符所在的位置。如果没有找到，则返回-1</li>
+<li>rfind                  如果在字符串中找到子串，则返回最后一个发现的子串的第一个字符所在的位置。如果没有找到，则返回-1</li>
+<li>replace                用另一个字符串替换指定子串</li>
+<li>strip,rstrip,lstrip   去除空白符（包括换行符）。相当于对各个元素执行x.strip()(rstrip、lstrip)</li>
+<li>split                  通过指定的分隔符将字符串拆分为一组子串</li>
+<li>lower,upper            分别将字母字符转换为小写或大写</li>
+<li>ljust,rjust           用空格（或其它字符）填充字符串的空白测以返回符合最低宽度的字符串</li>
+</ul>
+</blockquote>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><br>In <span class="hljs-selector-attr">[86]</span>: s = <span class="hljs-string">&#x27;x,y,  github&#x27;</span><br><br>In <span class="hljs-selector-attr">[87]</span>: s<span class="hljs-selector-class">.split</span>(<span class="hljs-string">&#x27;,&#x27;</span>)<br>Out<span class="hljs-selector-attr">[87]</span>: <span class="hljs-selector-attr">[<span class="hljs-string">&#x27;x&#x27;</span>, <span class="hljs-string">&#x27;y&#x27;</span>, <span class="hljs-string">&#x27;  github&#x27;</span>]</span><br><br>In <span class="hljs-selector-attr">[88]</span>: s1 = <span class="hljs-selector-attr">[x.strip() for x in s.split(<span class="hljs-string">&#x27;,&#x27;</span>)]</span><br><br>In <span class="hljs-selector-attr">[89]</span>: s1<br>Out<span class="hljs-selector-attr">[89]</span>: <span class="hljs-selector-attr">[<span class="hljs-string">&#x27;x&#x27;</span>, <span class="hljs-string">&#x27;y&#x27;</span>, <span class="hljs-string">&#x27;github&#x27;</span>]</span><br><br>In <span class="hljs-selector-attr">[90]</span>: <span class="hljs-selector-tag">a</span>,<span class="hljs-selector-tag">b</span>,c = s1<br><br>In <span class="hljs-selector-attr">[91]</span>: a+<span class="hljs-string">&#x27;::&#x27;</span>+b+<span class="hljs-string">&#x27;::&#x27;</span>+c<br>Out<span class="hljs-selector-attr">[91]</span>: <span class="hljs-string">&#x27;x::y::github&#x27;</span><br><br>In <span class="hljs-selector-attr">[92]</span>: <span class="hljs-string">&#x27;::&#x27;</span><span class="hljs-selector-class">.join</span>(s1)<br>Out<span class="hljs-selector-attr">[92]</span>: <span class="hljs-string">&#x27;x::y::github&#x27;</span><br><br>In <span class="hljs-selector-attr">[93]</span>: <span class="hljs-string">&#x27;github&#x27;</span> <span class="hljs-keyword">in</span> s<br>Out<span class="hljs-selector-attr">[93]</span>: True<br><br>In <span class="hljs-selector-attr">[94]</span>: s<span class="hljs-selector-class">.index</span>(<span class="hljs-string">&#x27;,&#x27;</span>)<br>Out<span class="hljs-selector-attr">[94]</span>: <span class="hljs-number">1</span><br><br>In <span class="hljs-selector-attr">[95]</span>: s<span class="hljs-selector-class">.index</span>(<span class="hljs-string">&#x27;  &#x27;</span>)<br>Out<span class="hljs-selector-attr">[95]</span>: <span class="hljs-number">4</span><br><br>In <span class="hljs-selector-attr">[96]</span>: s<span class="hljs-selector-class">.find</span>(<span class="hljs-string">&#x27;::&#x27;</span>)<br>Out<span class="hljs-selector-attr">[96]</span>: -<span class="hljs-number">1</span><br><br>In <span class="hljs-selector-attr">[97]</span>: s<span class="hljs-selector-class">.count</span>(<span class="hljs-string">&#x27;,&#x27;</span>)<br>Out<span class="hljs-selector-attr">[97]</span>: <span class="hljs-number">2</span><br><br>In <span class="hljs-selector-attr">[98]</span>: s<span class="hljs-selector-class">.replace</span>(<span class="hljs-string">&#x27;,&#x27;</span>,<span class="hljs-string">&#x27;@&#x27;</span>)<br>Out<span class="hljs-selector-attr">[98]</span>: <span class="hljs-string">&#x27;x@y@  github&#x27;</span><br><br></code></pre></td></tr></table></figure>
+<h4 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h4><p>正则表达式常称为regex，是根据正则表达式语言编写的字符串，它提供了一种灵活的在文本中搜索或匹配字符串的<br>方式。python内置的re模块用来对文本应用正则表达式。re模块的函数可以分成三个大类：模式匹配、替换及拆分。<br>一个正则表达式描述了需要在文本中定位的一个模式。  </p>
+<p>正则表达式方法</p>
+<blockquote>
+<ul>
+<li>findall,finditer    返回字符串中所有的非重叠匹配模式。findall返回的是由所有模式组成的列表，而finditer则通过一个迭代器逐个返回</li>
+<li>match               从字符串起始位置匹配模式，还可以对模式各部分进行分组。如果匹配到模式，则返回一个匹配项对象，否则返回None</li>
+<li>search              扫描整个字符串以匹配模式。如果找到则返回一个匹配项对象。跟match不同，其匹配项可以位于字符串的任意位置，而不仅仅是起始处。</li>
+<li>split               根据找到的模式将字符串拆分为数段</li>
+<li>sub,subn            将字符串中所有的sub或前n个（subn)模式替换为指定表达式。在替换字符串中可以通过\1、\2等符号表示各分组项。</li>
+</ul>
+</blockquote>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs stylus">In <span class="hljs-selector-attr">[100]</span>: import re<br><br>In <span class="hljs-selector-attr">[101]</span>: test = <span class="hljs-string">&quot;this      is\ta test      \tdemo &quot;</span><br><br>In <span class="hljs-selector-attr">[102]</span>: re<span class="hljs-selector-class">.split</span>(<span class="hljs-string">&#x27;\s+&#x27;</span>, test)<br>Out<span class="hljs-selector-attr">[102]</span>: <span class="hljs-selector-attr">[<span class="hljs-string">&#x27;this&#x27;</span>, <span class="hljs-string">&#x27;is&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;test&#x27;</span>, <span class="hljs-string">&#x27;demo&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>]</span><br><br></code></pre></td></tr></table></figure>
+<p>调用re.split(‘\s+’,test)时，正则表达式’\s+’会先被编译，然后再在test上调用split方法。当有大量的字符串<br>需要使用同一个模式匹配时，可以先将该正则表达式模式通过re.compile编译成regex对象，再调用函数，这样可以<br>提升性能：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs stylus">In <span class="hljs-selector-attr">[103]</span>: regex = re<span class="hljs-selector-class">.compile</span>(<span class="hljs-string">&#x27;\s+&#x27;</span>)<br><br>In <span class="hljs-selector-attr">[104]</span>: regex<span class="hljs-selector-class">.split</span>(test)<br>Out<span class="hljs-selector-attr">[104]</span>: <span class="hljs-selector-attr">[<span class="hljs-string">&#x27;this&#x27;</span>, <span class="hljs-string">&#x27;is&#x27;</span>, <span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;test&#x27;</span>, <span class="hljs-string">&#x27;demo&#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>]</span><br><br>In <span class="hljs-selector-attr">[105]</span>: regex<span class="hljs-selector-class">.findall</span>(test)<br>Out<span class="hljs-selector-attr">[105]</span>: <span class="hljs-selector-attr">[<span class="hljs-string">&#x27;      &#x27;</span>, <span class="hljs-string">&#x27;\t&#x27;</span>, <span class="hljs-string">&#x27; &#x27;</span>, <span class="hljs-string">&#x27;      \t&#x27;</span>, <span class="hljs-string">&#x27; &#x27;</span>]</span><br><br></code></pre></td></tr></table></figure><br>findall可以返回字符串中找到的所有模式匹配项，search和match也有类似功能，区别在于，search只是返回第一个<br>匹配项；而match的匹配较为严格，只对字符串的首部匹配。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs python"><br>In [<span class="hljs-number">110</span>]: text = <span class="hljs-string">&quot;&quot;&quot;Zxy zxy@163.com</span><br><span class="hljs-string">     ...: Zmg zmg@gmail.com</span><br><span class="hljs-string">     ...: Cy cy@qq.com</span><br><span class="hljs-string">     ...: Jim jim@live.com</span><br><span class="hljs-string">     ...: &quot;&quot;&quot;</span><br><br>In [<span class="hljs-number">111</span>]: pattern = <span class="hljs-string">r&#x27;[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]&#123;2,4&#125;&#x27;</span><br><br>In [<span class="hljs-number">112</span>]: regex = re.<span class="hljs-built_in">compile</span>(pattern, flags=re.IGNORECASE)<br><br>In [<span class="hljs-number">113</span>]: regex.findall(text)<br>Out[<span class="hljs-number">113</span>]: [<span class="hljs-string">&#x27;zxy@163.com&#x27;</span>, <span class="hljs-string">&#x27;zmg@gmail.com&#x27;</span>, <span class="hljs-string">&#x27;cy@qq.com&#x27;</span>, <span class="hljs-string">&#x27;jim@live.com&#x27;</span>]<br><br>In [<span class="hljs-number">114</span>]: ret = regex.search(text)<br><br>In [<span class="hljs-number">115</span>]: ret<br>Out[<span class="hljs-number">115</span>]: &lt;re.Match <span class="hljs-built_in">object</span>; span=(<span class="hljs-number">4</span>, <span class="hljs-number">15</span>), <span class="hljs-keyword">match</span>=<span class="hljs-string">&#x27;zxy@163.com&#x27;</span>&gt;<br><br>In [<span class="hljs-number">116</span>]: text[ret.start():ret.end()]<br>Out[<span class="hljs-number">116</span>]: <span class="hljs-string">&#x27;zxy@163.com&#x27;</span><br><br>In [<span class="hljs-number">117</span>]: regex.<span class="hljs-keyword">match</span>(text)<br><br>In [<span class="hljs-number">118</span>]: <span class="hljs-built_in">print</span>(regex.<span class="hljs-keyword">match</span>(text))<br><span class="hljs-literal">None</span><br><br></code></pre></td></tr></table></figure>
+<p>sub方法可以将匹配到的模式替换为指定的字符串，并返回新的结果字符串：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus">In <span class="hljs-selector-attr">[119]</span>: retsub = regex<span class="hljs-selector-class">.sub</span>(<span class="hljs-string">&#x27;testdemo&#x27;</span>,text)<br><br>In <span class="hljs-selector-attr">[120]</span>: retsub<br>Out<span class="hljs-selector-attr">[120]</span>: <span class="hljs-string">&#x27;Zxy testdemo\nZmg testdemo\nCy testdemo\nJim testdemo\n&#x27;</span><br><br></code></pre></td></tr></table></figure><br>还可以将匹配到的模式进行分离，如将匹配到邮件地址分为三个部分：用户名、域名以及域后缀。要实现该功能，需<br>要将待分离的模式部分用圆括号括起来即可：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python">In [<span class="hljs-number">122</span>]: pattern = <span class="hljs-string">r&#x27;([A-Z0-9._%+-]+)@([A-Z0-9.-]+)\.([A-Z]&#123;2,4&#125;)&#x27;</span><br><br>In [<span class="hljs-number">123</span>]: regex = re.<span class="hljs-built_in">compile</span>(pattern, flags=re.IGNORECASE)<br><br>In [<span class="hljs-number">124</span>]: testdemo = regex.<span class="hljs-keyword">match</span>(<span class="hljs-string">&#x27;lucy@google.com&#x27;</span>)<br><br>In [<span class="hljs-number">125</span>]: testdemo.groups()<br>Out[<span class="hljs-number">125</span>]: (<span class="hljs-string">&#x27;lucy&#x27;</span>, <span class="hljs-string">&#x27;google&#x27;</span>, <span class="hljs-string">&#x27;com&#x27;</span>)<br><br>In [<span class="hljs-number">126</span>]: regex.findall(text)<br>Out[<span class="hljs-number">126</span>]:<br>[(<span class="hljs-string">&#x27;zxy&#x27;</span>, <span class="hljs-string">&#x27;163&#x27;</span>, <span class="hljs-string">&#x27;com&#x27;</span>),<br> (<span class="hljs-string">&#x27;zmg&#x27;</span>, <span class="hljs-string">&#x27;gmail&#x27;</span>, <span class="hljs-string">&#x27;com&#x27;</span>),<br> (<span class="hljs-string">&#x27;cy&#x27;</span>, <span class="hljs-string">&#x27;qq&#x27;</span>, <span class="hljs-string">&#x27;com&#x27;</span>),<br> (<span class="hljs-string">&#x27;jim&#x27;</span>, <span class="hljs-string">&#x27;live&#x27;</span>, <span class="hljs-string">&#x27;com&#x27;</span>)]<br><br></code></pre></td></tr></table></figure><br>可以通过groups方法返回一个由模式各段组成的元组，findall会返回一个元组列表；sub函数还可以通过\1,\2之类<br>的特殊符号访问各匹配项中的分组，\1对应第一个分组，\2对应第二个匹配项，以此类推：<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs applescript">In [<span class="hljs-number">127</span>]: print(regex.sub(r&#x27;fist:\<span class="hljs-number">1</span>, <span class="hljs-keyword">second</span>:\<span class="hljs-number">2</span>, <span class="hljs-keyword">third</span>:\<span class="hljs-number">3</span>&#x27;,<span class="hljs-built_in">text</span>))<br>Zxy fist:zxy, <span class="hljs-keyword">second</span>:<span class="hljs-number">163</span>, <span class="hljs-keyword">third</span>:com<br>Zmg fist:zmg, <span class="hljs-keyword">second</span>:gmail, <span class="hljs-keyword">third</span>:com<br>Cy fist:cy, <span class="hljs-keyword">second</span>:qq, <span class="hljs-keyword">third</span>:com<br>Jim fist:jim, <span class="hljs-keyword">second</span>:live, <span class="hljs-keyword">third</span>:com<br><br></code></pre></td></tr></table></figure></p>
+<h4 id="pandas的字符串函数"><a href="#pandas的字符串函数" class="headerlink" title="pandas的字符串函数"></a>pandas的字符串函数</h4><blockquote>
+<ul>
+<li>cat              实现元素级的字符串连接操作，可指定分隔符</li>
+<li>count            返回匹配模式的字符串出现的次数</li>
+<li>extract          使用带分组的正则表达式从字符串Series提取一个或多个字符串，结果是一个DataFrame，每组有一列</li>
+<li>endswith         相当于对每个元素执行x.endswith(pattern)</li>
+<li>startswith       相当于对每个元素执行x.startswith(pattern)</li>
+<li>findall          计算各字符串的模式列表</li>
+<li>get              获取各元素的第i个字符</li>
+<li>isalnum          相当于内置的str.alnum</li>
+<li>isalpha          相当于内置的str.isalpha</li>
+<li>isdecimal        相当于内置的str.isdecimal</li>
+<li>isdigit          相当于内置的str.isdigit</li>
+<li>islower          相当于内置的str.islower</li>
+<li>isnumeric        相当于内置的str.isnumeric</li>
+<li>isupper          相当于内置的str.isupper</li>
+<li>join             根据指定的分隔符将Series中各元素的字符串连接起来</li>
+<li>len              计算各字符串的长度</li>
+<li>lower,upper      转换大小写，相当于对各个元素执行x.lower()或x.upper()</li>
+<li>match            根据指定的正则表达式对各个元素执行re.match，返回匹配的组为列表</li>
+<li>pad              在字符串的左边、右边或两边添加空白符</li>
+<li>center           相当于pad(side=’both’)</li>
+<li>repeat           重复值。例如，s.str.repeat(3)相当于对各个字符串执行重复倍数</li>
+<li>replace          用指定字符串替换找到的模式</li>
+<li>slice            对Series中的各个字符串进行子串截取</li>
+<li>split            根据分隔符或正则表达式对字符串进行拆分</li>
+<li>strip            去除两边的空白符，包括新行</li>
+<li>rstrip           去除右边的空白符</li>
+<li>lstrip           去除左边的空白符</li>
+</ul>
+</blockquote>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><br>In <span class="hljs-selector-attr">[137]</span>: pdt = &#123;<span class="hljs-string">&#x27;Jim&#x27;</span>:<span class="hljs-string">&#x27;jim@live.com&#x27;</span>,<span class="hljs-string">&#x27;Lucy&#x27;</span>:<span class="hljs-string">&#x27;lucy@gmail.com&#x27;</span>,<span class="hljs-string">&#x27;LiLei&#x27;</span>:<span class="hljs-string">&#x27;lilei@qq.com&#x27;</span>,<span class="hljs-string">&#x27;Linux&#x27;</span>:np.nan&#125;<br><br>In <span class="hljs-selector-attr">[138]</span>: data = pd<span class="hljs-selector-class">.Series</span>(pdt)<br><br>In <span class="hljs-selector-attr">[139]</span>: data<br>Out<span class="hljs-selector-attr">[139]</span>:<br>Jim        jim@live<span class="hljs-selector-class">.com</span><br>Lucy     lucy@gmail<span class="hljs-selector-class">.com</span><br>LiLei      lilei@qq<span class="hljs-selector-class">.com</span><br>Linux               NaN<br>dtype: <span class="hljs-selector-tag">object</span><br><br>In <span class="hljs-selector-attr">[140]</span>: data<span class="hljs-selector-class">.isnull</span>()<br>Out<span class="hljs-selector-attr">[140]</span>:<br>Jim      False<br>Lucy     False<br>LiLei    False<br>Linux     True<br>dtype: bool<br><br></code></pre></td></tr></table></figure>
+<p>通过使用data.map,所有的字符串值都能够被匿名函数lambda或者正则表达式所映射处理，但是如果存在缺失值Na，<br>就会报错。但是Series有能忽略Na缺失值的方法，以进行字符串操作，通过Series的str属性就可以使用这些方法：  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs stylus">In <span class="hljs-selector-attr">[141]</span>: pattern<br>Out<span class="hljs-selector-attr">[141]</span>: <span class="hljs-string">&#x27;([A-Z0-9._%+-]+)@([A-Z0-9.-]+)\\.([A-Z]&#123;2,4&#125;)&#x27;</span><br><br>In <span class="hljs-selector-attr">[142]</span>: data<span class="hljs-selector-class">.str</span><span class="hljs-selector-class">.findall</span>(pattern, flags=re.IGNORECASE)<br>Out<span class="hljs-selector-attr">[142]</span>:<br>Jim        <span class="hljs-selector-attr">[(jim, live, com)]</span><br>Lucy     <span class="hljs-selector-attr">[(lucy, gmail, com)]</span><br>LiLei      <span class="hljs-selector-attr">[(lilei, qq, com)]</span><br>Linux                     NaN<br>dtype: <span class="hljs-selector-tag">object</span><br><br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/python/" class="category-chain-item">python</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/script/">#script</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>数据处理（五）</div>
+      <div>https://akatsukihi.github.io/2023/09/27/数据处理（五）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>akatsukihi</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年9月27日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/09/24/%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%EF%BC%88%E5%9B%9B%EF%BC%89/" title="数据处理（四）">
+                        <span class="hidden-mobile">数据处理（四）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'gruvbox-dark';
+      var dark = 'gruvbox-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'akatsukihi/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div id="_footer" class="footer-inner">
+
+  
+    <div class="footer-content">
+	 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.js"></script>
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+  <!-- require MetingJS -->
+  <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<meting-js
+server="netease"
+type="playlist"
+id="8102703245"
+fixed="true"
+autoplay="false"
+loop="all"
+order="list"
+preload="auto"
+list-folded="ture"
+list-max-height="500px"
+lrc-type="0">
+</meting-js>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.1/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
