@@ -317,20 +317,20 @@
 <h2 id="处理方式"><a href="#处理方式" class="headerlink" title="处理方式"></a>处理方式</h2><p>两种处理该接口的方式，一种是将所有的逻辑都仍在业务代码里面处理，还有一种是在数据库处理，然后业务端只做<br>更新和插入操作。如果放在业务端做处理最容易的实现办法就是循环读取IF的行，然后取到复合字段进行拆分再循环<br>该符合字段进行相应的更新或者插入操作；还有一种就是仍在数据库进行相应的拆分处理，然后取到需要的字段进行<br>中间表的更新和插入。第一种处理方式经常使用，第二种方式使用场景不多，记录一下。</p>
 <blockquote>
 <ul>
-<li>复合字段处理<br>根据数据库不同，处理有所差异，但是大同小异，如果使用的是sql server和Oracle，或者postgreSQL的数据库，<br>则有现成的函数可用，所要做的就是将该复合字段转为xml类型的结构化数据，然后再调用处理xml类型的函数将<br>各节点由一行转为多行数据，再使用各节点的id去关联对应的主表获取所需的字段，如下所示：   </li>
+<li>复合字段处理<br>根据数据库不同，处理有所差异，但是大同小异，如果使用的是sql server和Oracle，或者postgreSQL的数据库，<br>则有现成的函数可用，所要做的就是将该复合字段转为xml类型的结构化数据，然后再调用处理xml类型的函数将<br>各节点由一行转为多行数据，再使用各节点的id去关联对应的主表获取所需的字段，如下所示：</li>
 </ul>
 </blockquote>
 <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/1.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 <p></p>
 将上图的std_id转为xml结构化数据，再使用对应的函数将节点数据转为多行处理；   
-
+  
 <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/2.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 <p></p>
 因为我本地使用的是mysql，该数据库没有对应的xml转换函数，所以此处就需要使用mysql的一张系统表help_topic
 该表的解释如下：  
-
+  
 <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/3.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 <p></p>
@@ -347,7 +347,7 @@
 <p></p>
 <p></p>
 根据上图可以看出help_topic_id的相关变化，然后再配合substring_index函数就可以将复合的字段转为多行id使用
-
+   
 <img src="/2023/06/18/%E5%AD%97%E6%AE%B5%E6%8B%86%E5%88%86/7.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 <p></p>
@@ -608,11 +608,10 @@
   </main>
 
   <footer>
-    	<div id="_footer" class="footer-inner">
-
+    <div class="footer-inner">
   
     <div class="footer-content">
-	 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
   
   
@@ -643,13 +642,12 @@
   
   
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
 <!-- require MetingJS -->
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
 <meting-js server="netease" type="playlist" id="8102703245" fixed="true" autoplay="false" loop="all" order="list" preload="auto" list-folded="ture" list-max-height="500px" lrc-type="0" storage-name=“metingjs”></meting-js>
-
 
   </footer>
 

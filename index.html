@@ -631,7 +631,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/08/11/2023-08-11/" target="_self">
         <div>
-          最近一直在忙搬家的事情，所以好久没更新内容了，趁着今天是祝日休息有时间，所以打算写一下昨天遇到的一个bug。现象是在脚本的函数外定义了一个集合，然后在函数内部调用该集合的+&#x3D;操作符时报错，抛出的异常错误是没有名为op_Addition的方法，但是如果要debug去调试时，则该+&#x3D;操作是不会抛异常的，函数正常终了，非debug模式就会抛出异常。 复现异常的情况如下所示：       如上所示，定义了
+          最近一直在忙搬家的事情，所以好久没更新内容了，趁着今天是祝日休息有时间，所以打算写一下昨天遇到的一个bug。现象是在脚本的函数外定义了一个集合，然后在函数内部调用该集合的+&#x3D;操作符时报错，抛出的异常错误是没有名为op_Addition的方法，但是如果要debug去调试时，则该+&#x3D;操作是不会抛异常的，函数正常终了，非debug模式就会抛出异常。 复现异常的情况如下所示：
         </div>
       </a>
 
@@ -753,7 +753,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/07/17/2023-07-17/" target="_self">
         <div>
-          幂前几天，初一的外甥女问了一道关于乘方的数学题，题目是$2^a &#x3D; 5^b &#x3D; 10$,求a+b与ab的大小关系。因为是初一的知识，所以还没学对数和根号，只学了同底数幂的乘除，所以这道题得用初一的知识去解。解法如下：   \begin{aligned} 2^a &#x3D; 5^b &#x3D; 10 \end{aligned}\begin{aligned} 2^a &amp;&#x3D;10^{a\times\frac{1}{a}}
+          幂前几天，初一的外甥女问了一道关于乘方的数学题，题目是$2^a &#x3D; 5^b &#x3D; 10$,求a+b与ab的大小关系。因为是初一的知识，所以还没学对数和根号，只学了同底数幂的乘除，所以这道题得用初一的知识去解。解法如下：$$ \begin{aligned}2^a &#x3D; 5^b &#x3D; 10\end{aligned}$$ $$ \begin{aligned}2^a&amp;am
         </div>
       </a>
 
@@ -912,11 +912,10 @@
   </main>
 
   <footer>
-    	<div id="_footer" class="footer-inner">
-
+    <div class="footer-inner">
   
     <div class="footer-content">
-	 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
   
   
@@ -947,13 +946,12 @@
   
   
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
 <!-- require MetingJS -->
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
 <meting-js server="netease" type="playlist" id="8102703245" fixed="true" autoplay="false" loop="all" order="list" preload="auto" list-folded="ture" list-max-height="500px" lrc-type="0" storage-name=“metingjs”></meting-js>
-
 
   </footer>
 

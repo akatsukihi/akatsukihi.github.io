@@ -268,7 +268,7 @@
         
         
         
-          18 分钟
+          19 分钟
         
       </span>
     
@@ -318,51 +318,37 @@
 <img src="/2023/07/13/%E8%87%AA%E6%89%B0%E9%9B%86/1.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 <p></p>
-
+  
 <p>将上述代码中的注释放开，替换为4个元素的交换:  </p>
 <img src="/2023/07/13/%E8%87%AA%E6%89%B0%E9%9B%86/2.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 <p></p>
 
-<p>可以看到排序是正确的，且数据交换也正常，现在让我们将上述数据移动交换部分替换为下面后再执行:<br><figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs excel">template&lt;class <span class="hljs-built_in">T</span>&gt;<br>void selectSort(<span class="hljs-built_in">T</span> *<span class="hljs-built_in">t</span>, <span class="hljs-built_in">int</span> <span class="hljs-built_in">n</span>)&#123;<br>    for(<span class="hljs-built_in">int</span> size=<span class="hljs-built_in">n</span>; size&gt;<span class="hljs-number">1</span>; size--)&#123;<br>        <span class="hljs-built_in">int</span> <span class="hljs-built_in">index</span> = indexOfMaxElement(<span class="hljs-built_in">t</span>,<span class="hljs-built_in">n</span>);<br>        /*<br>        <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>] ^= <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>];<br>        <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>] ^= <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>];<br>        <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>] ^= <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>];<br>        */<br>        <span class="hljs-built_in">int</span> tmp = <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>];<br>        <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>] = <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>];<br>        <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>] = tmp;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure></p>
+<p>可以看到排序是正确的，且数据交换也正常，现在让我们将上述数据移动交换部分替换为下面后再执行:  </p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs excel">template&lt;class <span class="hljs-built_in">T</span>&gt;<br>void selectSort(<span class="hljs-built_in">T</span> *<span class="hljs-built_in">t</span>, <span class="hljs-built_in">int</span> <span class="hljs-built_in">n</span>)&#123;<br>    for(<span class="hljs-built_in">int</span> size=<span class="hljs-built_in">n</span>; size&gt;<span class="hljs-number">1</span>; size--)&#123;<br>        <span class="hljs-built_in">int</span> <span class="hljs-built_in">index</span> = indexOfMaxElement(<span class="hljs-built_in">t</span>,<span class="hljs-built_in">n</span>);<br>        /*<br>        <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>] ^= <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>];<br>        <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>] ^= <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>];<br>        <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>] ^= <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>];<br>        */<br>        <span class="hljs-built_in">int</span> tmp = <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>];<br>        <span class="hljs-built_in">t</span>[<span class="hljs-built_in">index</span>] = <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>];<br>        <span class="hljs-built_in">t</span>[size-<span class="hljs-number">1</span>] = tmp;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
 <p>执行上述代码后结果如下:  </p>
 <img src="/2023/07/13/%E8%87%AA%E6%89%B0%E9%9B%86/3.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/07/13/%E8%87%AA%E6%89%B0%E9%9B%86/4.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 <p></p>
 可以看到将异或部分替换掉后，通过引入中间变量后实现了正常的排序，数据交换是正常无误的.   
-
-那么问题来了，为什么在使用异或时会出现与预期的结果不一致的情况？为什么会出现时而正常时而异常的情况呢？  
-通过多次变换测量的数据样本和数量，可以发现使用异或的版本中会经常出现0这个数据，为什么会有0出现呢？而且  
-本该出现在0的位置上的数据却消失了?   
-
-其实，这个0就是该问题的关键因素，通过仔细分析就可以知道异或时出现了0则必然说明是取到了同一个东西，也就  
-是说自己与自己异或，此处是指同一位置的数据，也就是同一地址。如果是不同位置的数据，即使位置的数据值相同  
-也会正确的完成数据交换，不会出现0的情况.   
-
-通过以上的分析猜想，可以得到这个过程的错误之处，应该是在查找最大元素时，最大元素刚好在序列尾部，此时其  
-实是不应该做数据交换移动操作的，因为它本来就在正确的位置上；如果使用引入中间变量来做的话移动不移动都不  
-会影响结果的正确性，但是如果要使用异或的方法时，此时则刚好入坑，正常情况下两个不同位置间的异或此时则会  
-取到同一个位置上的，所以要使用异或方法时，则需要处理这种情况，代码如下:  
-
-```
-template<class T>
-void selectSort(T *t, int n){
-    for(int size=n; size>1; size--){
+  
+<p>那么问题来了，为什么在使用异或时会出现与预期的结果不一致的情况？为什么会出现时而正常时而异常的情况呢？<br>通过多次变换测量的数据样本和数量，可以发现使用异或的版本中会经常出现0这个数据，为什么会有0出现呢？而且<br>本该出现在0的位置上的数据却消失了?   </p>
+<p>其实，这个0就是该问题的关键因素，通过仔细分析就可以知道异或时出现了0则必然说明是取到了同一个东西，也就<br>是说自己与自己异或，此处是指同一位置的数据，也就是同一地址。如果是不同位置的数据，即使位置的数据值相同<br>也会正确的完成数据交换，不会出现0的情况.   </p>
+<p>通过以上的分析猜想，可以得到这个过程的错误之处，应该是在查找最大元素时，最大元素刚好在序列尾部，此时其<br>实是不应该做数据交换移动操作的，因为它本来就在正确的位置上；如果使用引入中间变量来做的话移动不移动都不<br>会影响结果的正确性，但是如果要使用异或的方法时，此时则刚好入坑，正常情况下两个不同位置间的异或此时则会<br>取到同一个位置上的，所以要使用异或方法时，则需要处理这种情况，代码如下:  </p>
+<pre><code class="hljs">template&lt;class T&gt;
+void selectSort(T *t, int n)&#123;
+    for(int size=n; size&gt;1; size--)&#123;
         int index = indexOfMaxElement(t,n);
         if(index == size-1)
             continue;
         t[index] ^= t[size-1];
         t[size-1] ^= t[index];
         t[index] ^= t[size-1];
-    }
-}
-
-```  
-
-修改后的代码执行如下：  
-
-
+    &#125;
+&#125;
+</code></pre>
+<p>修改后的代码执行如下：  </p>
 <img src="/2023/07/13/%E8%87%AA%E6%89%B0%E9%9B%86/5.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/07/13/%E8%87%AA%E6%89%B0%E9%9B%86/6.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
@@ -625,11 +611,10 @@ void selectSort(T *t, int n){
   </main>
 
   <footer>
-    	<div id="_footer" class="footer-inner">
-
+    <div class="footer-inner">
   
     <div class="footer-content">
-	 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
   
   
@@ -660,13 +645,12 @@ void selectSort(T *t, int n){
   
   
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
 <!-- require MetingJS -->
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
 <meting-js server="netease" type="playlist" id="8102703245" fixed="true" autoplay="false" loop="all" order="list" preload="auto" list-folded="ture" list-max-height="500px" lrc-type="0" storage-name=“metingjs”></meting-js>
-
 
   </footer>
 

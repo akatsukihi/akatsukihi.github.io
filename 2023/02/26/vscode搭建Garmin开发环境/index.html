@@ -331,42 +331,108 @@
                 <h2 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h2><p>之前买了块跑步用的手表佳明245M，最近想给它装一个可以记录踢球的app，在商店里面搜了半天，感觉都不是自己<br>想要的那种，有两款收费的app，也不清楚它们的功能怎么样，所以也不想花冤枉钱，于是就想着自己折腾一下，之<br>前使用eclipse搭建过佳明sdk的环境，后来工作忙也就一直没上心，现在又有点需求了，所以就暂且记录一下吧。。</p>
 <h2 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h2><p>首先在佳明的官网注册一个账号，然后下载符合自己系统的SDK，解压后运行里面sdkmanager.exe,这时候会要求登录<br>刚才注册的账号，登录完毕后如下图所示：  </p>
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/1.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>下载所需版本的sdk即可，我下载的是最新的4.1.7版本。然后打开vscode，在插件扩展里面搜索Monkey，如下图所示<br>，选中后安装插件。</p>
+<p></p>  
+下载所需版本的sdk即可，我下载的是最新的4.1.7版本。然后打开vscode，在插件扩展里面搜索Monkey，如下图所示
+，选中后安装插件。
+    
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/2.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>插件安装完毕后，在键盘上输入Shift+Ctrl+p快捷键，然后在命令框中输入Generate关键字，选择生成一个开发者key<br>，如下图所示，存储该key的目录后面要用，所以记录以下：  </p>
+<p></p>   
+插件安装完毕后，在键盘上输入Shift+Ctrl+p快捷键，然后在命令框中输入Generate关键字，选择生成一个开发者key
+，如下图所示，存储该key的目录后面要用，所以记录以下：  
+  
+  
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/3.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>key生成之后，找到刚才的插件，然后选择扩展插件的设置，主要设置两个目录，一个就是上一步中key所在的目录，<br>另一个就是java的安装目录，如下图所示：  </p>
+<p></p>
+key生成之后，找到刚才的插件，然后选择扩展插件的设置，主要设置两个目录，一个就是上一步中key所在的目录，
+另一个就是java的安装目录，如下图所示：  
+    
+   
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/4.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>这步设置完成后，接下来设置刚才下载的sdk的环境变量。下载的sdk默认是在当前用户的AppData下面的Roaming下，<br>找到红框所示文件，并复制里面的路径，如下图所示：  </p>
+<p></p>
+这步设置完成后，接下来设置刚才下载的sdk的环境变量。下载的sdk默认是在当前用户的AppData下面的Roaming下，
+找到红框所示文件，并复制里面的路径，如下图所示：  
+  
+  
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/5.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/6.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>将复制的路径添加到环境变量中，如下图所示：  </p>
+<p></p>  
+将复制的路径添加到环境变量中，如下图所示：  
+ 
+  
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/7.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/8.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>环境变量设置完成后可以在cmd中使用connectiq、monkeyc和monkeydo进行验证。如下图所示即配置完成了：</p>
+<p></p>
+环境变量设置完成后可以在cmd中使用connectiq、monkeyc和monkeydo进行验证。如下图所示即配置完成了：
+   
+
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/9.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/10.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/11.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>环境变量配置完成之后，回到vscode，使用shift+ctrl+p快捷键调出输入框，然后输入verify关键字，如下图所示<br>就一切准备就绪了：  </p>
+<p></p>
+环境变量配置完成之后，回到vscode，使用shift+ctrl+p快捷键调出输入框，然后输入verify关键字，如下图所示
+就一切准备就绪了：  
+  
+
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/12.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>接下来就可以创建一个简单的demo来验证一下开发环境了。首先使用shift+ctrl+p调出输入框，输入new project,如<br>下图示例：  </p>
+<p></p>
+接下来就可以创建一个简单的demo来验证一下开发环境了。首先使用shift+ctrl+p调出输入框，输入new project,如
+下图示例：  
+  
+
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/13.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>然后输入项目名：garmin_demo  </p>
+<p></p>
+然后输入项目名：garmin_demo  
+   
+
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/14.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>然后选择要创建的项目类型，这里我选择简单的表盘类型：  </p>
+<p></p>
+然后选择要创建的项目类型，这里我选择简单的表盘类型：  
+  
+
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/15.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>接下来选择simple：  </p>
+<p></p>
+接下来选择simple：  
+   
+
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/16.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>然后选择可兼容的最低版本api，这里我选择最低版,然后选择创建工程的路径：     </p>
+<p></p>
+然后选择可兼容的最低版本api，这里我选择最低版,然后选择创建工程的路径：     
+  
+
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/17.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>demo创建好后，就可以尝试运行该demo，选择非调试模式运行，如下图示：  </p>
+<p></p>
+demo创建好后，就可以尝试运行该demo，选择非调试模式运行，如下图示：  
+   
+
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/18.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>如果报错，如下图所示,则是因为没有指定设备，此时调出输入框，输入monkey，选择命令行edit products，指定<br>设备后重新运行即可：   </p>
+<p></p>
+如果报错，如下图所示,则是因为没有指定设备，此时调出输入框，输入monkey，选择命令行edit products，指定 
+设备后重新运行即可：   
+   
+
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/19.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/20.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/21.png" srcset="/img/loading.gif" lazyload class="">
 <img src="/2023/02/26/vscode%E6%90%AD%E5%BB%BAGarmin%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/22.png" srcset="/img/loading.gif" lazyload class="">
-<p><p></p><br>如上所示，用于开发佳明手表app的环境就算搭建好了，也可以使用eclipse搭建该环境。</p>
+<p></p>  
+如上所示，用于开发佳明手表app的环境就算搭建好了，也可以使用eclipse搭建该环境。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 
               </div>
@@ -601,11 +667,10 @@
   </main>
 
   <footer>
-    	<div id="_footer" class="footer-inner">
-
+    <div class="footer-inner">
   
     <div class="footer-content">
-	 <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
   
   
@@ -636,13 +701,12 @@
   
   
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
 <!-- require MetingJS -->
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
 <meting-js server="netease" type="playlist" id="8102703245" fixed="true" autoplay="false" loop="all" order="list" preload="auto" list-folded="ture" list-max-height="500px" lrc-type="0" storage-name=“metingjs”></meting-js>
-
 
   </footer>
 
