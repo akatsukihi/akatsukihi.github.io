@@ -4,7 +4,6 @@
 <html lang="zh-CN" data-default-color-scheme=auto>
 
 
-
 <head>
   <meta charset="UTF-8">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
@@ -16,12 +15,12 @@
   <meta name="author" content="akatsukihi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="指针操作C++ Primer中关于指针操作中有一段描述是：  对于两个类型相同的合法指针，可以用相等操作符 &#x3D;&#x3D; 或 不相等操作符 !&#x3D; 来比较它们，比较的的结果是布尔类型。如果两个指针存放的地址值相同，则它们相等；反之它们不相等。这里两个指针存放的地址值相同（两个指针相等）有三种可能：它们都为空、都指向同一个对象、或者都指向了同一个对象的下一地址。需要注意的是:一个">
+    <meta name="description" content="指针操作C++ Primer中关于指针操作中有一段描述是：  对于两个类型相同的合法指针，可以用相等操作符 &#x3D;&#x3D; 或 不相等操作符 !&#x3D; 来比较它们，比较的的结果是布尔类型。如果两个指针存放的地址值相同，则它们相等；反之它们不相等。这里两个指针存放的地址值相同（两个指针相等）有三种可能：它们都为空、都指向同一个对象、或者都指向了同一个对象的下一地址。需要注意的是:一个指针指向某对象，同时另一个指针">
 <meta property="og:type" content="article">
 <meta property="og:title" content="指针相等问题">
 <meta property="og:url" content="https://akatsukihi.github.io/2022/11/01/%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%8C%87%E9%92%88%E7%9B%B8%E7%AD%89%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/index.html">
 <meta property="og:site_name" content="AkatsukiHi">
-<meta property="og:description" content="指针操作C++ Primer中关于指针操作中有一段描述是：  对于两个类型相同的合法指针，可以用相等操作符 &#x3D;&#x3D; 或 不相等操作符 !&#x3D; 来比较它们，比较的的结果是布尔类型。如果两个指针存放的地址值相同，则它们相等；反之它们不相等。这里两个指针存放的地址值相同（两个指针相等）有三种可能：它们都为空、都指向同一个对象、或者都指向了同一个对象的下一地址。需要注意的是:一个">
+<meta property="og:description" content="指针操作C++ Primer中关于指针操作中有一段描述是：  对于两个类型相同的合法指针，可以用相等操作符 &#x3D;&#x3D; 或 不相等操作符 !&#x3D; 来比较它们，比较的的结果是布尔类型。如果两个指针存放的地址值相同，则它们相等；反之它们不相等。这里两个指针存放的地址值相同（两个指针相等）有三种可能：它们都为空、都指向同一个对象、或者都指向了同一个对象的下一地址。需要注意的是:一个指针指向某对象，同时另一个指针">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://akatsukihi.github.io/2022/11/01/%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%8C%87%E9%92%88%E7%9B%B8%E7%AD%89%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/bg1.png">
 <meta property="article:published_time" content="2022-11-01T03:25:39.000Z">
@@ -80,8 +79,8 @@
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
+  <script   src="/js/utils.js" ></script>
+  <script   src="/js/color-schema.js" ></script>
   
 
   
@@ -113,7 +112,6 @@
 
   <header>
     
-
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
@@ -285,6 +283,7 @@
 
 </div>
 
+
   </header>
 
   <main>
@@ -310,16 +309,15 @@
                 
                 <h2 id="指针操作"><a href="#指针操作" class="headerlink" title="指针操作"></a>指针操作</h2><p>C++ Primer中关于指针操作中有一段描述是：</p>
 <blockquote>
-<p>对于两个类型相同的合法指针，可以用相等操作符 &#x3D;&#x3D; 或 不相等操作符 !&#x3D; 来比较它们，比较的的结果<br>是布尔类型。如果两个指针存放的地址值相同，则它们相等；反之它们不相等。这里两个指针存放的地址值相同（两个指针相等）<br>有三种可能：它们都为空、都指向同一个对象、或者都指向了同一个对象的下一地址。<br>需要注意的是:<strong>一个指针指向某对象，同时另一个指针指向另外对象的下一地址，此时也有可能出现这两个指针值相同的情况，即指针相等。</strong></p>
-</blockquote>
+<p>对于两个类型相同的合法指针，可以用相等操作符 == 或 不相等操作符 != 来比较它们，比较的的结果<br>是布尔类型。如果两个指针存放的地址值相同，则它们相等；反之它们不相等。这里两个指针存放的地址值相同（两个指针相等）<br>有三种可能：它们都为空、都指向同一个对象、或者都指向了同一个对象的下一地址。<br>需要注意的是:<strong>一个指针指向某对象，同时另一个指针指向另外对象的下一地址，此时也有可能出现这两个指针值相同的情况，即指针相等。</strong></p>
 <p>关于最后描述的同一个对象的下一地址，出现有可能相等的情况，这是因为内存的申请使用一般都是连续分配的，所以很可能出现指针运算过后指向的下一个地址和相同类型的另一指针指向的当前位置相等！具体如下所示：</p>
+</blockquote>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br> <br>  <span class="hljs-type">int</span> a1 = <span class="hljs-number">1</span>;<br>  <span class="hljs-type">int</span> a2 = <span class="hljs-number">2</span>;<br> <br>  <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function">  </span>&#123;<br>      <span class="hljs-type">int</span>* p1 = &amp;a1;<br>      <span class="hljs-type">int</span>* p2 = &amp;a2;<br>      <span class="hljs-type">int</span>* p3;<br> <br>      std::cout&lt;&lt;<span class="hljs-string">&quot;*p1 = &quot;</span>&lt;&lt;*p1&lt;&lt;<span class="hljs-string">&quot;,地址为：p1 = &quot;</span>&lt;&lt;p1&lt;&lt;std::endl;<br>      std::cout&lt;&lt;<span class="hljs-string">&quot;*p2 = &quot;</span>&lt;&lt;*p2&lt;&lt;<span class="hljs-string">&quot;,地址为：p2 = &quot;</span>&lt;&lt;p2&lt;&lt;std::endl;<br>      p3 = ++p1;<br>      <span class="hljs-keyword">if</span>(p2 == p3)&#123;<br>      ¦   std::cout&lt;&lt;<span class="hljs-string">&quot;*p3 = &quot;</span>&lt;&lt;*p3&lt;&lt;<span class="hljs-string">&quot;,地址为：p3 = &quot;</span>&lt;&lt;p3&lt;&lt;std::endl;<br>      &#125;<br> <br>      <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>  &#125;<br></code></pre></td></tr></table></figure>
 <p>运行图如下所示：</p>
 <img src="/2022/11/01/%E5%88%A4%E6%96%AD%E4%B8%A4%E4%B8%AA%E6%8C%87%E9%92%88%E7%9B%B8%E7%AD%89%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/bg1.png" srcset="/img/loading.gif" lazyload class="">
-
 <h4 id="关于指针和引用"><a href="#关于指针和引用" class="headerlink" title="关于指针和引用"></a>关于指针和引用</h4><p>引用并非对象，它只是为一个已经存在的对象所起的别名而已，所以引用只能使用对象进行初始化(不能使用字面量初始化)，<br>引用的初始化过程并非是将对象的值拷贝给引用，而是绑定，程序将引用和它的初始值绑定在一起，一旦初始化完成，引用<br>将和它的初始值对象一直捆绑在一起，也正是因为引用无法重新解绑到另外一个对象，所以引用必须进行初始化操作！因为<br>引用不是对象，没有实际的地址，所以不能定义指向引用的指针 ！</p>
 <p><strong>指针和引用的区别：</strong><br>指针和引用同为复合类型，都与内存中实际存在的对象有联系。指针”指向”内存中的某个对象，而引用”绑定到”内存中的某<br>个对象，它们都实现了对其他对象的间接访问，二者的区别主要有两方面：</p>
-<p><em><strong>第一，指针本身就是一个对象，允许对指针赋值和拷贝，而且在指针的生命周期内它可以指向几个不同的对象；引用不是一<br>个对象，无法令引用重新绑定到另外一个对象。<br><br>第二，指针无须在定义时赋初值，和其他内置类型一样，在块作用域内定义的指针如果没有被初始化，也将拥有一个不确定<br>的值；引用则必须在定义时赋初值。</strong></em></p>
+<p><strong><em>第一，指针本身就是一个对象，允许对指针赋值和拷贝，而且在指针的生命周期内它可以指向几个不同的对象；引用不是一<br>个对象，无法令引用重新绑定到另外一个对象。<br><br>第二，指针无须在定义时赋初值，和其他内置类型一样，在块作用域内定义的指针如果没有被初始化，也将拥有一个不确定<br>的值；引用则必须在定义时赋初值。</em></strong></p>
 
                 
               </div>
@@ -554,7 +552,7 @@
   </main>
 
   <footer>
-    <div id="_footer" class="footer-inner">
+    	<div id="_footer" class="footer-inner">
 
   
     <div class="footer-content">
@@ -590,31 +588,18 @@
   
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.js"></script>
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
-  <!-- require MetingJS -->
-  <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
-<meting-js
-server="netease"
-type="playlist"
-id="8102703245"
-fixed="true"
-autoplay="false"
-loop="all"
-order="list"
-preload="auto"
-list-folded="ture"
-list-max-height="500px"
-lrc-type="0"
-storage-name=“metingjs”>
-</meting-js>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<!-- require MetingJS -->
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<meting-js server="netease" type="playlist" id="8102703245" fixed="true" autoplay="false" loop="all" order="list" preload="auto" list-folded="ture" list-max-height="500px" lrc-type="0" storage-name=“metingjs”></meting-js>
+
 
   </footer>
 
-  <!-- Scripts -->
-  
-  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+<!-- Scripts -->
+
+  <script   src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
 
   <script>
@@ -626,13 +611,13 @@ storage-name=“metingjs”>
   </script>
 
 
-<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
-<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
+<script   src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script   src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script   src="/js/events.js" ></script>
+<script   src="/js/plugins.js" ></script>
 
 
-  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script   src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
   <script>
     (function (window, document) {
       var typing = Fluid.plugins.typing;
@@ -651,7 +636,7 @@ storage-name=“metingjs”>
 
 
   
-    <script  src="/js/img-lazyload.js" ></script>
+    <script   src="/js/img-lazyload.js" ></script>
   
 
 
@@ -755,22 +740,23 @@ storage-name=“metingjs”>
       </script>
     
 
-  <script  src="https://lib.baomitu.com/mathjax/3.2.1/es5/tex-mml-chtml.js" ></script>
+  <script   src="https://lib.baomitu.com/mathjax/3.2.1/es5/tex-mml-chtml.js" ></script>
 
-  <script  src="/js/local-search.js" ></script>
+  <script   src="/js/local-search.js" ></script>
 
-  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
-
+  <script  defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
 
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
+<script   src="/js/boot.js" ></script>
 
 
-  
+
+
+
 
   <noscript>
     <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>

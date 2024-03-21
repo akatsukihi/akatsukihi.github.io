@@ -4,7 +4,7 @@ Fluid.boot = {};
 
 Fluid.boot.registerEvents = function() {
   Fluid.events.billboard();
-  Fluid.events.registerNavbarEvent();
+ Fluid.events.registerNavbarEvent();
   Fluid.events.registerParallaxEvent();
   Fluid.events.registerScrollDownArrowEvent();
   Fluid.events.registerScrollTopArrowEvent();
