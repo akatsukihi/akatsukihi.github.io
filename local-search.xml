@@ -8,7 +8,7 @@
     <link href="/2024/02/10/2024-02-10/"/>
     <url>/2024/02/10/2024-02-10/</url>
     
-    <content type="html"><![CDATA[<p>爆竹声中一岁除，春风送暖入屠苏。<br>千门万户曈曈日，总把新桃换旧符。</p><p>甲辰龙年，新年伊始第一场。</p><img src="/2024/02/10/2024-02-10/1.jpg" class=""><p></p><p></p>]]></content>
+    <content type="html"><![CDATA[<p>爆竹声中一岁除，春风送暖入屠苏。<br>千门万户曈曈日，总把新桃换旧符。</p><p>大年初一，别样的体验</p><img src="/2024/02/10/2024-02-10/1.jpg" class=""><p></p><p></p>]]></content>
     
     
     <categories>
@@ -208,7 +208,7 @@
     <link href="/2023/07/17/2023-07-17/"/>
     <url>/2023/07/17/2023-07-17/</url>
     
-    <content type="html"><![CDATA[<h2 id="幂"><a href="#幂" class="headerlink" title="幂"></a>幂</h2><p>前几天，初一的外甥女问了一道关于乘方的数学题，题目是$2^a &#x3D; 5^b &#x3D; 10$,求a+b与ab的大小关系。<br>因为是初一的知识，所以还没学对数和根号，只学了同底数幂的乘除，所以这道题得用初一的知识去解。解法如下：<br>$$ \begin{aligned}<br>2^a &#x3D; 5^b &#x3D; 10<br>\end{aligned}$$</p><p>$$ \begin{aligned}<br>2^a<br>&amp;&#x3D;10^{a\times\frac{1}{a}}&#x3D;\left(2\times5\right)^{a\times\frac{1}{a}}\\<br>&amp;&#x3D;\left( 2^a\times 5^a\right)^{\frac{1}{a}}&#x3D;\left(10\times5^a\right)^{\frac{1}{a}}\\<br>&amp;&#x3D;10^{\frac{1}{a}}\times5&#x3D;10<br>\end{aligned}$$<br>所以可以得出：<br>$$10^{\frac{1}{a}} &#x3D; 2 \tag{1}$$<br>同理可以得出：<br>$$10^{\frac{1}{b}} &#x3D; 5 \tag{2}$$<br>由（1）和（2）可得：<br>$$\begin{aligned}<br>10^{\frac{1}{a}}\times10^{\frac{1}{b}} &amp;&#x3D; 10\\<br>10^{\left({\frac{1}{a}+\frac{1}{b}}\right)}&amp;&#x3D; 10\\<br>10^{\left(\frac{a+b}{ab}\right)} &amp;&#x3D;10\\<br>\end{aligned}$$<br>由以上可得到:<br>$$\frac{a+b}{ab} &#x3D; 1$$<br>所以可以得出a$a+b$与ab是相等的。</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="幂"><a href="#幂" class="headerlink" title="幂"></a>幂</h2><p>前几天，初一的外甥女问了一道关于乘方的数学题，题目是$2^a &#x3D; 5^b &#x3D; 10$,求a+b与ab的大小关系。<br>因为是初一的知识，所以还没学对数和根号，只学了同底数幂的乘除，所以这道题得用初一的知识去解。解法如下：<br>$$ \begin{aligned}<br>2^a &#x3D; 5^b &#x3D; 10<br>\end{aligned}$$</p><p>$$ \begin{aligned}<br>2^a<br>&amp;&#x3D;10^{a\times\frac{1}{a}}&#x3D;\left(2\times5\right)^{a\times\frac{1}{a}}\\<br>&amp;&#x3D;\left( 2^a\times 5^a\right)^{\frac{1}{a}}&#x3D;\left(10\times5^a\right)^{\frac{1}{a}}\\<br>&amp;&#x3D;10^{\frac{1}{a}}\times5&#x3D;10<br>\end{aligned}$$<br>所以可以得出：<br>$$10^{\frac{1}{a}} &#x3D; 2 \tag{1}$$<br>同理可以得出：<br>$$10^{\frac{1}{b}} &#x3D; 5 \tag{2}$$<br>由（1）和（2）可得：<br>$$\begin{aligned}<br>10^{\frac{1}{a}}\times10^{\frac{1}{b}} &amp;&#x3D; 10\\<br>10^{\left({\frac{1}{a}+\frac{1}{b}}\right)}&amp;&#x3D; 10\\<br>10^{\left(\frac{a+b}{ab}\right)} &amp;&#x3D;10\\<br>\end{aligned}$$<br>由以上可得到:<br>$$\frac{a+b}{ab} &#x3D; 1$$<br>所以可以得出$a+b$与ab是相等的。</p>]]></content>
     
     
     <categories>
