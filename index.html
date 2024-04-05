@@ -257,6 +257,67 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2024/04/05/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" target="_self">
+          智能指针
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/04/05/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" target="_self">
+        <div>
+          智能指针c++常见的错误和bug来源百分之九十以上都是来自于内存管理和指针的使用，程序中经常需要在对象之间传递指针，分配内存，但是经常会忘记在合适的时候将内存回收，或者多次释放已经释放过的内存，通常这些错误会导致运行中的程序莫名崩溃。智能指针可以管理动态分配的内存，避免内存泄漏，当智能指针离开作用域或者被重置时，会自动释放所占用的资源。智能指针有多种类型，对资源具有唯一所有权的智能指针类型是标准库
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-04-05 17:07" pubdate>
+              2024-04-05
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/c-c/" class="category-chain-item">c/c++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%8C%87%E9%92%88/">#指针</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2024/02/10/2024-02-10/" target="_self">
           2024/02/10
         </a>
@@ -631,7 +692,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/08/11/2023-08-11/" target="_self">
         <div>
-          最近一直在忙搬家的事情，所以好久没更新内容了，趁着今天是祝日休息有时间，所以打算写一下昨天遇到的一个bug。现象是在脚本的函数外定义了一个集合，然后在函数内部调用该集合的+&#x3D;操作符时报错，抛出的异常错误是没有名为op_Addition的方法，但是如果要debug去调试时，则该+&#x3D;操作是不会抛异常的，函数正常终了，非debug模式就会抛出异常。 复现异常的情况如下所示：
+          最近一直在忙搬家的事情，所以好久没更新内容了，趁着今天是祝日休息有时间，所以打算写一下昨天遇到的一个bug。现象是在脚本的函数外定义了一个集合，然后在函数内部调用该集合的+&#x3D;操作符时报错，抛出的异常错误是没有名为op_Addition的方法，但是如果要debug去调试时，则该+&#x3D;操作是不会抛异常的，函数正常终了，非debug模式就会抛出异常。 复现异常的情况如下所示：       如上所示，定义了
         </div>
       </a>
 
@@ -753,7 +814,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/07/17/2023-07-17/" target="_self">
         <div>
-          幂前几天，初一的外甥女问了一道关于乘方的数学题，题目是$2^a &#x3D; 5^b &#x3D; 10$,求a+b与ab的大小关系。因为是初一的知识，所以还没学对数和根号，只学了同底数幂的乘除，所以这道题得用初一的知识去解。解法如下：$$ \begin{aligned}2^a &#x3D; 5^b &#x3D; 10\end{aligned}$$ $$ \begin{aligned}2^a&amp;am
+          幂前几天，初一的外甥女问了一道关于乘方的数学题，题目是$2^a &#x3D; 5^b &#x3D; 10$,求a+b与ab的大小关系。因为是初一的知识，所以还没学对数和根号，只学了同底数幂的乘除，所以这道题得用初一的知识去解。解法如下：   \begin{aligned} 2^a &#x3D; 5^b &#x3D; 10 \end{aligned}\begin{aligned} 2^a &amp;&#x3D;10^{a\times\frac{1}{a}}
         </div>
       </a>
 
@@ -793,67 +854,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E5%B9%82/">#幂</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/07/13/%E8%87%AA%E6%89%B0%E9%9B%86/" target="_self">
-          bug合集
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/07/13/%E8%87%AA%E6%89%B0%E9%9B%86/" target="_self">
-        <div>
-          20230713如果需要交换两个数据时，我们最常用的方法是定义一个临时的中间变量，然后通过这个中间变量来完成两个数据的对调；如果不想使用第三个变量还想完成两个数据的交换，我们知道可以使用异或的方法来达到目的。通常这两种方法都可以完成两个数据的对调，一般选用哪种都可以，如果对性能有一定的要求的话，尽量使用异或来做，因为定义中间变量时会有额外的内存指令开销，即使编译器会进行优化以降低开销，但还是会产生
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-07-13 20:00" pubdate>
-              2023-07-13
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/bugs/" class="category-chain-item">bugs</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/bug/">#bug</a>
             
           </div>
         

@@ -15,12 +15,12 @@
   <meta name="author" content="akatsukihi">
   <meta name="keywords" content="">
   
-    <meta name="description" content="最近一直在忙搬家的事情，所以好久没更新内容了，趁着今天是祝日休息有时间，所以打算写一下昨天遇到的一个bug。现象是在脚本的函数外定义了一个集合，然后在函数内部调用该集合的+&#x3D;操作符时报错，抛出的异常错误是没有名为op_Addition的方法，但是如果要debug去调试时，则该+&#x3D;操作是不会抛异常的，函数正常终了，非debug模式就会抛出异常。 复现异常的情况如下所示：">
+    <meta name="description" content="最近一直在忙搬家的事情，所以好久没更新内容了，趁着今天是祝日休息有时间，所以打算写一下昨天遇到的一个bug。现象是在脚本的函数外定义了一个集合，然后在函数内部调用该集合的+&#x3D;操作符时报错，抛出的异常错误是没有名为op_Addition的方法，但是如果要debug去调试时，则该+&#x3D;操作是不会抛异常的，函数正常终了，非debug模式就会抛出异常。 复现异常的情况如下所示：       如上所示，定义了">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2023&#x2F;08&#x2F;11">
 <meta property="og:url" content="https://akatsukihi.github.io/2023/08/11/2023-08-11/index.html">
 <meta property="og:site_name" content="AkatsukiHi">
-<meta property="og:description" content="最近一直在忙搬家的事情，所以好久没更新内容了，趁着今天是祝日休息有时间，所以打算写一下昨天遇到的一个bug。现象是在脚本的函数外定义了一个集合，然后在函数内部调用该集合的+&#x3D;操作符时报错，抛出的异常错误是没有名为op_Addition的方法，但是如果要debug去调试时，则该+&#x3D;操作是不会抛异常的，函数正常终了，非debug模式就会抛出异常。 复现异常的情况如下所示：">
+<meta property="og:description" content="最近一直在忙搬家的事情，所以好久没更新内容了，趁着今天是祝日休息有时间，所以打算写一下昨天遇到的一个bug。现象是在脚本的函数外定义了一个集合，然后在函数内部调用该集合的+&#x3D;操作符时报错，抛出的异常错误是没有名为op_Addition的方法，但是如果要debug去调试时，则该+&#x3D;操作是不会抛异常的，函数正常终了，非debug模式就会抛出异常。 复现异常的情况如下所示：       如上所示，定义了">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/08/11/2023-08-11/1.png">
 <meta property="og:image" content="https://akatsukihi.github.io/2023/08/11/2023-08-11/2.png">
@@ -256,7 +256,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          592 字
+          582 字
         
       </span>
     
@@ -311,21 +311,21 @@
             
               <div class="markdown-body">
                 
-                <p>最近一直在忙搬家的事情，所以好久没更新内容了，趁着今天是祝日休息有时间，所以打算写一下昨天遇到的一个<br>bug。现象是在脚本的函数外定义了一个集合，然后在函数内部调用该集合的+&#x3D;操作符时报错，抛出的异常错误是没<br>有名为op_Addition的方法，但是如果要debug去调试时，则该+&#x3D;操作是不会抛异常的，函数正常终了，非debug模式<br>就会抛出异常。</p>
+                <p>最近一直在忙搬家的事情，所以好久没更新内容了，趁着今天是祝日休息有时间，所以打算写一下昨天遇到的一个<br>bug。现象是在脚本的函数外定义了一个集合，然后在函数内部调用该集合的+=操作符时报错，抛出的异常错误是没<br>有名为op_Addition的方法，但是如果要debug去调试时，则该+=操作是不会抛异常的，函数正常终了，非debug模式<br>就会抛出异常。</p>
 <h2 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h2><p>异常的情况如下所示：   </p>
 <img src="/2023/08/11/2023-08-11/1.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 <p></p>
 如上所示，定义了一个全局变量datas，在函数中往该datas追加数据，但是报错没有该op_Addition方法。但是debug  
 时的情况却正常结束，如下：   
-   
+
 <img src="/2023/08/11/2023-08-11/2.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 <p></p>
 <img src="/2023/08/11/2023-08-11/3.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>
 <p></p>   
-  
+
 <h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>图一报错的原因是因为在使用复合赋值运算符时，全局的datas变量和函数内部的datas变量不是同一个变量，复合赋<br>值运算符不使用动态范围，变量始终在当前范围内，所以函数内所创建的datas是一个新的变量，而非全局定义的datas<br>所以会报错PSObject没有对应的方法。解决的办法就是将该复合赋值运算符改为一般的写法，或者将全局的变量定义<br>为强类型的ArrayList集合，并使用add的方法。具体的报错原因官方文档如下：      </p>
 <img src="/2023/08/11/2023-08-11/5.png" srcset="/img/loading.gif" lazyload class="">
 <p></p>

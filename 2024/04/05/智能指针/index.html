@@ -1,0 +1,816 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="akatsukihi">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="智能指针c++常见的错误和bug来源百分之九十以上都是来自于内存管理和指针的使用，程序中经常需要在对象之间传递指针，分配内存，但是经常会忘记在合适的时候将内存回收，或者多次释放已经释放过的内存，通常这些错误会导致运行中的程序莫名崩溃。智能指针可以管理动态分配的内存，避免内存泄漏，当智能指针离开作用域或者被重置时，会自动释放所占用的资源。智能指针有多种类型，对资源具有唯一所有权的智能指针类型是标准库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="智能指针">
+<meta property="og:url" content="https://akatsukihi.github.io/2024/04/05/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/index.html">
+<meta property="og:site_name" content="AkatsukiHi">
+<meta property="og:description" content="智能指针c++常见的错误和bug来源百分之九十以上都是来自于内存管理和指针的使用，程序中经常需要在对象之间传递指针，分配内存，但是经常会忘记在合适的时候将内存回收，或者多次释放已经释放过的内存，通常这些错误会导致运行中的程序莫名崩溃。智能指针可以管理动态分配的内存，避免内存泄漏，当智能指针离开作用域或者被重置时，会自动释放所占用的资源。智能指针有多种类型，对资源具有唯一所有权的智能指针类型是标准库">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://akatsukihi.github.io/2024/04/05/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/1.png">
+<meta property="og:image" content="https://akatsukihi.github.io/2024/04/05/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/2.png">
+<meta property="article:published_time" content="2024-04-05T08:07:47.000Z">
+<meta property="article:modified_time" content="2024-04-05T07:45:56.063Z">
+<meta property="article:author" content="akatsukihi">
+<meta property="article:tag" content="指针">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://akatsukihi.github.io/2024/04/05/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>智能指针 - AkatsukiHi</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"akatsukihi.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"","Options":"left | right"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script   src="/js/utils.js" ></script>
+  <script   src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>akatsukihi</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/remark/">
+                <i class="iconfont icon-twitch-fill"></i>
+                留言板
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg/nihon.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="智能指针"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-04-05 17:07" pubdate>
+          2024年4月5日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          53 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">智能指针</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="智能指针"><a href="#智能指针" class="headerlink" title="智能指针"></a>智能指针</h2><p>c++常见的错误和bug来源百分之九十以上都是来自于内存管理和指针的使用，程序中经常需要在对象之间传递指针，<br>分配内存，但是经常会忘记在合适的时候将内存回收，或者多次释放已经释放过的内存，通常这些错误会导致运行<br>中的程序莫名崩溃。<br>智能指针可以管理动态分配的内存，避免内存泄漏，当智能指针离开作用域或者被重置时，会自动释放所占用的资源<br>。智能指针有多种类型，对资源具有唯一所有权的智能指针类型是标准库提供的std::unique_ptr,当离开作用域或者<br>被重置时，该指针会自动释放所指向的内存，它是一个具有唯一所有权语义的智能指针；另外高级一点的智能指针是<br>允许共享所有权，也就是说，多个智能指针可以指向同一个资源，当这样的智能指针离开作用域或被重置时，仅当它<br>是指向该资源的最后一个智能指针时，才应该释放指向资源，标准库提供了std::shared_ptr支持共享所有权。  </p>
+<h3 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h3><p>使用智能指针时需要添加头文件<memory>。<br>unique_ptr拥有资源的唯一所有权，当unique_ptr被销毁或者重置时，资源将自动释放，unique_ptr的一个有点是，<br>内存和资源总会被释放，即使在执行return语句或者抛出异常时也是如此。作为经验法则，总是应该将动态分配的<br>具有唯一所有者的资源保存在unique_ptr的实例中。   </p>
+<h5 id="创建unique-ptr"><a href="#创建unique-ptr" class="headerlink" title="创建unique_ptr"></a>创建unique_ptr</h5><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs css">void f1()&#123;<br>    <span class="hljs-selector-tag">A</span>* <span class="hljs-selector-tag">a</span>&#123;new <span class="hljs-selector-tag">A</span>&#123;&#125;&#125;;<br>    <span class="hljs-selector-tag">a</span>-&gt;play();<br>    delete <span class="hljs-selector-tag">a</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>上面的函数动态分配了一个A对象，然后调用A对象的play方法，最后正确的调用delete方法。但是这个例子仍然可能<br>导致内存泄漏，如果play()方法抛出一个异常，将永远不会调用delete，此时对象a所占用的内存将得不到释放。<br>应该使用智能指针来避免上述情况的出现，智能指针应该始终使用std::make_unique()辅助函数来创建。unique_ptr<br>是一个泛型的智能指针，可以指向任何类型的内存，它是一个类模板。std::make_unique()是一个函数模板。两者都<br>需要指定模板参数来明确unique_ptr需要指向的内存类型。  </p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs scss">void <span class="hljs-built_in">f1</span>()&#123;<br>    auto <span class="hljs-selector-tag">a</span>&#123;make_unique&lt;<span class="hljs-selector-tag">A</span>&gt;()&#125;;<br>    <span class="hljs-selector-tag">a</span>-&gt;<span class="hljs-built_in">play</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>上面使用智能指针unique_ptr，A对象不会显式释放，但unique_ptr实例离开作用域时，或者方法抛出异常时，就会<br>在其析构函数中自动释放A对象。<br>也可以使用构造函数来直接创建一个unique_ptr，如下所示：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">unique_ptr&lt;<span class="hljs-selector-tag">A</span>&gt; <span class="hljs-selector-tag">a</span>&#123; new <span class="hljs-selector-tag">A</span>&#123;&#125;&#125;;<br></code></pre></td></tr></table></figure></p>
+<p>建议始终使用make_unique()函数来创建unique_ptr；在c++17之前，出于安全方面考虑必须使用make_unique()，请<br>看下面foo()函数的调用：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-built_in">foo</span>(unique_ptr&lt;A&gt; &#123;<span class="hljs-keyword">new</span> A&#123;&#125;&#125;, unique_ptr&lt;B&gt; &#123;<span class="hljs-keyword">new</span> B&#123;<span class="hljs-built_in">data</span>()&#125;&#125;);<br></code></pre></td></tr></table></figure></p>
+<p>如果A，B的构造函数或者data()函数抛出异常，很可能导致A或者B对象出现内存泄漏，这取决于编译器的优化，然而<br>使用make_unique()则不会发生内存泄漏。<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs lisp">foo(<span class="hljs-name">make_unique&lt;A&gt;</span>(), make_unique&lt;B&gt;(<span class="hljs-name">data</span>()))<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure></p>
+<p>在c++17之后，对foo的两个调用都是安全的，但是仍然建议使用make_unique()。  </p>
+<h5 id="unique-ptr的用法"><a href="#unique-ptr的用法" class="headerlink" title="unique_ptr的用法"></a>unique_ptr的用法</h5><p>智能指针的用法和普通指针类似，仍然可以使用星号和-&gt;对智能指针进行解引用，如下所示：<br><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs scss">test-&gt;<span class="hljs-built_in">play</span>();<br>(*test)<span class="hljs-selector-class">.play</span>();<br></code></pre></td></tr></table></figure></p>
+<p>除了上述的使用方法外，智能指针还有get()方法，这个方法用于直接获得底层指针，用来给需要传递普通指针的函<br>数。示例：<br><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scss">auto <span class="hljs-selector-tag">a</span>&#123;make_unique&lt;<span class="hljs-selector-tag">A</span>&gt;()&#125;;<br><br>void <span class="hljs-built_in">setData</span>(A* x)&#123;<br>    ...<br>&#125;;<br><br><span class="hljs-built_in">setData</span>(a.get());<br></code></pre></td></tr></table></figure></p>
+<p>unique_ptr的reset()方法可释放unique_ptr的底层指针，或者根据需求将其设置为另一个指针，如下所示：<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs smali">auto a&#123;make_unique&lt;A&gt;()&#125;;<br><br>//free resource<span class="hljs-built_in"> and </span>set to nullptr;<br>a.reset();<br><br>//free resource<span class="hljs-built_in"> and </span>set to a<span class="hljs-built_in"> new </span>A<span class="hljs-built_in"> instance</span><br><span class="hljs-built_in"></span>a.reset(new A&#123;&#125;);<br></code></pre></td></tr></table></figure></p>
+<p>release()方法用于断开unique_ptr的底层指针连接，并需要返回底层指针资源的时候。该方法与reset方法的区别就<br>是会返回底层资源，返回后将智能指针设置为nullptr。智能指针将会时去对资源的所有权，调用者需要负责在使用<br>完资源后释放该资源。<br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs abnf">auto a1&#123;make_unique&lt;A&gt;()&#125;<span class="hljs-comment">;</span><br><br>A* a2&#123;a1.release()&#125;<span class="hljs-comment">;</span><br>//a2的使用<br>....<br><br>delete a2<span class="hljs-comment">;</span><br><span class="hljs-attribute">a2</span> <span class="hljs-operator">=</span> nullptr<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure></p>
+<p>由于unique_ptr代表唯一拥有权，因此无法复制它们，但是可以使用移动语义将一个unique_ptr移动到另一个。标准<br>库的std::move()工具函数可以用于显示移动unique_ptr的所有权。示例：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span>&#123;<br><br>    <span class="hljs-keyword">public</span>:<br>        <span class="hljs-built_in">Test</span>(unique_ptr&lt;<span class="hljs-type">int</span>&gt; data):t_data&#123;<span class="hljs-built_in">move</span>(data)&#125;&#123;&#125;<br>    <span class="hljs-keyword">private</span>:<br>        unique_ptr&lt;<span class="hljs-type">int</span>&gt; t_data;<br>&#125;;<br><br><span class="hljs-keyword">auto</span> a&#123;<span class="hljs-built_in">make_unique</span>&lt;<span class="hljs-type">int</span>&gt;(<span class="hljs-number">10</span>)&#125;;<br>Test t&#123;<span class="hljs-built_in">move</span>(a)&#125;;<br></code></pre></td></tr></table></figure></p>
+<h5 id="自定义分配和释放"><a href="#自定义分配和释放" class="headerlink" title="自定义分配和释放"></a>自定义分配和释放</h5><p>默认情况下unique_ptr使用标准的new和delete运算符来分配和释放内存，可以将其指定为自定义的分配和释放函数。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">int</span>* <span class="hljs-title">getMemory</span><span class="hljs-params">(<span class="hljs-type">int</span> val)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">int</span>&#123;val&#125;;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">freeMemory</span><span class="hljs-params">(<span class="hljs-type">int</span>* ptr)</span></span>&#123;<br>    <span class="hljs-keyword">delete</span> ptr;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    unique_ptr&lt;<span class="hljs-type">int</span>, <span class="hljs-keyword">decltype</span>(&amp;freeMemory)&gt; ptr&#123; <span class="hljs-built_in">getMemory</span>(<span class="hljs-number">10</span>), freeMemory&#125;;<br>&#125;<br></code></pre></td></tr></table></figure></p>
+<p>上面的示例使用getMemory给整数分配内存，unique_ptr使用freeMemory函数来释放内存。unique_ptr的这项功能很<br>有用，它不仅可以管理内存资源，而且还可以管理类似与文件和套接字资源。例如可自动关闭文件以及网络套接字。  </p>
+<h3 id="shared-ptr"><a href="#shared-ptr" class="headerlink" title="shared_ptr"></a>shared_ptr</h3><p>有时，多个对象或者代码段需要同一指针的副本，因为unique_ptr无法复制，所以需要使用标准准提供的另外一个可<br>复制的支持共享所有权的智能指针std::shared_ptr，该指针使用引用计数来解决共享资源的释放问题。  </p>
+<h5 id="shared-ptr的创建及使用"><a href="#shared-ptr的创建及使用" class="headerlink" title="shared_ptr的创建及使用"></a>shared_ptr的创建及使用</h5><p>shared_ptr的用法与unique_ptr类似，可使用make_shared()来创建，它比直接创建shared_ptr更高效和安全，而且<br>应该总是使用make_shared()来创建。与unique_ptr一样，类模板参数推断也不适用于shared_ptr,所以必须指定模板<br>类型。与unique_ptr类似，make_shared()也使用了值初始化，如果对性能有要求的话，也可以使用c++20提供的函数<br>make_shared_for_overwrite()实现默认初始化，与make_unique_for_overwrite()用法类似。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">auto</span> ptr&#123;<span class="hljs-built_in">make_shared</span>&lt;A&gt;()&#125;;<br></code></pre></td></tr></table></figure></p>
+<p>与unique_ptr一样，shared_ptr也支持get()和reset()方法，唯一区别在于，当调用reset时，仅在最后的shared_ptr<br>销毁或者重置时，才释放底层资源。需要注意的是，shared_ptr不支持release()，可使用user_count()方法检索共享<br>同一资源的shared_ptr实例数量。同样的，与unique_ptr类似，默认情况下，当存储C风格数组时，shared_ptr使用标准<br>的new和delete运算符或使用new[]和delete[]分配和释放内存，可更改此行为，如下所示：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino">shared_ptr&lt;<span class="hljs-type">int</span>&gt; ptr&#123;<span class="hljs-built_in">getMemory</span>(<span class="hljs-number">10</span>), freeMemory&#125;;<br></code></pre></td></tr></table></figure></p>
+<p>可以看到，不需要将自定义的内存释放函数的类型指定为模板类型参数，这比unique_ptr的自定义更简便。以下示例<br>使用shared_ptr存储文件指针，当shared_ptr被销毁时，即离开作用域时，会调用close自动关闭文件指针。  </p>
+<img src="/2024/04/05/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/1.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+<p></p>
+
+
+<h5 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h5><p>引用计数用于跟踪正在使用的某个类的实例或特定对象的个数，引用计数的智能指针跟踪为引用一个真实指针或某个<br>对象来建立智能指针的数目，每次复制这样一个引用计数的智能指针时，都会创建一个指向同一个资源的新实例，并<br>且引用计数会增加。当此类智能指针实例超出作用域或者被重置时，引用计数将减少，当引用计数降至为0时，资源<br>不再有其它所有者，此时智能指针会释放资源。引用计数的智能指针解决了很多内存管理的问题，如双重释放。看下<br>示例：<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk">Test* test1&#123;new Test&#123;&#125;&#125;;<br>Test* test2&#123;test1&#125;;<span class="hljs-regexp">//m</span>ake a copy of the pointer<br><br><span class="hljs-regexp">//</span>释放两个原始指针会造成双重释放<br><span class="hljs-keyword">delete</span> test2;<br><span class="hljs-keyword">delete</span> test1;  <br></code></pre></td></tr></table></figure></p>
+<p>当函数嵌套多次后，难免会发生多重释放的情况，通过使用引用计数的智能指针shared_ptr可以避免这种问题的发生<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">auto</span> smartPtr1&#123;<span class="hljs-built_in">make_shared</span>&lt;A&gt;()&#125;;<br><span class="hljs-keyword">auto</span> smartPtr2&#123;smartPtr1&#125;;<span class="hljs-comment">//make a copy of the pointer</span><br></code></pre></td></tr></table></figure></p>
+<p>上面的示例只有当两个智能指针都离开作用域或被重置时，A实例则只会被释放一次。<br>然而，以上的情况也只有在没有使用原始指针的情况下才成立，如果使用了原始指针并用new分配了一些内存，然后<br>又使用了指向原始指针的智能指针shared_ptr，则可能导致程序崩溃，也有可能正常工作，这取决于使用的编译器,<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">A</span>* <span class="hljs-selector-tag">a</span>&#123;new <span class="hljs-selector-tag">A</span>&#123;&#125;&#125;;<br>shared_ptr&lt;<span class="hljs-selector-tag">A</span>&gt; a1&#123;<span class="hljs-selector-tag">a</span>&#125;;<br>shared_ptr&lt;<span class="hljs-selector-tag">A</span>&gt; a2&#123;<span class="hljs-selector-tag">a</span>&#125;;<br></code></pre></td></tr></table></figure></p>
+<p>当用原始指针创建对象后，上面的两个智能指针都会试图释放同一个对象，此代码可能会崩溃，如果没有崩溃并正常<br>结束了，则会看到实际只会调用一次A的构造函数，但却会调用两次析构函数。使用unique_ptr时也会有相同的问题，<br>所以最安全的做法就是不要使用原始指针这种操作。  </p>
+<h5 id="别名"><a href="#别名" class="headerlink" title="别名"></a>别名</h5><p>shared_ptr支持所谓的别名，这允许一个shared_ptr和另一个shared_ptr拥有同一个指针，但指向不同的对象。如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Foo</span>&#123;<br>    <span class="hljs-keyword">public</span>:<br>        <span class="hljs-built_in">Foo</span>(<span class="hljs-type">int</span> val):data&#123;val&#125;&#123;&#125;;<br>        <span class="hljs-type">int</span> val;<br>&#125;;<br><br><span class="hljs-keyword">auto</span> foo&#123;<span class="hljs-built_in">make_shared</span>&lt;Foo&gt;(<span class="hljs-number">10</span>)&#125;;<br><span class="hljs-keyword">auto</span> aliasing&#123;shared_ptr&lt;<span class="hljs-type">int</span>&gt;&#123;foo, &amp;foo-&gt;val&#125;&#125;;<br></code></pre></td></tr></table></figure></p>
+<p>只有当两个shared_ptr都销毁时，即foo和aliasing都销毁时才会销毁Foo对象。“拥有的指针”用于引用计数，对指针<br>解引用或调用它的get()时，将返回“存储的指针”。  </p>
+<blockquote>
+<ul>
+<li>在现代C++中，只有在没有涉及所有权时才允许使用原始指针，如果涉及所有权，默认情况下使用unique_ptr，如<br>果需要共享所有权，则使用shared_ptr，此外，请使用make_unique()和make_shared()创建这些智能指针。这样，<br>几乎不需要直接调用new运算符，也不需要调用delete。  </li>
+</ul>
+</blockquote>
+<h3 id="weak-ptr"><a href="#weak-ptr" class="headerlink" title="weak_ptr"></a>weak_ptr</h3><p>在c++中还有一个与shared_ptr有关的类，就是weak_ptr。weak_ptr可包含由shared_ptr管理的资源的引用，但是却<br>不拥有这个资源，它不能阻止shared_ptr释放资源。weak_ptr销毁时，例如离开作用域，不会销毁它指向的资源。所<br>以它可以用来判断资源是否已经被与之关联的shared_ptr释放了。<br>weak_ptr的构造函数要求将一个share_ptr或另一个weak_ptr作为参数。为了使用weak_ptr中保存的指针，需要将该<br>weak_ptr转为shared_ptr，转化的方式有两种：  </p>
+<blockquote>
+<ul>
+<li><p>使用weak_ptr实例的lock()方法，该方法返回一个shared_ptr。如果释放了与该实例关联的shared_ptr，则返回<br>的shared_ptr是nullptr。  </p>
+</li>
+<li><p>创建一个新的shared_ptr实例，将weak_ptr作为shared_ptr构造函数的参数。如果释放了与weak_ptr关联的<br>shared_ptr，将抛出std::bad_weak_ptr异常。  </p>
+</li>
+</ul>
+</blockquote>
+<p>示例：  </p>
+<img src="/2024/04/05/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/2.png" srcset="/img/loading.gif" lazyload class="">
+<p></p>
+<p></p>
+
+
+<h4 id="函数参数与返回"><a href="#函数参数与返回" class="headerlink" title="函数参数与返回"></a>函数参数与返回</h4><p>只有当涉及所有权转移或者所有权共享时，接受指针参数传递的函数才应接受智能指针。要共享shared_ptr的所有权<br>,只需要接受按值传递的shared_ptr作为参数。类似的要转移unique_ptr的所有权，只需要接受按值传递的unique_ptr<br>作为参数即可，区别就是后者需要移动语义。如果既不涉及所有权转移，也不涉及所有权共享，那么函数应该简单的<br>使用non-const的引用或const引用作为参数；或者如果nullptr是参数的有效值的话，则应该使用原始指针作为参数。  </p>
+<p>标准智能指针shared_ptr、unique_ptr和weak_ptr可以高效的从函数中按值返回，且不会产生额外的开销。示例：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">unique_ptr&lt;A&gt; <span class="hljs-title">create</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-keyword">auto</span> ptr&#123;<span class="hljs-built_in">make_unique</span>&lt;A&gt;()&#125;;<br>    ...<br>    <span class="hljs-keyword">return</span> ptr;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    unique_ptr&lt;A&gt; aptr1&#123; <span class="hljs-built_in">create</span>() &#125;;<br>    <span class="hljs-keyword">auto</span> aptr2&#123; <span class="hljs-built_in">create</span>() &#125;;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>&#125;<br></code></pre></td></tr></table></figure></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/c-c/" class="category-chain-item">c/c++</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%8C%87%E9%92%88/">#指针</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>智能指针</div>
+      <div>https://akatsukihi.github.io/2024/04/05/智能指针/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>akatsukihi</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年4月5日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/02/10/2024-02-10/" title="2024/02/10">
+                        <span class="hidden-mobile">2024/02/10</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'gruvbox-dark';
+      var dark = 'gruvbox-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'akatsukihi/blog-comment');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<!-- require MetingJS -->
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<meting-js server="netease" type="playlist" id="8102703245" fixed="true" autoplay="false" loop="all" order="list" preload="auto" list-folded="ture" list-max-height="500px" lrc-type="0" storage-name=“metingjs”></meting-js>
+
+  </footer>
+
+<!-- Scripts -->
+
+  <script   src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script   src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script   src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script   src="/js/events.js" ></script>
+<script   src="/js/plugins.js" ></script>
+
+
+  <script   src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script   src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+      </script>
+    
+
+  <script   src="https://lib.baomitu.com/mathjax/3.2.1/es5/tex-mml-chtml.js" ></script>
+
+  <script   src="/js/local-search.js" ></script>
+
+  <script  defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script   src="/js/boot.js" ></script>
+
+
+
+
+
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
